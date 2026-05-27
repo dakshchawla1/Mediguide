@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency — MediGuide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --gold: #c9a84c; --gold-light: #f0d080; --gold-dim: #8a6f2e; --bg: #04040c; --card: #08081a; --border: #12122a; --text: #e8e8f8; --muted: #5a5a80; --red: #dc2626; --red-dim: #7f1d1d; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--red-dim), var(--red)); border-radius: 10px; }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 1001; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(4,4,12,0.98); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.1); padding: 20px 24px; flex-direction: column; gap: 4px; z-index: 999; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 16px; border-radius: 10px; transition: all 0.2s; }
+    .mobile-menu a:hover { color: var(--gold-light); background: rgba(201,168,76,0.06); }
+    .mobile-menu .mob-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c !important; font-weight: 700 !important; margin-top: 8px; text-align: center; }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-right { display: none; }
+      .hamburger { display: flex; }
+      .page-wrap { padding: 100px 16px 60px; }
+      .sos-title { font-size: 32px; letter-spacing: -1px; }
+      .sos-btn { width: 140px; height: 140px; font-size: 24px; }
+      .helplines-grid { grid-template-columns: 1fr; }
+      .firstaid-grid { grid-template-columns: 1fr; }
+      .er-grid { grid-template-columns: 1fr; }
+      .contacts-row { flex-direction: column; }
+      .contact-input { min-width: unset; width: 100%; }
+      .section-title { font-size: 24px; }
+    }
+
+    body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+    .center-glow { position: fixed; width: 700px; height: 700px; background: radial-gradient(circle, rgba(220,38,38,0.04) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 0; border-radius: 50%; }
+    .cursor { width: 500px; height: 500px; background: radial-gradient(circle, rgba(220,38,38,0.02), transparent 70%); position: fixed; border-radius: 50%; pointer-events: none; z-index: 1; transform: translate(-50%,-50%); transition: left 0.15s ease, top 0.15s ease; }
+
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 72px; background: rgba(4,4,12,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.08); transition: all 0.3s; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--gold-dim), var(--gold)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); }
+    .nav-links { display: flex; align-items: center; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
+    .nav-links a:hover { color: var(--text); background: rgba(201,168,76,0.06); }
+    .nav-links a.active { color: #fca5a5; background: rgba(220,38,38,0.06); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-signin { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+    .nav-signin:hover { color: var(--gold-light); }
+    .nav-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 0 24px rgba(201,168,76,0.2); }
+
+    .page-wrap { max-width: 860px; margin: 0 auto; padding: 130px 24px 100px; position: relative; z-index: 2; }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+    .sos-section { text-align: center; margin-bottom: 72px; animation: fadeUp 0.5s ease both; }
+    .sos-eyebrow { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(220,38,38,0.2); background: rgba(220,38,38,0.04); color: #f87171; font-size: 11px; font-weight: 600; padding: 7px 18px; border-radius: 100px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 32px; }
+    .sos-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 64px); font-weight: 900; letter-spacing: -2px; color: #fca5a5; margin-bottom: 16px; line-height: 1.05; }
+    .sos-sub { font-size: 16px; color: #7f5050; line-height: 1.8; margin-bottom: 48px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .sos-btn-wrap { position: relative; display: inline-block; margin-bottom: 28px; }
+    .sos-ring { position: absolute; inset: -20px; border-radius: 50%; border: 1px solid rgba(220,38,38,0.2); animation: sosPing 2s ease-out infinite; }
+    .sos-ring2 { position: absolute; inset: -40px; border-radius: 50%; border: 1px solid rgba(220,38,38,0.1); animation: sosPing 2s ease-out infinite 0.6s; }
+    .sos-ring3 { position: absolute; inset: -60px; border-radius: 50%; border: 1px solid rgba(220,38,38,0.05); animation: sosPing 2s ease-out infinite 1.2s; }
+    @keyframes sosPing { 0% { transform: scale(0.9); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
+    .sos-btn { width: 170px; height: 170px; border-radius: 50%; background: linear-gradient(135deg, #7f1d1d, #dc2626, #7f1d1d); border: none; cursor: pointer; font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 0 60px rgba(220,38,38,0.4), 0 0 120px rgba(220,38,38,0.15); animation: sosPulse 2s ease-in-out infinite; transition: transform 0.2s; position: relative; z-index: 1; }
+    .sos-btn:hover { transform: scale(1.06); }
+    .sos-btn:active { transform: scale(0.97); }
+    .sos-btn-sub { font-size: 11px; font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.12em; opacity: 0.85; }
+    @keyframes sosPulse { 0%,100% { box-shadow: 0 0 60px rgba(220,38,38,0.4), 0 0 120px rgba(220,38,38,0.15); } 50% { box-shadow: 0 0 90px rgba(220,38,38,0.65), 0 0 180px rgba(220,38,38,0.25); } }
+    .sos-status { font-size: 13px; color: #3a1a1a; margin-top: 12px; min-height: 20px; transition: color 0.3s; }
+    .sos-status.active { color: #f87171; }
+
+    .contacts-card { background: var(--card); border: 1px solid rgba(220,38,38,0.08); border-radius: 20px; padding: 28px; margin-bottom: 40px; animation: fadeUp 0.5s ease 0.15s both; }
+    .contacts-title { font-size: 13px; font-weight: 700; color: rgba(248,113,113,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .contacts-title::after { content: ''; flex: 1; height: 1px; background: rgba(220,38,38,0.08); }
+    .contacts-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .contact-input { flex: 1; min-width: 200px; background: var(--bg); border: 1px solid rgba(220,38,38,0.08); border-radius: 10px; padding: 11px 16px; color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+    .contact-input:focus { border-color: rgba(220,38,38,0.25); }
+    .contact-input::placeholder { color: #1e1e38; }
+    .save-btn { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2); color: #f87171; font-size: 12px; font-weight: 700; padding: 11px 20px; border-radius: 10px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
+    .save-btn:hover { background: rgba(220,38,38,0.15); }
+
+    .section-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .eyebrow-tag { font-size: 11px; color: #f87171; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+    .eyebrow-rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(220,38,38,0.2), transparent); max-width: 80px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3vw, 36px); font-weight: 900; color: #f0f0ff; letter-spacing: -0.5px; margin-bottom: 10px; }
+    .section-desc { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.7; }
+
+    .helplines-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 56px; animation: fadeUp 0.5s ease 0.2s both; }
+    .helpline-card { background: var(--card); border: 1px solid rgba(220,38,38,0.08); border-radius: 18px; padding: 24px; transition: all 0.3s; }
+    .helpline-card:hover { border-color: rgba(220,38,38,0.2); transform: translateY(-2px); }
+    .helpline-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .helpline-icon { font-size: 24px; }
+    .helpline-num { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: #f87171; letter-spacing: -0.5px; cursor: pointer; }
+    .helpline-num:hover { opacity: 0.8; }
+    .helpline-name { font-size: 14px; font-weight: 700; color: #d0d0e8; margin-bottom: 4px; }
+    .helpline-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+    .call-btn { width: 100%; padding: 11px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(220,38,38,0.2); background: rgba(220,38,38,0.05); color: #f87171; letter-spacing: 0.04em; text-transform: uppercase; }
+    .call-btn:hover { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.4); }
+
+    .firstaid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 56px; animation: fadeUp 0.5s ease 0.3s both; }
+    .firstaid-card { background: var(--card); border: 1px solid rgba(201,168,76,0.06); border-radius: 18px; padding: 24px; transition: all 0.3s; cursor: pointer; }
+    .firstaid-card:hover { border-color: rgba(201,168,76,0.15); transform: translateY(-2px); }
+    .firstaid-card.expanded { border-color: rgba(201,168,76,0.2); }
+    .fa-num { font-family: 'Playfair Display', serif; font-size: 11px; color: rgba(201,168,76,0.3); font-weight: 700; letter-spacing: 0.1em; margin-bottom: 12px; display: block; }
+    .fa-icon { font-size: 26px; margin-bottom: 12px; display: block; }
+    .fa-title { font-size: 14px; font-weight: 700; color: #d0d0e8; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
+    .fa-arrow { font-size: 12px; color: rgba(201,168,76,0.3); transition: transform 0.3s; }
+    .firstaid-card.expanded .fa-arrow { transform: rotate(180deg); }
+    .fa-steps { list-style: none; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .firstaid-card.expanded .fa-steps { max-height: 300px; }
+    .fa-steps li { font-size: 12px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); line-height: 1.5; display: flex; gap: 8px; }
+    .fa-steps li:last-child { border-bottom: none; }
+    .step-dot { color: rgba(201,168,76,0.4); flex-shrink: 0; }
+    .fa-tap-hint { font-size: 11px; color: #2a2a45; margin-top: 6px; }
+
+    .er-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; animation: fadeUp 0.5s ease 0.4s both; }
+    .er-card { background: linear-gradient(135deg, #100808, #180a0a); border: 1px solid rgba(220,38,38,0.1); border-radius: 18px; padding: 24px; transition: all 0.3s; }
+    .er-card:hover { border-color: rgba(220,38,38,0.25); transform: translateY(-2px); }
+    .er-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+    .er-name { font-size: 14px; font-weight: 700; color: #fca5a5; margin-bottom: 4px; }
+    .er-address { font-size: 12px; color: #7f5050; margin-bottom: 10px; line-height: 1.5; }
+    .er-dist { font-size: 11px; color: #f87171; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.15); padding: 3px 10px; border-radius: 100px; font-weight: 600; flex-shrink: 0; }
+    .er-time { font-size: 11px; color: #7f5050; margin-bottom: 14px; }
+    .er-btn { width: 100%; padding: 11px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(220,38,38,0.2); background: rgba(220,38,38,0.05); color: #f87171; }
+    .er-btn:hover { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.4); }
+    .copy-hint { font-size: 11px; color: #2a2a45; text-align: center; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="center-glow"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⚕️</div>
+      <span class="logo-text">MediGuide</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="symptoms.html">Symptoms</a>
+      <a href="hospitals.html">Hospitals</a>
+      <a href="emergency.html" class="active">Emergency</a>
+      <a href="medicines.html">Medicines</a>
+      <a href="helplines.html">Helplines</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" class="nav-signin">Sign in</a>
+      <a href="login.html" class="nav-cta">Get Started →</a>
+    </div>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">🏠 Home</a>
+    <a href="symptoms.html">🤖 Symptom Checker</a>
+    <a href="hospitals.html">🗺️ Find Hospital</a>
+    <a href="emergency.html">🚨 Emergency</a>
+    <a href="medicines.html">💊 Medicines</a>
+    <a href="helplines.html">📞 Helplines</a>
+    <a href="login.html" class="mob-cta">Get Started →</a>
+  </div>
+
+  <div class="page-wrap">
+    <div class="sos-section">
+      <div class="sos-eyebrow">🚨 Emergency Mode</div>
+      <h1 class="sos-title">Medical Emergency?<br>Don't Wait.</h1>
+      <p class="sos-sub">Press SOS to instantly detect your location, alert your emergency contacts, and find the nearest hospital.</p>
+      <div class="sos-btn-wrap">
+        <div class="sos-ring"></div>
+        <div class="sos-ring2"></div>
+        <div class="sos-ring3"></div>
+        <button class="sos-btn" onclick="activateSOS()" id="sosBtn">SOS<span class="sos-btn-sub">TAP NOW</span></button>
+      </div>
+      <p class="sos-status" id="sosStatus">Sends your live location to saved contacts</p>
+    </div>
+
+    <div class="contacts-card">
+      <div class="contacts-title">Your Emergency Contacts</div>
+      <div class="contacts-row">
+        <input class="contact-input" id="contact1" placeholder="Contact 1 name — e.g. Mummy" />
+        <input class="contact-input" id="contact1phone" placeholder="Phone number" type="tel" />
+        <input class="contact-input" id="contact2" placeholder="Contact 2 name — e.g. Papa" />
+        <input class="contact-input" id="contact2phone" placeholder="Phone number" type="tel" />
+        <button class="save-btn" onclick="saveContacts()">💾 Save</button>
+      </div>
+    </div>
+
+    <div class="section-eyebrow"><span class="eyebrow-tag">Emergency Helplines</span><div class="eyebrow-rule"></div></div>
+    <h2 class="section-title">Call Instantly</h2>
+    <p class="section-desc">All India emergency helplines — tap to call directly. Click number to copy.</p>
+
+    <div class="helplines-grid">
+      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🚑</span><span class="helpline-num" onclick="copyNum('108')">108</span></div><div class="helpline-name">Ambulance</div><div class="helpline-desc">National ambulance service — 24/7 across India. Free of cost.</div><button class="call-btn" onclick="callNum('108')">📞 Call 108</button></div>
+      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🚔</span><span class="helpline-num" onclick="copyNum('100')">100</span></div><div class="helpline-name">Police</div><div class="helpline-desc">Police emergency helpline — immediate law enforcement assistance.</div><button class="call-btn" onclick="callNum('100')">📞 Call 100</button></div>
+      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🔥</span><span class="helpline-num" onclick="copyNum('101')">101</span></div><div class="helpline-name">Fire Brigade</div><div class="helpline-desc">Fire emergency — 24/7 rapid response across all cities.</div><button class="call-btn" onclick="callNum('101')">📞 Call 101</button></div>
+      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🆘</span><span class="helpline-num" onclick="copyNum('112')">112</span></div><div class="helpline-name">National Emergency</div><div class="helpline-desc">Single number — connects to police, ambulance and fire.</div><button class="call-btn" onclick="callNum('112')">📞 Call 112</button></div>
+      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🧠</span><span class="helpline-num" onclick="copyNum('9152987821')" style="font-size:16px">iCall</span></div><div class="helpline-name">Mental Health</div><div class="helpline-desc">Free psychological counselling — 9152987821. Mon–Sat, 8AM–10PM.</div><button class="call-btn" onclick="callNum('9152987821')">📞 Call iCall</button></div>
+      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">☠️</span><span class="helpline-num" onclick="copyNum('18001116117')" style="font-size:16px">1800</span></div><div class="helpline-name">Poison Control</div><div class="helpline-desc">AIIMS Poison Control — 1800-11-6117. Free, 24/7.</div><button class="call-btn" onclick="callNum('18001116117')">📞 Call Helpline</button></div>
+    </div>
+    <p class="copy-hint">💡 Click any number to copy it to clipboard</p>
+
+    <div class="section-eyebrow"><span class="eyebrow-tag">First Aid Guide</span><div class="eyebrow-rule"></div></div>
+    <h2 class="section-title">What To Do Right Now</h2>
+    <p class="section-desc">Tap any card to expand step-by-step first aid instructions.</p>
+
+    <div class="firstaid-grid">
+      <div class="firstaid-card" onclick="toggleFirstAid(this)">
+        <span class="fa-num">01</span><span class="fa-icon">💔</span>
+        <div class="fa-title">Heart Attack <span class="fa-arrow">▼</span></div>
+        <p class="fa-tap-hint">Tap to expand steps</p>
+        <ul class="fa-steps"><li><span class="step-dot">→</span>Call 108 immediately</li><li><span class="step-dot">→</span>Make person sit or lie down comfortably</li><li><span class="step-dot">→</span>Loosen tight clothing around chest and neck</li><li><span class="step-dot">→</span>Give aspirin if available and not allergic</li><li><span class="step-dot">→</span>Do not leave them alone — stay calm</li></ul>
+      </div>
+      <div class="firstaid-card" onclick="toggleFirstAid(this)">
+        <span class="fa-num">02</span><span class="fa-icon">🫁</span>
+        <div class="fa-title">Choking <span class="fa-arrow">▼</span></div>
+        <p class="fa-tap-hint">Tap to expand steps</p>
+        <ul class="fa-steps"><li><span class="step-dot">→</span>Ask if they can speak or cough</li><li><span class="step-dot">→</span>Encourage forceful coughing first</li><li><span class="step-dot">→</span>Give 5 firm back blows between shoulder blades</li><li><span class="step-dot">→</span>Give 5 abdominal thrusts (Heimlich)</li><li><span class="step-dot">→</span>Call 108 if object not dislodged</li></ul>
+      </div>
+      <div class="firstaid-card" onclick="toggleFirstAid(this)">
+        <span class="fa-num">03</span><span class="fa-icon">🩸</span>
+        <div class="fa-title">Severe Bleeding <span class="fa-arrow">▼</span></div>
+        <p class="fa-tap-hint">Tap to expand steps</p>
+        <ul class="fa-steps"><li><span class="step-dot">→</span>Press firmly on wound with clean cloth</li><li><span class="step-dot">→</span>Keep continuous pressure for 10+ minutes</li><li><span class="step-dot">→</span>Do NOT remove cloth if soaked — add more on top</li><li><span class="step-dot">→</span>Elevate injured area above heart level if possible</li><li><span class="step-dot">→</span>Call 108 immediately for deep wounds</li></ul>
+      </div>
+      <div class="firstaid-card" onclick="toggleFirstAid(this)">
+        <span class="fa-num">04</span><span class="fa-icon">⚡</span>
+        <div class="fa-title">Electric Shock <span class="fa-arrow">▼</span></div>
+        <p class="fa-tap-hint">Tap to expand steps</p>
+        <ul class="fa-steps"><li><span class="step-dot">→</span>Do NOT touch the person directly</li><li><span class="step-dot">→</span>Switch off main power source first</li><li><span class="step-dot">→</span>Use dry wood or rubber to move them away</li><li><span class="step-dot">→</span>Check breathing and pulse — call 108</li><li><span class="step-dot">→</span>Start CPR if person is unconscious</li></ul>
+      </div>
+      <div class="firstaid-card" onclick="toggleFirstAid(this)">
+        <span class="fa-num">05</span><span class="fa-icon">🔥</span>
+        <div class="fa-title">Burns <span class="fa-arrow">▼</span></div>
+        <p class="fa-tap-hint">Tap to expand steps</p>
+        <ul class="fa-steps"><li><span class="step-dot">→</span>Cool burn under running water for 10 minutes</li><li><span class="step-dot">→</span>Do NOT use ice, butter or toothpaste</li><li><span class="step-dot">→</span>Remove jewellery near burn area gently</li><li><span class="step-dot">→</span>Cover loosely with clean bandage</li><li><span class="step-dot">→</span>Go to hospital for large or deep burns</li></ul>
+      </div>
+      <div class="firstaid-card" onclick="toggleFirstAid(this)">
+        <span class="fa-num">06</span><span class="fa-icon">😵</span>
+        <div class="fa-title">Unconscious Person <span class="fa-arrow">▼</span></div>
+        <p class="fa-tap-hint">Tap to expand steps</p>
+        <ul class="fa-steps"><li><span class="step-dot">→</span>Call 108 immediately</li><li><span class="step-dot">→</span>Check if they are breathing normally</li><li><span class="step-dot">→</span>Place in recovery position (on their side)</li><li><span class="step-dot">→</span>Tilt head back gently to open airway</li><li><span class="step-dot">→</span>Start CPR if no breathing detected</li></ul>
+      </div>
+    </div>
+
+    <div class="section-eyebrow"><span class="eyebrow-tag">Nearest Emergency Rooms</span><div class="eyebrow-rule"></div></div>
+    <h2 class="section-title">Go Here Right Now</h2>
+    <p class="section-desc">Nearest 24/7 emergency rooms in Delhi NCR — open right now.</p>
+
+    <div class="er-grid">
+      <div class="er-card"><div class="er-top"><div><div class="er-name">AIIMS Trauma Centre</div><div class="er-address">Sri Aurobindo Marg, New Delhi — 110029</div></div><span class="er-dist">3.1 km</span></div><div class="er-time">🕐 Open 24/7 · Ambulance: 108</div><button class="er-btn" onclick="goToER('AIIMS Trauma Centre Delhi')">🚨 Get Directions Now</button></div>
+      <div class="er-card"><div class="er-top"><div><div class="er-name">Safdarjung Hospital ER</div><div class="er-address">Ring Road, Safdarjung, New Delhi — 110029</div></div><span class="er-dist">2.4 km</span></div><div class="er-time">🕐 Open 24/7 · Ambulance: 108</div><button class="er-btn" onclick="goToER('Safdarjung Hospital Emergency Delhi')">🚨 Get Directions Now</button></div>
+      <div class="er-card"><div class="er-top"><div><div class="er-name">Max Hospital Emergency</div><div class="er-address">Press Enclave Road, Saket, New Delhi — 110017</div></div><span class="er-dist">4.7 km</span></div><div class="er-time">🕐 Open 24/7 · Tel: 011-26515050</div><button class="er-btn" onclick="goToER('Max Hospital Saket Emergency Delhi')">🚨 Get Directions Now</button></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('mousemove', e => { document.getElementById('cursor').style.left = e.clientX + 'px'; document.getElementById('cursor').style.top = e.clientY + 'px'; });
+
+    function showToast(msg, type = 'success') {
+      const existing = document.querySelector('.toast-msg'); if (existing) existing.remove();
+      const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
+      toast.style.cssText = `position: fixed; bottom: 32px; right: 32px; z-index: 99999; background: ${type === 'success' ? 'rgba(52,211,153,0.12)' : type === 'error' ? 'rgba(248,113,113,0.12)' : 'rgba(201,168,76,0.12)'}; border: 1px solid ${type === 'success' ? 'rgba(52,211,153,0.3)' : type === 'error' ? 'rgba(248,113,113,0.3)' : 'rgba(201,168,76,0.3)'}; color: ${type === 'success' ? '#34d399' : type === 'error' ? '#f87171' : '#c9a84c'}; padding: 14px 24px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;`;
+      document.body.appendChild(toast); setTimeout(() => toast.remove(), 3500);
+    }
+    const s = document.createElement('style'); s.textContent = `@keyframes toastIn { from { opacity:0; transform: translateY(20px) scale(0.9); } to { opacity:1; transform: translateY(0) scale(1); } }`; document.head.appendChild(s);
+
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.navbar');
+      nav.style.background = window.scrollY > 50 ? 'rgba(4,4,12,0.98)' : 'rgba(4,4,12,0.85)';
+      nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(201,168,76,0.15)' : 'rgba(201,168,76,0.08)';
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('mobileMenu').classList.remove('open');
+    });
+
+    function toggleMenu() { document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
+    document.querySelectorAll('.mobile-menu a').forEach(a => { a.addEventListener('click', () => { document.getElementById('hamburger').classList.remove('open'); document.getElementById('mobileMenu').classList.remove('open'); }); });
+
+    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } }); }, { threshold: 0.1 });
+    document.querySelectorAll('.helpline-card, .firstaid-card, .er-card, .contacts-card').forEach((el, i) => { el.style.opacity = '0'; el.style.transform = 'translateY(24px)'; el.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s ease ${i * 0.06}s`; observer.observe(el); });
+
+    function saveContacts() {
+      const c1 = document.getElementById('contact1').value.trim(); const c1p = document.getElementById('contact1phone').value.trim();
+      const c2 = document.getElementById('contact2').value.trim(); const c2p = document.getElementById('contact2phone').value.trim();
+      if (!c1 || !c1p) { showToast('⚠️ Please enter at least Contact 1 details', 'error'); return; }
+      localStorage.setItem('emg_contact1', c1); localStorage.setItem('emg_contact1phone', c1p);
+      localStorage.setItem('emg_contact2', c2); localStorage.setItem('emg_contact2phone', c2p);
+      showToast('✅ Emergency contacts saved!', 'success');
+    }
+
+    window.addEventListener('load', () => {
+      document.getElementById('contact1').value = localStorage.getItem('emg_contact1') || '';
+      document.getElementById('contact1phone').value = localStorage.getItem('emg_contact1phone') || '';
+      document.getElementById('contact2').value = localStorage.getItem('emg_contact2') || '';
+      document.getElementById('contact2phone').value = localStorage.getItem('emg_contact2phone') || '';
+    });
+
+    let sosActivated = false;
+    function activateSOS() {
+      if (sosActivated) return;
+      sosActivated = true;
+      const btn = document.getElementById('sosBtn'); const status = document.getElementById('sosStatus');
+      btn.style.background = 'linear-gradient(135deg, #991b1b, #ef4444, #991b1b)';
+      status.classList.add('active'); status.textContent = '📍 Detecting your location...';
+      showToast('🚨 SOS Activated! Getting location...', 'error');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const { latitude, longitude } = pos.coords;
+          status.textContent = '✅ Location found! Showing nearest hospitals...';
+          showToast('📍 Location detected! Opening nearest hospitals...', 'success');
+          setTimeout(() => { window.open(`https://www.google.com/maps/search/emergency+hospital/@${latitude},${longitude},14z`, '_blank'); }, 800);
+          setTimeout(() => { sosActivated = false; btn.style.background = ''; status.classList.remove('active'); status.textContent = 'Sends your live location to saved contacts'; }, 5000);
+        }, () => {
+          status.textContent = '⚠️ Location unavailable — Call 108 now!';
+          showToast('⚠️ Location failed — Call 108 immediately!', 'error');
+          window.open('tel:108');
+          setTimeout(() => { sosActivated = false; btn.style.background = ''; status.classList.remove('active'); status.textContent = 'Sends your live location to saved contacts'; }, 4000);
+        });
+      } else { status.textContent = '📞 Please call 108 immediately!'; window.open('tel:108'); setTimeout(() => { sosActivated = false; btn.style.background = ''; status.classList.remove('active'); status.textContent = 'Sends your live location to saved contacts'; }, 4000); }
+    }
+
+    function toggleFirstAid(card) {
+      const isExpanded = card.classList.contains('expanded');
+      document.querySelectorAll('.firstaid-card').forEach(c => c.classList.remove('expanded'));
+      if (!isExpanded) { card.classList.add('expanded'); showToast('📋 ' + card.querySelector('.fa-title').childNodes[0].textContent.trim(), 'gold'); }
+    }
+
+    function callNum(num) { showToast('📞 Calling ' + num + '...', 'error'); setTimeout(() => window.open('tel:' + num), 500); }
+    function copyNum(num) { navigator.clipboard.writeText(num).then(() => { showToast('📋 ' + num + ' copied to clipboard!', 'gold'); }).catch(() => { showToast('📋 Number: ' + num, 'gold'); }); }
+    function goToER(place) { showToast('🚨 Opening directions...', 'error'); setTimeout(() => { window.open('https://www.google.com/maps/search/' + encodeURIComponent(place), '_blank'); }, 500); }
+
+    setTimeout(() => showToast('🚨 Emergency page ready — stay safe!', 'gold'), 1500);
+  </script>
+</body>
+</html>

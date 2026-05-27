@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helplines — MediGuide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --gold: #c9a84c; --gold-light: #f0d080; --gold-dim: #8a6f2e; --bg: #04040c; --card: #08081a; --border: #12122a; --text: #e8e8f8; --muted: #5a5a80; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--gold-dim), var(--gold)); border-radius: 10px; }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 1001; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(4,4,12,0.98); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.1); padding: 20px 24px; flex-direction: column; gap: 4px; z-index: 999; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 16px; border-radius: 10px; transition: all 0.2s; }
+    .mobile-menu a:hover { color: var(--gold-light); background: rgba(201,168,76,0.06); }
+    .mobile-menu .mob-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c !important; font-weight: 700 !important; margin-top: 8px; text-align: center; }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-right { display: none; }
+      .hamburger { display: flex; }
+      .page-wrap { padding: 100px 16px 60px; }
+      .page-title { font-size: 32px; }
+      .helpline-grid { grid-template-columns: 1fr; }
+      .cat-filters { gap: 6px; }
+      .cat-btn { font-size: 11px; padding: 6px 12px; }
+      .hl-actions { flex-direction: column; }
+    }
+
+    body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+    .center-glow { position: fixed; width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 0; border-radius: 50%; }
+    .cursor { width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,0.025), transparent 70%); position: fixed; border-radius: 50%; pointer-events: none; z-index: 1; transform: translate(-50%,-50%); transition: left 0.15s ease, top 0.15s ease; }
+
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 72px; background: rgba(4,4,12,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.08); transition: all 0.3s; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--gold-dim), var(--gold)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); }
+    .nav-links { display: flex; align-items: center; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
+    .nav-links a:hover { color: var(--text); background: rgba(201,168,76,0.06); }
+    .nav-links a.active { color: var(--gold-light); background: rgba(201,168,76,0.06); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-signin { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+    .nav-signin:hover { color: var(--gold-light); }
+    .nav-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 0 24px rgba(201,168,76,0.2); }
+    .nav-cta:hover { box-shadow: 0 0 40px rgba(201,168,76,0.35); transform: translateY(-1px); }
+
+    .page-wrap { max-width: 1000px; margin: 0 auto; padding: 130px 24px 100px; position: relative; z-index: 2; }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+    .page-eyebrow { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); color: var(--gold); font-size: 11px; font-weight: 600; padding: 7px 18px; border-radius: 100px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
+    .page-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; letter-spacing: -1.5px; color: #f0f0ff; margin-bottom: 16px; line-height: 1.05; animation: fadeUp 0.5s ease 0.1s both; }
+    .page-title span { background: linear-gradient(135deg, var(--gold-dim), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-sub { font-size: 16px; color: var(--muted); line-height: 1.8; margin-bottom: 40px; animation: fadeUp 0.5s ease 0.2s both; }
+
+    .search-wrap { margin-bottom: 20px; }
+    .hl-search-input { width: 100%; background: var(--card); border: 1px solid rgba(201,168,76,0.1); border-radius: 14px; padding: 16px 20px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+    .hl-search-input:focus { border-color: rgba(201,168,76,0.3); }
+    .hl-search-input::placeholder { color: #2a2a45; }
+
+    .cat-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
+    .cat-btn { background: var(--card); border: 1px solid rgba(201,168,76,0.1); color: var(--muted); font-size: 12px; font-weight: 600; padding: 9px 18px; border-radius: 100px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    .cat-btn:hover { background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.3); color: var(--gold-light); }
+    .cat-btn.on { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.35); color: var(--gold-light); }
+
+    .section-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .eyebrow-tag { font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+    .eyebrow-rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,168,76,0.2), transparent); max-width: 80px; }
+    .section-title-hl { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: #f0f0ff; letter-spacing: -0.5px; margin-bottom: 20px; }
+
+    .helpline-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 48px; }
+
+    .helpline-card { background: var(--card); border: 1px solid rgba(201,168,76,0.08); border-radius: 20px; padding: 24px; transition: all 0.3s; position: relative; overflow: hidden; }
+    .helpline-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; transition: opacity 0.3s; opacity: 1; }
+    .helpline-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); border-color: rgba(201,168,76,0.2); }
+    .helpline-card.hidden { display: none !important; }
+
+    .c-red::before { background: linear-gradient(90deg, #dc2626, #f87171); }
+    .c-red .hl-num { color: #f87171; }
+    .c-blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .c-blue .hl-num { color: #60a5fa; }
+    .c-green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+    .c-green .hl-num { color: #34d399; }
+    .c-gold::before { background: linear-gradient(90deg, var(--gold-dim), var(--gold)); }
+    .c-gold .hl-num { color: var(--gold); }
+    .c-purple::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .c-purple .hl-num { color: #a78bfa; }
+    .c-pink::before { background: linear-gradient(90deg, #db2777, #f472b6); }
+    .c-pink .hl-num { color: #f472b6; }
+
+    .hl-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+    .hl-icon { font-size: 28px; }
+    .hl-num { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; cursor: pointer; transition: opacity 0.2s; }
+    .hl-num:hover { opacity: 0.75; }
+    .hl-name { font-size: 15px; font-weight: 700; color: #d0d0e8; margin-bottom: 4px; }
+    .hl-org { font-size: 11px; color: rgba(201,168,76,0.45); font-weight: 600; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .hl-desc { font-size: 12px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; }
+
+    .hl-hours { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; margin-bottom: 16px; }
+    .hours-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .always-open { color: #34d399; }
+    .always-open .hours-dot { background: #34d399; animation: blink 2s infinite; }
+    .limited { color: #fbbf24; }
+    .limited .hours-dot { background: #fbbf24; }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+    .hl-actions { display: flex; gap: 8px; }
+    .hl-call { flex: 1; padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.06); color: var(--gold-light); }
+    .hl-call:hover { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.3); transform: translateY(-1px); }
+    .hl-copy { padding: 11px 16px; border-radius: 10px; font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(201,168,76,0.08); background: transparent; color: var(--muted); }
+    .hl-copy:hover { color: var(--gold-light); border-color: rgba(201,168,76,0.2); }
+
+    .no-results { display: none; text-align: center; padding: 60px 24px; }
+    .no-results.show { display: block; }
+    .no-results p { font-size: 16px; color: var(--muted); margin-bottom: 8px; }
+    .no-results span { font-size: 13px; color: #2a2a45; }
+
+    .copy-tip { text-align: center; font-size: 12px; color: #2a2a45; margin-bottom: 48px; }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="center-glow"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⚕️</div>
+      <span class="logo-text">MediGuide</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="symptoms.html">Symptoms</a>
+      <a href="hospitals.html">Hospitals</a>
+      <a href="emergency.html">Emergency</a>
+      <a href="medicines.html">Medicines</a>
+      <a href="helplines.html" class="active">Helplines</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" class="nav-signin">Sign in</a>
+      <a href="login.html" class="nav-cta">Get Started →</a>
+    </div>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">🏠 Home</a>
+    <a href="symptoms.html">🤖 Symptom Checker</a>
+    <a href="hospitals.html">🗺️ Find Hospital</a>
+    <a href="emergency.html">🚨 Emergency</a>
+    <a href="medicines.html">💊 Medicines</a>
+    <a href="helplines.html">📞 Helplines</a>
+    <a href="login.html" class="mob-cta">Get Started →</a>
+  </div>
+
+  <div class="page-wrap">
+    <div class="page-eyebrow">📞 India Health Helplines</div>
+    <h1 class="page-title">All <span>Helplines</span> in One Place</h1>
+    <p class="page-sub">Every important Indian health helpline — emergency, mental health, women safety, child, senior citizen and more. Tap any number to call instantly.</p>
+
+    <div class="search-wrap">
+      <input class="hl-search-input" id="hlSearch" placeholder="🔍  Search helplines — e.g. Ambulance, Mental health, Women, Cancer..." />
+    </div>
+
+    <div class="cat-filters">
+      <button class="cat-btn on" onclick="setCat('all',this)">🏥 All</button>
+      <button class="cat-btn" onclick="setCat('emergency',this)">🚨 Emergency</button>
+      <button class="cat-btn" onclick="setCat('mental',this)">🧠 Mental Health</button>
+      <button class="cat-btn" onclick="setCat('women',this)">👩 Women</button>
+      <button class="cat-btn" onclick="setCat('child',this)">👶 Child</button>
+      <button class="cat-btn" onclick="setCat('senior',this)">👴 Senior</button>
+      <button class="cat-btn" onclick="setCat('disease',this)">🦠 Disease</button>
+      <button class="cat-btn" onclick="setCat('govt',this)">🇮🇳 Government</button>
+    </div>
+
+    <div class="no-results" id="noResults">
+      <p>😕 No helplines found</p>
+      <span>Try a different search term or category</span>
+    </div>
+
+    <!-- ===== EMERGENCY ===== -->
+    <div class="section-eyebrow"><span class="eyebrow-tag">Emergency</span><div class="eyebrow-rule"></div></div>
+    <div class="section-title-hl">Immediate Help</div>
+    <div class="helpline-grid">
+
+      <div class="helpline-card c-red" data-cat="emergency" data-search="ambulance emergency medical 108 national health">
+        <div class="hl-top"><span class="hl-icon">🚑</span><span class="hl-num" onclick="copyNum('108')">108</span></div>
+        <div class="hl-name">Ambulance Service</div>
+        <div class="hl-org">National Health Mission</div>
+        <div class="hl-desc">Free ambulance service across India. Call immediately for any medical emergency requiring hospital transfer.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Completely Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('108')">📞 Call 108</button>
+          <button class="hl-copy" onclick="copyNum('108')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-red" data-cat="emergency" data-search="national emergency police fire ambulance 112">
+        <div class="hl-top"><span class="hl-icon">🆘</span><span class="hl-num" onclick="copyNum('112')">112</span></div>
+        <div class="hl-name">National Emergency</div>
+        <div class="hl-org">Government of India</div>
+        <div class="hl-desc">Single emergency number connecting to police, fire brigade and ambulance. Use when unsure who to call.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('112')">📞 Call 112</button>
+          <button class="hl-copy" onclick="copyNum('112')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-red" data-cat="emergency" data-search="poison control aiims toxicology overdose chemical 1800 11 6117">
+        <div class="hl-top"><span class="hl-icon">☠️</span><span class="hl-num" onclick="copyNum('18001116117')" style="font-size:15px">1800-11-6117</span></div>
+        <div class="hl-name">Poison Control Centre</div>
+        <div class="hl-org">AIIMS New Delhi</div>
+        <div class="hl-desc">National Poison Information Centre — expert advice for poisoning, drug overdose, chemical and snake bite exposure.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('18001116117')">📞 Call Now</button>
+          <button class="hl-copy" onclick="copyNum('18001116117')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== MENTAL HEALTH ===== -->
+    <div class="section-eyebrow"><span class="eyebrow-tag">Mental Health</span><div class="eyebrow-rule"></div></div>
+    <div class="section-title-hl">Counselling & Support</div>
+    <div class="helpline-grid">
+
+      <div class="helpline-card c-purple" data-cat="mental" data-search="mental health depression anxiety counselling icall tiss 9152987821">
+        <div class="hl-top"><span class="hl-icon">🧠</span><span class="hl-num" onclick="copyNum('9152987821')" style="font-size:16px">iCall</span></div>
+        <div class="hl-name">iCall — Mental Health</div>
+        <div class="hl-org">TISS Mumbai</div>
+        <div class="hl-desc">Free psychological counselling by trained professionals. Call 9152987821 for depression, anxiety and emotional support.</div>
+        <div class="hl-hours limited"><div class="hours-dot"></div>Mon–Sat · 8AM–10PM · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('9152987821')">📞 Call iCall</button>
+          <button class="hl-copy" onclick="copyNum('9152987821')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-purple" data-cat="mental" data-search="vandrevala mental health depression suicide crisis 1860 2662 345">
+        <div class="hl-top"><span class="hl-icon">💜</span><span class="hl-num" onclick="copyNum('18602662345')" style="font-size:14px">1860-2662-345</span></div>
+        <div class="hl-name">Vandrevala Foundation</div>
+        <div class="hl-org">Vandrevala Foundation</div>
+        <div class="hl-desc">24/7 free mental health helpline — depression, anxiety, trauma, suicidal thoughts and crisis support in Hindi and English.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('18602662345')">📞 Call Now</button>
+          <button class="hl-copy" onclick="copyNum('18602662345')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-purple" data-cat="mental" data-search="nimhans mental health bangalore 080 4611 0007">
+        <div class="hl-top"><span class="hl-icon">🏥</span><span class="hl-num" onclick="copyNum('08046110007')" style="font-size:14px">080-4611-0007</span></div>
+        <div class="hl-name">NIMHANS Helpline</div>
+        <div class="hl-org">NIMHANS Bangalore</div>
+        <div class="hl-desc">National Institute of Mental Health and Neurosciences — professional guidance for all mental health concerns.</div>
+        <div class="hl-hours limited"><div class="hours-dot"></div>Mon–Sat · 8AM–8PM · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('08046110007')">📞 Call Now</button>
+          <button class="hl-copy" onclick="copyNum('08046110007')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== WOMEN ===== -->
+    <div class="section-eyebrow"><span class="eyebrow-tag">Women Safety & Health</span><div class="eyebrow-rule"></div></div>
+    <div class="section-title-hl">Women Helplines</div>
+    <div class="helpline-grid">
+
+      <div class="helpline-card c-pink" data-cat="women" data-search="women safety helpline 181 domestic violence harassment abuse">
+        <div class="hl-top"><span class="hl-icon">👩</span><span class="hl-num" onclick="copyNum('181')">181</span></div>
+        <div class="hl-name">Women Helpline</div>
+        <div class="hl-org">Ministry of Women & Child Development</div>
+        <div class="hl-desc">National helpline for women facing domestic violence, harassment, abuse or any emergency situation across India.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('181')">📞 Call 181</button>
+          <button class="hl-copy" onclick="copyNum('181')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-pink" data-cat="women" data-search="women police helpline 1091 stalking violence safety">
+        <div class="hl-top"><span class="hl-icon">🛡️</span><span class="hl-num" onclick="copyNum('1091')">1091</span></div>
+        <div class="hl-name">Women Police Helpline</div>
+        <div class="hl-org">National Commission for Women</div>
+        <div class="hl-desc">Dedicated police helpline for women facing violence, stalking, harassment or any safety concern anywhere in India.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('1091')">📞 Call 1091</button>
+          <button class="hl-copy" onclick="copyNum('1091')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-pink" data-cat="women" data-search="maternal health pregnancy 104 janani suraksha immunisation">
+        <div class="hl-top"><span class="hl-icon">🤱</span><span class="hl-num" onclick="copyNum('104')">104</span></div>
+        <div class="hl-name">Health Helpline</div>
+        <div class="hl-org">State Health Departments</div>
+        <div class="hl-desc">Medical advice helpline — maternal health, pregnancy support, immunisation queries and free consultation available.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('104')">📞 Call 104</button>
+          <button class="hl-copy" onclick="copyNum('104')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== CHILD ===== -->
+    <div class="section-eyebrow"><span class="eyebrow-tag">Child & Youth</span><div class="eyebrow-rule"></div></div>
+    <div class="section-title-hl">Child Helplines</div>
+    <div class="helpline-grid">
+
+      <div class="helpline-card c-blue" data-cat="child" data-search="child helpline 1098 childline abuse trafficking missing labour">
+        <div class="hl-top"><span class="hl-icon">👶</span><span class="hl-num" onclick="copyNum('1098')">1098</span></div>
+        <div class="hl-name">Childline India</div>
+        <div class="hl-org">Ministry of Women & Child Development</div>
+        <div class="hl-desc">24/7 emergency helpline for children in distress — abuse, trafficking, missing children and child labour cases.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('1098')">📞 Call 1098</button>
+          <button class="hl-copy" onclick="copyNum('1098')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-blue" data-cat="child" data-search="student youth counselling mental health manodarpan exam stress 1800 1800 233">
+        <div class="hl-top"><span class="hl-icon">🎓</span><span class="hl-num" onclick="copyNum('18001800233')" style="font-size:13px">1800-1800-233</span></div>
+        <div class="hl-name">Manodarpan — Student Helpline</div>
+        <div class="hl-org">Ministry of Education</div>
+        <div class="hl-desc">Psychosocial support for students facing exam stress, anxiety, depression and academic pressure. Free and confidential.</div>
+        <div class="hl-hours limited"><div class="hours-dot"></div>Mon–Sat · 8AM–8PM · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('18001800233')">📞 Call Now</button>
+          <button class="hl-copy" onclick="copyNum('18001800233')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== SENIOR ===== -->
+    <div class="section-eyebrow"><span class="eyebrow-tag">Senior Citizens</span><div class="eyebrow-rule"></div></div>
+    <div class="section-title-hl">Elder Care Helplines</div>
+    <div class="helpline-grid">
+
+      <div class="helpline-card c-gold" data-cat="senior" data-search="senior citizen elderly elder 14567 abuse neglect legal">
+        <div class="hl-top"><span class="hl-icon">👴</span><span class="hl-num" onclick="copyNum('14567')">14567</span></div>
+        <div class="hl-name">Elder Line</div>
+        <div class="hl-org">Ministry of Social Justice</div>
+        <div class="hl-desc">National helpline for senior citizens facing abuse, neglect, legal issues or needing medical and emotional guidance.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('14567')">📞 Call 14567</button>
+          <button class="hl-copy" onclick="copyNum('14567')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== DISEASE ===== -->
+    <div class="section-eyebrow"><span class="eyebrow-tag">Disease & Health</span><div class="eyebrow-rule"></div></div>
+    <div class="section-title-hl">Health Specific Helplines</div>
+    <div class="helpline-grid">
+
+      <div class="helpline-card c-green" data-cat="disease" data-search="covid corona pandemic health 1075 vaccine testing">
+        <div class="hl-top"><span class="hl-icon">🦠</span><span class="hl-num" onclick="copyNum('1075')">1075</span></div>
+        <div class="hl-name">COVID-19 Helpline</div>
+        <div class="hl-org">Ministry of Health & Family Welfare</div>
+        <div class="hl-desc">National COVID-19 helpline for symptoms, testing centres, vaccination queries and medical guidance across India.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('1075')">📞 Call 1075</button>
+          <button class="hl-copy" onclick="copyNum('1075')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-green" data-cat="disease" data-search="tb tuberculosis helpline nikshay 1800 1800 444 medicine free">
+        <div class="hl-top"><span class="hl-icon">🫁</span><span class="hl-num" onclick="copyNum('18001800444')" style="font-size:13px">1800-1800-444</span></div>
+        <div class="hl-name">TB Helpline — Nikshay</div>
+        <div class="hl-org">Central TB Division</div>
+        <div class="hl-desc">Free TB helpline for symptoms, nearest DOTS centre, free medicines under Nikshay programme and patient support.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('18001800444')">📞 Call Now</button>
+          <button class="hl-copy" onclick="copyNum('18001800444')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-green" data-cat="disease" data-search="cancer helpline tata memorial 1800 102 4228 treatment">
+        <div class="hl-top"><span class="hl-icon">🎗️</span><span class="hl-num" onclick="copyNum('18001024228')" style="font-size:13px">1800-102-4228</span></div>
+        <div class="hl-name">Cancer Helpline</div>
+        <div class="hl-org">Tata Memorial Centre</div>
+        <div class="hl-desc">Free cancer information, guidance on treatment options, second opinion and patient support services across India.</div>
+        <div class="hl-hours limited"><div class="hours-dot"></div>Mon–Fri · 9AM–5PM · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('18001024228')">📞 Call Now</button>
+          <button class="hl-copy" onclick="copyNum('18001024228')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== GOVERNMENT ===== -->
+    <div class="section-eyebrow"><span class="eyebrow-tag">Government Schemes</span><div class="eyebrow-rule"></div></div>
+    <div class="section-title-hl">Govt Health Helplines</div>
+    <div class="helpline-grid">
+
+      <div class="helpline-card c-gold" data-cat="govt" data-search="ayushman bharat health insurance pmjay 14555 card hospital">
+        <div class="hl-top"><span class="hl-icon">🇮🇳</span><span class="hl-num" onclick="copyNum('14555')">14555</span></div>
+        <div class="hl-name">Ayushman Bharat — PMJAY</div>
+        <div class="hl-org">National Health Authority</div>
+        <div class="hl-desc">Helpline for Ayushman Bharat health insurance — check eligibility, card issues, find empanelled hospitals.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('14555')">📞 Call 14555</button>
+          <button class="hl-copy" onclick="copyNum('14555')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-gold" data-cat="govt" data-search="jan aushadhi generic medicine pharmacy 1800 180 8080 cheap affordable">
+        <div class="hl-top"><span class="hl-icon">💊</span><span class="hl-num" onclick="copyNum('18001808080')" style="font-size:13px">1800-180-8080</span></div>
+        <div class="hl-name">Jan Aushadhi</div>
+        <div class="hl-org">BPPI — Govt of India</div>
+        <div class="hl-desc">Find nearest Jan Aushadhi store for generic medicines up to 90% cheaper than branded. Quality assured by govt.</div>
+        <div class="hl-hours limited"><div class="hours-dot"></div>Mon–Sat · 9AM–6PM · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('18001808080')">📞 Call Now</button>
+          <button class="hl-copy" onclick="copyNum('18001808080')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+      <div class="helpline-card c-blue" data-cat="govt" data-search="blood bank 104 transfusion donor blood group emergency">
+        <div class="hl-top"><span class="hl-icon">🩸</span><span class="hl-num" onclick="copyNum('104')">104</span></div>
+        <div class="hl-name">Blood Bank Helpline</div>
+        <div class="hl-org">State Blood Transfusion Council</div>
+        <div class="hl-desc">Find nearest blood bank, check availability by blood group and connect to verified donors in emergency.</div>
+        <div class="hl-hours always-open"><div class="hours-dot"></div>Available 24/7 · Free</div>
+        <div class="hl-actions">
+          <button class="hl-call" onclick="callNum('104')">📞 Call 104</button>
+          <button class="hl-copy" onclick="copyNum('104')" title="Copy number">📋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="copy-tip">💡 Click the 📋 icon on any card to copy the number to your clipboard</p>
+
+  </div>
+
+  <script>
+    let activeCat = 'all';
+
+    document.addEventListener('mousemove', e => {
+      document.getElementById('cursor').style.left = e.clientX + 'px';
+      document.getElementById('cursor').style.top = e.clientY + 'px';
+    });
+
+    function showToast(msg, type = 'gold') {
+      const existing = document.querySelector('.toast-msg');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.textContent = msg;
+      toast.style.cssText = `
+        position: fixed; bottom: 32px; right: 32px; z-index: 99999;
+        background: ${type === 'success' ? 'rgba(52,211,153,0.12)' : type === 'error' ? 'rgba(248,113,113,0.12)' : 'rgba(201,168,76,0.12)'};
+        border: 1px solid ${type === 'success' ? 'rgba(52,211,153,0.3)' : type === 'error' ? 'rgba(248,113,113,0.3)' : 'rgba(201,168,76,0.3)'};
+        color: ${type === 'success' ? '#34d399' : type === 'error' ? '#f87171' : '#c9a84c'};
+        padding: 14px 24px; border-radius: 12px; font-family: 'Inter', sans-serif;
+        font-size: 14px; font-weight: 600; backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    const sty = document.createElement('style');
+    sty.textContent = `@keyframes toastIn { from { opacity:0; transform:translateY(20px) scale(0.9); } to { opacity:1; transform:translateY(0) scale(1); } }`;
+    document.head.appendChild(sty);
+
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.navbar');
+      nav.style.background = window.scrollY > 50 ? 'rgba(4,4,12,0.98)' : 'rgba(4,4,12,0.85)';
+      nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(201,168,76,0.15)' : 'rgba(201,168,76,0.08)';
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('mobileMenu').classList.remove('open');
+    });
+
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    document.querySelectorAll('.mobile-menu a').forEach(a => {
+      a.addEventListener('click', () => {
+        document.getElementById('hamburger').classList.remove('open');
+        document.getElementById('mobileMenu').classList.remove('open');
+      });
+    });
+
+    function setCat(cat, btn) {
+      activeCat = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      applyFilters();
+    }
+
+    document.getElementById('hlSearch').addEventListener('input', applyFilters);
+
+    function applyFilters() {
+      const q = document.getElementById('hlSearch').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.helpline-card');
+      let visible = 0;
+      cards.forEach(card => {
+        const cat = card.dataset.cat || '';
+        const searchData = (card.dataset.search || '') + ' ' +
+          (card.querySelector('.hl-name') ? card.querySelector('.hl-name').textContent : '') + ' ' +
+          (card.querySelector('.hl-desc') ? card.querySelector('.hl-desc').textContent : '');
+        const catOk = activeCat === 'all' || activeCat === cat;
+        const searchOk = !q || searchData.toLowerCase().includes(q);
+        if (catOk && searchOk) {
+          card.classList.remove('hidden');
+          visible++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+      document.getElementById('noResults').classList.toggle('show', visible === 0);
+    }
+
+    function callNum(num) {
+      showToast('📞 Calling ' + num + '...', 'error');
+      setTimeout(() => window.open('tel:' + num), 600);
+    }
+
+    function copyNum(num) {
+      navigator.clipboard.writeText(num).then(() => {
+        showToast('📋 ' + num + ' copied to clipboard!', 'gold');
+      }).catch(() => {
+        showToast('📋 Number: ' + num, 'gold');
+      });
+    }
+
+    setTimeout(() => showToast('📞 All Indian health helplines loaded!', 'gold'), 1200);
+  </script>
+</body>
+</html>

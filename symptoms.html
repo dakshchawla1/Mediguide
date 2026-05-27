@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symptom Checker — MediGuide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --gold: #c9a84c; --gold-light: #f0d080; --gold-dim: #8a6f2e; --bg: #04040c; --card: #08081a; --border: #12122a; --text: #e8e8f8; --muted: #5a5a80; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--gold-dim), var(--gold)); border-radius: 10px; }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 1001; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(4,4,12,0.98); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.1); padding: 20px 24px; flex-direction: column; gap: 4px; z-index: 999; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 16px; border-radius: 10px; transition: all 0.2s; border: 1px solid transparent; }
+    .mobile-menu a:hover { color: var(--gold-light); background: rgba(201,168,76,0.06); }
+    .mobile-menu .mob-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c !important; font-weight: 700 !important; margin-top: 8px; text-align: center; }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-right { display: none; }
+      .hamburger { display: flex; }
+      .page-wrap { padding: 100px 16px 60px; }
+      .page-title { font-size: 32px; letter-spacing: -1px; }
+      .page-sub { font-size: 14px; }
+      .form-card { padding: 24px 20px; }
+      .result-grid { grid-template-columns: 1fr; }
+      .result-actions { flex-direction: column; }
+      .res-btn { min-width: unset; width: 100%; }
+      .chips { gap: 6px; }
+      .chip { font-size: 11px; padding: 6px 12px; }
+      .lang-row { flex-wrap: wrap; gap: 10px; }
+    }
+
+    body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+    .center-glow { position: fixed; width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 0; border-radius: 50%; }
+    .cursor { width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,0.025), transparent 70%); position: fixed; border-radius: 50%; pointer-events: none; z-index: 1; transform: translate(-50%,-50%); transition: left 0.15s ease, top 0.15s ease; }
+
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 72px; background: rgba(4,4,12,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.08); transition: all 0.3s; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--gold-dim), var(--gold)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); }
+    .nav-links { display: flex; align-items: center; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
+    .nav-links a:hover { color: var(--text); background: rgba(201,168,76,0.06); }
+    .nav-links a.active { color: var(--gold-light); background: rgba(201,168,76,0.06); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-signin { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+    .nav-signin:hover { color: var(--gold-light); }
+    .nav-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 0 24px rgba(201,168,76,0.2); }
+    .nav-cta:hover { box-shadow: 0 0 40px rgba(201,168,76,0.35); transform: translateY(-1px); }
+
+    .page-wrap { max-width: 780px; margin: 0 auto; padding: 130px 24px 100px; position: relative; z-index: 2; }
+    .page-eyebrow { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); color: var(--gold); font-size: 11px; font-weight: 600; padding: 7px 18px; border-radius: 100px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
+    .page-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; letter-spacing: -1.5px; color: #f0f0ff; margin-bottom: 16px; line-height: 1.05; animation: fadeUp 0.5s ease 0.1s both; }
+    .page-title span { background: linear-gradient(135deg, var(--gold-dim), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-sub { font-size: 16px; color: var(--muted); line-height: 1.8; margin-bottom: 52px; animation: fadeUp 0.5s ease 0.2s both; }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+    @keyframes goldShimmer { to { background-position: 200% center; } }
+
+    .form-card { background: var(--card); border: 1px solid rgba(201,168,76,0.08); border-radius: 24px; padding: 40px; margin-bottom: 20px; animation: fadeUp 0.5s ease 0.3s both; }
+    .lang-row { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .lang-label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+    .lang-toggle { display: flex; background: var(--bg); border: 1px solid rgba(201,168,76,0.1); border-radius: 10px; overflow: hidden; }
+    .lang-btn { padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--muted); font-family: 'Inter', sans-serif; transition: all 0.2s; }
+    .lang-btn.active { background: rgba(201,168,76,0.1); color: var(--gold-light); }
+
+    .field-label { font-size: 11px; font-weight: 700; color: rgba(201,168,76,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .symptom-textarea { width: 100%; background: var(--bg); border: 1px solid rgba(201,168,76,0.08); border-radius: 14px; padding: 20px; color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif; resize: none; outline: none; transition: border-color 0.2s; min-height: 130px; line-height: 1.7; }
+    .symptom-textarea:focus { border-color: rgba(201,168,76,0.25); box-shadow: 0 0 0 3px rgba(201,168,76,0.04); }
+    .symptom-textarea::placeholder { color: #1e1e38; }
+    .input-hint { font-size: 12px; color: #2e2e50; margin-top: 8px; transition: color 0.2s; }
+
+    .chips-label { font-size: 11px; font-weight: 700; color: rgba(201,168,76,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 12px; display: block; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .chip { background: var(--bg); border: 1px solid rgba(201,168,76,0.08); color: var(--muted); font-size: 12px; font-weight: 500; padding: 8px 16px; border-radius: 100px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    .chip:hover, .chip.on { background: rgba(201,168,76,0.06); border-color: rgba(201,168,76,0.25); color: var(--gold-light); }
+
+    .btn-gold { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #8a6f2e, var(--gold), #8a6f2e); background-size: 200% auto; color: #04040c; font-size: 15px; font-weight: 700; padding: 17px 32px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.03em; box-shadow: 0 0 40px rgba(201,168,76,0.2), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.3s; animation: goldShimmer 4s linear infinite; }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(201,168,76,0.35); }
+
+    .loading { display: none; text-align: center; padding: 48px; }
+    .loading.show { display: block; }
+    .spinner { width: 36px; height: 36px; border: 2px solid rgba(201,168,76,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: var(--muted); font-size: 14px; }
+
+    .result-card { background: var(--card); border: 1px solid rgba(201,168,76,0.12); border-radius: 24px; padding: 40px; display: none; animation: fadeUp 0.5s ease; }
+    .result-card.show { display: block; }
+    .result-top { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(201,168,76,0.06); }
+    .result-icon-wrap { width: 52px; height: 52px; border-radius: 14px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.15); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .result-title-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: #f0f0ff; }
+    .result-sub-text { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .result-item { background: var(--bg); border: 1px solid rgba(201,168,76,0.06); border-radius: 14px; padding: 18px 20px; }
+    .result-item-label { font-size: 10px; color: rgba(201,168,76,0.4); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 8px; }
+    .result-item-val { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.4; }
+    .urgency-low { color: #34d399; }
+    .urgency-mid { color: #fbbf24; }
+    .urgency-high { color: #f87171; }
+    .result-advice { background: rgba(201,168,76,0.03); border: 1px solid rgba(201,168,76,0.08); border-radius: 14px; padding: 20px; font-size: 14px; color: #7070a0; line-height: 1.8; }
+    .result-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .res-btn { flex: 1; padding: 13px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.05); color: var(--gold-light); min-width: 140px; }
+    .res-btn:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3); }
+    .disclaimer { margin-top: 20px; padding: 16px 20px; border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; font-size: 12px; color: #2a2a45; line-height: 1.7; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="center-glow"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⚕️</div>
+      <span class="logo-text">MediGuide</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="symptoms.html" class="active">Symptoms</a>
+      <a href="hospitals.html">Hospitals</a>
+      <a href="emergency.html">Emergency</a>
+      <a href="medicines.html">Medicines</a>
+      <a href="helplines.html">Helplines</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" class="nav-signin">Sign in</a>
+      <a href="login.html" class="nav-cta">Get Started →</a>
+    </div>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">🏠 Home</a>
+    <a href="symptoms.html">🤖 Symptom Checker</a>
+    <a href="hospitals.html">🗺️ Find Hospital</a>
+    <a href="emergency.html">🚨 Emergency</a>
+    <a href="medicines.html">💊 Medicines</a>
+    <a href="helplines.html">📞 Helplines</a>
+    <a href="login.html" class="mob-cta">Get Started →</a>
+  </div>
+
+  <div class="page-wrap">
+    <div class="page-eyebrow">⚕️ Powered by Claude AI</div>
+    <h1 class="page-title">AI <span>Symptom</span> Checker</h1>
+    <p class="page-sub">Describe what you're feeling in Hindi or English. Our AI tells you which doctor to see, how urgent it is, and exactly what to do next.</p>
+
+    <div class="form-card">
+      <div class="lang-row">
+        <span class="lang-label">Language</span>
+        <div class="lang-toggle">
+          <button class="lang-btn active" onclick="setLang('en',this)">English</button>
+          <button class="lang-btn" onclick="setLang('hi',this)">हिंदी</button>
+        </div>
+      </div>
+      <label class="field-label">Describe your symptoms</label>
+      <textarea class="symptom-textarea" id="symInput" placeholder="e.g. I have had a fever and severe headache for 2 days, feeling very weak and dizzy..."></textarea>
+      <p class="input-hint" id="charHint">💡 Mention duration, severity and any other details for a more accurate result</p>
+      <span class="chips-label">Quick add symptoms</span>
+      <div class="chips">
+        <div class="chip" onclick="addChip(this,'Fever')">🌡️ Fever</div>
+        <div class="chip" onclick="addChip(this,'Headache')">🤕 Headache</div>
+        <div class="chip" onclick="addChip(this,'Chest pain')">💔 Chest pain</div>
+        <div class="chip" onclick="addChip(this,'Cough')">😷 Cough</div>
+        <div class="chip" onclick="addChip(this,'Stomach ache')">🤢 Stomach ache</div>
+        <div class="chip" onclick="addChip(this,'Back pain')">🦴 Back pain</div>
+        <div class="chip" onclick="addChip(this,'Breathing difficulty')">😮‍💨 Breathing difficulty</div>
+        <div class="chip" onclick="addChip(this,'Dizziness')">😵 Dizziness</div>
+        <div class="chip" onclick="addChip(this,'Nausea')">🤮 Nausea</div>
+        <div class="chip" onclick="addChip(this,'Joint pain')">🦵 Joint pain</div>
+      </div>
+      <button class="btn-gold" id="analyseBtn" onclick="checkSymptoms()">🤖 Analyse Symptoms with AI</button>
+    </div>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p id="loadingMsg">AI is analysing your symptoms...</p>
+    </div>
+
+    <div class="result-card" id="result">
+      <div class="result-top">
+        <div class="result-icon-wrap">🩺</div>
+        <div>
+          <div class="result-title-text">AI Analysis Complete</div>
+          <div class="result-sub-text">Based on the symptoms you described</div>
+        </div>
+      </div>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-item-label">Recommended Specialist</div>
+          <div class="result-item-val" id="r-specialist">—</div>
+        </div>
+        <div class="result-item">
+          <div class="result-item-label">Urgency Level</div>
+          <div class="result-item-val" id="r-urgency">—</div>
+        </div>
+        <div class="result-item">
+          <div class="result-item-label">Possible Condition</div>
+          <div class="result-item-val" id="r-condition">—</div>
+        </div>
+        <div class="result-item">
+          <div class="result-item-label">Recommended Action</div>
+          <div class="result-item-val" id="r-action">—</div>
+        </div>
+      </div>
+      <div class="result-advice" id="r-advice">—</div>
+      <div class="result-actions">
+        <button class="res-btn" onclick="window.location.href='hospitals.html'">🗺️ Find Nearby Hospital</button>
+        <button class="res-btn" onclick="window.location.href='emergency.html'">🚨 Emergency Mode</button>
+        <button class="res-btn" onclick="resetForm()">🔄 Check Again</button>
+      </div>
+    </div>
+
+    <div class="disclaimer">⚠️ MediGuide is an AI-powered information tool. It does not replace professional medical advice. Always consult a qualified doctor for diagnosis and treatment.</div>
+  </div>
+
+  <script>
+    let lang = 'en';
+
+    document.addEventListener('mousemove', e => {
+      document.getElementById('cursor').style.left = e.clientX + 'px';
+      document.getElementById('cursor').style.top = e.clientY + 'px';
+    });
+
+    function showToast(msg, type = 'success') {
+      const existing = document.querySelector('.toast-msg');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.textContent = msg;
+      toast.style.cssText = `
+        position: fixed; bottom: 32px; right: 32px; z-index: 99999;
+        background: ${type === 'success' ? 'rgba(52,211,153,0.12)' : type === 'error' ? 'rgba(248,113,113,0.12)' : 'rgba(201,168,76,0.12)'};
+        border: 1px solid ${type === 'success' ? 'rgba(52,211,153,0.3)' : type === 'error' ? 'rgba(248,113,113,0.3)' : 'rgba(201,168,76,0.3)'};
+        color: ${type === 'success' ? '#34d399' : type === 'error' ? '#f87171' : '#c9a84c'};
+        padding: 14px 24px; border-radius: 12px; font-family: 'Inter', sans-serif;
+        font-size: 14px; font-weight: 600; backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    const s = document.createElement('style');
+    s.textContent = `@keyframes toastIn { from { opacity:0; transform: translateY(20px) scale(0.9); } to { opacity:1; transform: translateY(0) scale(1); } }`;
+    document.head.appendChild(s);
+
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.navbar');
+      nav.style.background = window.scrollY > 50 ? 'rgba(4,4,12,0.98)' : 'rgba(4,4,12,0.85)';
+      nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(201,168,76,0.15)' : 'rgba(201,168,76,0.08)';
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('mobileMenu').classList.remove('open');
+    });
+
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    document.querySelectorAll('.mobile-menu a').forEach(a => {
+      a.addEventListener('click', () => {
+        document.getElementById('hamburger').classList.remove('open');
+        document.getElementById('mobileMenu').classList.remove('open');
+      });
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.form-card, .disclaimer').forEach(el => {
+      el.style.opacity = '0'; el.style.transform = 'translateY(24px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(el);
+    });
+
+    const content = {
+      en: { placeholder: 'e.g. I have had a fever and severe headache for 2 days...', title: 'AI <span>Symptom</span> Checker', sub: "Describe what you're feeling in Hindi or English. Our AI tells you which doctor to see, how urgent it is, and exactly what to do next.", label: 'Describe your symptoms', hint: '💡 Mention duration, severity and any other details for a more accurate result', chipsLabel: 'Quick add symptoms', btn: '🤖 Analyse Symptoms with AI' },
+      hi: { placeholder: 'जैसे: मुझे 2 दिन से तेज़ बुखार और सिरदर्द है...', title: 'AI <span>लक्षण</span> जाँच', sub: 'अपनी तकलीफ हिंदी या अंग्रेज़ी में बताएं। हमारा AI बताएगा कि कौन सा डॉक्टर दिखाएं।', label: 'अपने लक्षण बताएं', hint: '💡 कितने दिन से है, कितना दर्द है — ये सब बताएं', chipsLabel: 'जल्दी जोड़ें', btn: '🤖 AI से लक्षण जाँचें' }
+    };
+
+    function setLang(l, btn) {
+      lang = l;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const c = content[l];
+      document.getElementById('symInput').placeholder = c.placeholder;
+      document.querySelector('.page-title').innerHTML = c.title;
+      document.querySelector('.page-sub').textContent = c.sub;
+      document.querySelector('.field-label').textContent = c.label;
+      document.getElementById('charHint').textContent = c.hint;
+      document.querySelector('.chips-label').textContent = c.chipsLabel;
+      document.getElementById('analyseBtn').textContent = c.btn;
+      showToast(l === 'hi' ? '🌐 हिंदी में बदल दिया गया' : '🌐 Switched to English', 'gold');
+    }
+
+    function addChip(el, text) {
+      el.classList.toggle('on');
+      const inp = document.getElementById('symInput');
+      if (el.classList.contains('on')) { inp.value = inp.value + (inp.value ? ', ' : '') + text; showToast('✅ ' + text + ' added', 'gold'); }
+      else { inp.value = inp.value.replace(new RegExp(',?\\s*' + text, 'g'), '').trim().replace(/^,/, '').trim(); }
+      updateCharCounter();
+    }
+
+    function updateCharCounter() {
+      const len = document.getElementById('symInput').value.length;
+      const hint = document.getElementById('charHint');
+      if (len === 0) { hint.style.color = '#2e2e50'; hint.textContent = '💡 Mention duration, severity and any other details for a more accurate result'; }
+      else if (len < 20) { hint.style.color = '#f87171'; hint.textContent = `${len} characters — Add more detail for better results`; }
+      else if (len < 50) { hint.style.color = '#fbbf24'; hint.textContent = `${len} characters — Good, add more if you can`; }
+      else { hint.style.color = '#34d399'; hint.textContent = `${len} characters — ✅ Great detail!`; }
+    }
+    document.getElementById('symInput').addEventListener('input', updateCharCounter);
+
+    function validateForm() {
+      const val = document.getElementById('symInput').value.trim();
+      if (!val) { showToast('⚠️ Please describe your symptoms first', 'error'); const ta = document.getElementById('symInput'); ta.style.borderColor = 'rgba(248,113,113,0.4)'; ta.focus(); setTimeout(() => ta.style.borderColor = '', 2000); return false; }
+      if (val.length < 10) { showToast('⚠️ Please describe in more detail', 'error'); return false; }
+      return true;
+    }
+
+    function resetForm() {
+      document.getElementById('result').classList.remove('show');
+      document.getElementById('symInput').value = '';
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+      document.getElementById('charHint').style.color = '#2e2e50';
+      document.getElementById('charHint').textContent = '💡 Mention duration, severity and any other details for a more accurate result';
+      showToast('🔄 Cleared — try again!', 'gold');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const loadingMessages = ['Analysing your symptoms...', 'Checking medical database...', 'Finding the right specialist...', 'Almost done...'];
+    let msgIndex = 0, msgTimer;
+    function startLoadingMessages() { msgIndex = 0; document.getElementById('loadingMsg').textContent = loadingMessages[0]; msgTimer = setInterval(() => { msgIndex = (msgIndex + 1) % loadingMessages.length; document.getElementById('loadingMsg').textContent = loadingMessages[msgIndex]; }, 1200); }
+    function stopLoadingMessages() { clearInterval(msgTimer); }
+
+    async function checkSymptoms() {
+      if (!validateForm()) return;
+      const symptoms = document.getElementById('symInput').value.trim();
+      document.getElementById('loading').classList.add('show');
+      document.getElementById('result').classList.remove('show');
+      startLoadingMessages();
+      showToast('🤖 AI is analysing your symptoms...', 'gold');
+
+      const prompt = `You are MediGuide, a professional AI medical assistant for India. Patient says: "${symptoms}". Respond in ${lang === 'hi' ? 'Hindi' : 'English'} ONLY as valid JSON: {"specialist":"specific doctor type","urgency":"Low or Medium or High","condition":"likely condition in 3-5 words","action":"specific next step","advice":"2-3 sentences of practical advice for an Indian patient"}`;
+
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [{ role: 'user', content: prompt }] }) });
+        const data = await res.json();
+        const parsed = JSON.parse(data.content[0].text.replace(/```json|```/g, '').trim());
+        document.getElementById('r-specialist').textContent = parsed.specialist;
+        document.getElementById('r-condition').textContent = parsed.condition;
+        document.getElementById('r-action').textContent = parsed.action;
+        document.getElementById('r-advice').textContent = parsed.advice;
+        const urg = document.getElementById('r-urgency');
+        urg.textContent = parsed.urgency;
+        urg.className = 'result-item-val ' + (parsed.urgency === 'High' ? 'urgency-high' : parsed.urgency === 'Medium' ? 'urgency-mid' : 'urgency-low');
+        showToast('✅ Analysis complete!', 'success');
+      } catch {
+        document.getElementById('r-specialist').textContent = 'General Physician';
+        document.getElementById('r-urgency').textContent = 'Medium';
+        document.getElementById('r-urgency').className = 'result-item-val urgency-mid';
+        document.getElementById('r-condition').textContent = 'Needs evaluation';
+        document.getElementById('r-action').textContent = 'Visit a doctor soon';
+        document.getElementById('r-advice').textContent = 'Based on your symptoms, we recommend visiting a general physician at your nearest clinic. Carry your Aadhaar card and any previous prescriptions.';
+        showToast('⚠️ AI offline — showing general advice', 'error');
+      }
+
+      stopLoadingMessages();
+      document.getElementById('loading').classList.remove('show');
+      document.getElementById('result').classList.add('show');
+      setTimeout(() => { document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
+    }
+
+    document.getElementById('symInput').addEventListener('keydown', e => { if (e.key === 'Enter' && e.ctrlKey) checkSymptoms(); });
+    setTimeout(() => showToast('🤖 AI Symptom Checker ready!', 'gold'), 1500);
+  </script>
+</body>
+</html>
