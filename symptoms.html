@@ -1,390 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Symptom Checker — MediGuide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --gold: #c9a84c; --gold-light: #f0d080; --gold-dim: #8a6f2e; --bg: #04040c; --card: #08081a; --border: #12122a; --text: #e8e8f8; --muted: #5a5a80; }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--gold-dim), var(--gold)); border-radius: 10px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Symptom Checker — MediGuide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff;--mt:#555}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(var(--gd),var(--gold));border-radius:10px}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
 
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 1001; }
-    .hamburger span { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all 0.3s; }
-    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(4,4,12,0.98); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.1); padding: 20px 24px; flex-direction: column; gap: 4px; z-index: 999; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 16px; border-radius: 10px; transition: all 0.2s; border: 1px solid transparent; }
-    .mobile-menu a:hover { color: var(--gold-light); background: rgba(201,168,76,0.06); }
-    .mobile-menu .mob-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c !important; font-weight: 700 !important; margin-top: 8px; text-align: center; }
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111;transition:all .3s}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-i{width:34px;height:34px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-t{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--gl)}
+.nav-mid{display:flex;align-items:center;gap:2px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-mid a{color:#555;text-decoration:none;font-size:13px;font-weight:500;padding:7px 14px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nav-mid a:hover,.nav-mid a.act{color:#fff;background:#111}
+.nav-mid a.act{color:var(--gl)!important}
+.nav-r{display:flex;align-items:center;gap:10px}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap;transition:color .2s}
+.nav-si:hover{color:var(--gl)}
+.nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap;box-shadow:0 0 20px rgba(201,168,76,.2)}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
+.hbg span{display:block;width:22px;height:2px;background:var(--gl);border-radius:2px;transition:all .3s}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mmenu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(0,0,0,.98);backdrop-filter:blur(20px);border-bottom:1px solid #111;padding:16px 20px;flex-direction:column;gap:2px;z-index:999}
+.mmenu.open{display:flex}
+.mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
+.mmenu a:hover{color:var(--gl)}
+.mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
 
-    @media (max-width: 768px) {
-      .navbar { padding: 0 20px; }
-      .nav-links { display: none; }
-      .nav-right { display: none; }
-      .hamburger { display: flex; }
-      .page-wrap { padding: 100px 16px 60px; }
-      .page-title { font-size: 32px; letter-spacing: -1px; }
-      .page-sub { font-size: 14px; }
-      .form-card { padding: 24px 20px; }
-      .result-grid { grid-template-columns: 1fr; }
-      .result-actions { flex-direction: column; }
-      .res-btn { min-width: unset; width: 100%; }
-      .chips { gap: 6px; }
-      .chip { font-size: 11px; padding: 6px 12px; }
-      .lang-row { flex-wrap: wrap; gap: 10px; }
-    }
+/* PAGE */
+.wrap{max-width:760px;margin:0 auto;padding:120px 22px 90px;position:relative;z-index:2}
 
-    body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
-    .center-glow { position: fixed; width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 0; border-radius: 50%; }
-    .cursor { width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,0.025), transparent 70%); position: fixed; border-radius: 50%; pointer-events: none; z-index: 1; transform: translate(-50%,-50%); transition: left 0.15s ease, top 0.15s ease; }
+/* ECG */
+.ecg{width:100%;height:36px;margin-bottom:36px;opacity:.14}
+.ecgp{stroke:var(--gold);stroke-width:1.5;fill:none;stroke-dasharray:800;stroke-dashoffset:800;animation:dec 4s ease forwards}
+@keyframes dec{to{stroke-dashoffset:0}}
 
-    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 72px; background: rgba(4,4,12,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.08); transition: all 0.3s; }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--gold-dim), var(--gold)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); }
-    .nav-links { display: flex; align-items: center; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
-    .nav-links a:hover { color: var(--text); background: rgba(201,168,76,0.06); }
-    .nav-links a.active { color: var(--gold-light); background: rgba(201,168,76,0.06); }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-signin { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
-    .nav-signin:hover { color: var(--gold-light); }
-    .nav-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 0 24px rgba(201,168,76,0.2); }
-    .nav-cta:hover { box-shadow: 0 0 40px rgba(201,168,76,0.35); transform: translateY(-1px); }
+.eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.ptitle{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,56px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.05}
+.ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.psub{font-size:15px;color:#444;line-height:1.8;margin-bottom:44px}
 
-    .page-wrap { max-width: 780px; margin: 0 auto; padding: 130px 24px 100px; position: relative; z-index: 2; }
-    .page-eyebrow { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); color: var(--gold); font-size: 11px; font-weight: 600; padding: 7px 18px; border-radius: 100px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
-    .page-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; letter-spacing: -1.5px; color: #f0f0ff; margin-bottom: 16px; line-height: 1.05; animation: fadeUp 0.5s ease 0.1s both; }
-    .page-title span { background: linear-gradient(135deg, var(--gold-dim), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .page-sub { font-size: 16px; color: var(--muted); line-height: 1.8; margin-bottom: 52px; animation: fadeUp 0.5s ease 0.2s both; }
-    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-    @keyframes goldShimmer { to { background-position: 200% center; } }
+@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gsh{to{background-position:200% center}}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-    .form-card { background: var(--card); border: 1px solid rgba(201,168,76,0.08); border-radius: 24px; padding: 40px; margin-bottom: 20px; animation: fadeUp 0.5s ease 0.3s both; }
-    .lang-row { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
-    .lang-label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-    .lang-toggle { display: flex; background: var(--bg); border: 1px solid rgba(201,168,76,0.1); border-radius: 10px; overflow: hidden; }
-    .lang-btn { padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--muted); font-family: 'Inter', sans-serif; transition: all 0.2s; }
-    .lang-btn.active { background: rgba(201,168,76,0.1); color: var(--gold-light); }
+/* FORM */
+.fcard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:22px;padding:32px;margin-bottom:18px}
+.lrow{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.llbl{font-size:11px;color:#333;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.ltog{display:flex;background:#000;border:1px solid #1a1a1a;border-radius:9px;overflow:hidden}
+.lbtn{padding:7px 18px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#333;font-family:'Inter',sans-serif;transition:all .2s}
+.lbtn.on{background:rgba(201,168,76,.1);color:var(--gl)}
+.flbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;display:block}
+.fta{width:100%;background:#000;border:1px solid #1a1a1a;border-radius:12px;padding:16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;resize:none;outline:none;transition:border-color .2s;min-height:120px;line-height:1.7}
+.fta:focus{border-color:rgba(201,168,76,.28);box-shadow:0 0 0 3px rgba(201,168,76,.04)}
+.fta::placeholder{color:#1a1a1a}
+.hint{font-size:12px;color:#222;margin-top:7px;transition:color .2s}
+.clbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin:22px 0 10px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px}
+.chip{background:#000;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:500;padding:7px 14px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.chip:hover,.chip.on{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.22);color:var(--gl)}
+.bgold{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#8a6f2e,var(--gold),#8a6f2e);background-size:200% auto;color:#000;font-size:14px;font-weight:700;padding:16px 28px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:.03em;box-shadow:0 0 36px rgba(201,168,76,.2);transition:all .3s;animation:gsh 4s linear infinite}
+.bgold:hover{transform:translateY(-2px);box-shadow:0 0 56px rgba(201,168,76,.35)}
 
-    .field-label { font-size: 11px; font-weight: 700; color: rgba(201,168,76,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; display: block; }
-    .symptom-textarea { width: 100%; background: var(--bg); border: 1px solid rgba(201,168,76,0.08); border-radius: 14px; padding: 20px; color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif; resize: none; outline: none; transition: border-color 0.2s; min-height: 130px; line-height: 1.7; }
-    .symptom-textarea:focus { border-color: rgba(201,168,76,0.25); box-shadow: 0 0 0 3px rgba(201,168,76,0.04); }
-    .symptom-textarea::placeholder { color: #1e1e38; }
-    .input-hint { font-size: 12px; color: #2e2e50; margin-top: 8px; transition: color 0.2s; }
+/* LOADING */
+.ld{display:none;text-align:center;padding:44px}
+.ld.on{display:block}
+.sp{width:34px;height:34px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite;margin:0 auto 14px}
+.ld p{color:#333;font-size:14px}
 
-    .chips-label { font-size: 11px; font-weight: 700; color: rgba(201,168,76,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 12px; display: block; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
-    .chip { background: var(--bg); border: 1px solid rgba(201,168,76,0.08); color: var(--muted); font-size: 12px; font-weight: 500; padding: 8px 16px; border-radius: 100px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-    .chip:hover, .chip.on { background: rgba(201,168,76,0.06); border-color: rgba(201,168,76,0.25); color: var(--gold-light); }
+/* RESULT */
+.rcard{background:#0a0a0a;border:1px solid rgba(201,168,76,.14);border-radius:22px;padding:36px;display:none;animation:fup .5s ease}
+.rcard.on{display:block}
+.rtop{display:flex;align-items:center;gap:14px;margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid #111}
+.ricn{width:50px;height:50px;border-radius:13px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.14);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.rttl{font-family:'Playfair Display',serif;font-size:19px;font-weight:800;color:#fff}
+.rsub{font-size:13px;color:#333;margin-top:2px}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.ritem{background:#000;border:1px solid #111;border-radius:12px;padding:16px 18px}
+.rlbl{font-size:10px;color:rgba(201,168,76,.35);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:7px}
+.rval{font-size:14px;font-weight:700;color:#fff;line-height:1.4}
+.ulow{color:#34d399}.umid{color:#fbbf24}.uhigh{color:#f87171}
+.radv{background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);border-radius:12px;padding:18px;font-size:14px;color:#555;line-height:1.8}
+.racts{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.rbtn{flex:1;padding:12px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid #1a1a1a;background:#0a0a0a;color:#555;min-width:120px}
+.rbtn:hover{border-color:rgba(201,168,76,.2);color:var(--gl)}
+.disc{margin-top:18px;padding:14px 18px;border:1px solid #0d0d0d;border-radius:11px;font-size:12px;color:#1a1a1a;line-height:1.7;text-align:center}
 
-    .btn-gold { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #8a6f2e, var(--gold), #8a6f2e); background-size: 200% auto; color: #04040c; font-size: 15px; font-weight: 700; padding: 17px 32px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.03em; box-shadow: 0 0 40px rgba(201,168,76,0.2), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.3s; animation: goldShimmer 4s linear infinite; }
-    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(201,168,76,0.35); }
+/* OFFLINE BANNER */
+.offline-banner{background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.15);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px}
+.offline-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.offline-text{font-size:13px;color:#92794a;line-height:1.7}
+.offline-text strong{color:#fbbf24;display:block;margin-bottom:3px}
 
-    .loading { display: none; text-align: center; padding: 48px; }
-    .loading.show { display: block; }
-    .spinner { width: 36px; height: 36px; border: 2px solid rgba(201,168,76,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 16px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading p { color: var(--muted); font-size: 14px; }
-
-    .result-card { background: var(--card); border: 1px solid rgba(201,168,76,0.12); border-radius: 24px; padding: 40px; display: none; animation: fadeUp 0.5s ease; }
-    .result-card.show { display: block; }
-    .result-top { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(201,168,76,0.06); }
-    .result-icon-wrap { width: 52px; height: 52px; border-radius: 14px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.15); display: flex; align-items: center; justify-content: center; font-size: 24px; }
-    .result-title-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: #f0f0ff; }
-    .result-sub-text { font-size: 13px; color: var(--muted); margin-top: 2px; }
-    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-    .result-item { background: var(--bg); border: 1px solid rgba(201,168,76,0.06); border-radius: 14px; padding: 18px 20px; }
-    .result-item-label { font-size: 10px; color: rgba(201,168,76,0.4); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 8px; }
-    .result-item-val { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.4; }
-    .urgency-low { color: #34d399; }
-    .urgency-mid { color: #fbbf24; }
-    .urgency-high { color: #f87171; }
-    .result-advice { background: rgba(201,168,76,0.03); border: 1px solid rgba(201,168,76,0.08); border-radius: 14px; padding: 20px; font-size: 14px; color: #7070a0; line-height: 1.8; }
-    .result-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-    .res-btn { flex: 1; padding: 13px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.05); color: var(--gold-light); min-width: 140px; }
-    .res-btn:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3); }
-    .disclaimer { margin-top: 20px; padding: 16px 20px; border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; font-size: 12px; color: #2a2a45; line-height: 1.7; text-align: center; }
-  </style>
+@media(max-width:900px){
+  .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
+  .wrap{padding:100px 16px 60px}.ptitle{font-size:28px!important}
+  .rgrid{grid-template-columns:1fr}.racts{flex-direction:column}.rbtn{min-width:unset;width:100%}
+  .chips{gap:5px}.chip{font-size:11px;padding:6px 11px}.lrow{flex-wrap:wrap}
+}
+</style>
 </head>
 <body>
 
-  <div class="cursor" id="cursor"></div>
-  <div class="center-glow"></div>
+<nav class="nav" id="nav">
+  <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
+  <div class="nav-mid">
+    <a href="index.html">Home</a><a href="symptoms.html" class="act">Symptoms</a>
+    <a href="hospitals.html">Hospitals</a><a href="emergency.html">Emergency</a>
+    <a href="medicines.html">Medicines</a><a href="helplines.html">Helplines</a>
+  </div>
+  <div class="nav-r">
+    <a href="login.html" class="nav-si">Sign in</a>
+    <a href="login.html" class="nav-ct">Get Started →</a>
+  </div>
+  <button class="hbg" id="hbg" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">
-      <div class="logo-icon">⚕️</div>
-      <span class="logo-text">MediGuide</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="symptoms.html" class="active">Symptoms</a>
-      <a href="hospitals.html">Hospitals</a>
-      <a href="emergency.html">Emergency</a>
-      <a href="medicines.html">Medicines</a>
-      <a href="helplines.html">Helplines</a>
-    </div>
-    <div class="nav-right">
-      <a href="login.html" class="nav-signin">Sign in</a>
-      <a href="login.html" class="nav-cta">Get Started →</a>
-    </div>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
+<div class="mmenu" id="mmenu">
+  <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+  <a href="symptoms.html" onclick="closeMenu()">🤖 Symptoms</a>
+  <a href="hospitals.html" onclick="closeMenu()">🗺️ Hospitals</a>
+  <a href="emergency.html" onclick="closeMenu()">🚨 Emergency</a>
+  <a href="medicines.html" onclick="closeMenu()">💊 Medicines</a>
+  <a href="helplines.html" onclick="closeMenu()">📞 Helplines</a>
+  <a href="login.html" class="mcta" onclick="closeMenu()">Get Started →</a>
+</div>
 
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">🏠 Home</a>
-    <a href="symptoms.html">🤖 Symptom Checker</a>
-    <a href="hospitals.html">🗺️ Find Hospital</a>
-    <a href="emergency.html">🚨 Emergency</a>
-    <a href="medicines.html">💊 Medicines</a>
-    <a href="helplines.html">📞 Helplines</a>
-    <a href="login.html" class="mob-cta">Get Started →</a>
+<div class="wrap">
+
+  <!-- ECG ANIMATION -->
+  <svg class="ecg" viewBox="0 0 800 36" preserveAspectRatio="none">
+    <polyline class="ecgp" points="0,18 80,18 110,18 124,2 138,34 152,6 166,30 180,18 260,18 290,18 304,2 318,34 332,6 346,30 360,18 440,18 470,18 484,2 498,34 512,6 526,30 540,18 620,18 650,18 664,2 678,34 692,6 706,30 720,18 800,18"/>
+  </svg>
+
+  <div class="eye">⚕️ Powered by Claude AI</div>
+  <h1 class="ptitle">AI <span>Symptom</span> Checker</h1>
+  <p class="psub">Describe what you're feeling in Hindi or English. Our AI tells you which doctor to see, how urgent it is, and exactly what to do next.</p>
+
+  <!-- AI NOTE -->
+  <div class="offline-banner">
+    <span class="offline-icon">💡</span>
+    <div class="offline-text">
+      <strong>AI Integration — Week 7</strong>
+      The Claude AI API will be fully connected in Week 7. Currently showing intelligent fallback responses based on your symptoms. The full AI will give personalised medical guidance in Hindi and English.
+    </div>
   </div>
 
-  <div class="page-wrap">
-    <div class="page-eyebrow">⚕️ Powered by Claude AI</div>
-    <h1 class="page-title">AI <span>Symptom</span> Checker</h1>
-    <p class="page-sub">Describe what you're feeling in Hindi or English. Our AI tells you which doctor to see, how urgent it is, and exactly what to do next.</p>
-
-    <div class="form-card">
-      <div class="lang-row">
-        <span class="lang-label">Language</span>
-        <div class="lang-toggle">
-          <button class="lang-btn active" onclick="setLang('en',this)">English</button>
-          <button class="lang-btn" onclick="setLang('hi',this)">हिंदी</button>
-        </div>
-      </div>
-      <label class="field-label">Describe your symptoms</label>
-      <textarea class="symptom-textarea" id="symInput" placeholder="e.g. I have had a fever and severe headache for 2 days, feeling very weak and dizzy..."></textarea>
-      <p class="input-hint" id="charHint">💡 Mention duration, severity and any other details for a more accurate result</p>
-      <span class="chips-label">Quick add symptoms</span>
-      <div class="chips">
-        <div class="chip" onclick="addChip(this,'Fever')">🌡️ Fever</div>
-        <div class="chip" onclick="addChip(this,'Headache')">🤕 Headache</div>
-        <div class="chip" onclick="addChip(this,'Chest pain')">💔 Chest pain</div>
-        <div class="chip" onclick="addChip(this,'Cough')">😷 Cough</div>
-        <div class="chip" onclick="addChip(this,'Stomach ache')">🤢 Stomach ache</div>
-        <div class="chip" onclick="addChip(this,'Back pain')">🦴 Back pain</div>
-        <div class="chip" onclick="addChip(this,'Breathing difficulty')">😮‍💨 Breathing difficulty</div>
-        <div class="chip" onclick="addChip(this,'Dizziness')">😵 Dizziness</div>
-        <div class="chip" onclick="addChip(this,'Nausea')">🤮 Nausea</div>
-        <div class="chip" onclick="addChip(this,'Joint pain')">🦵 Joint pain</div>
-      </div>
-      <button class="btn-gold" id="analyseBtn" onclick="checkSymptoms()">🤖 Analyse Symptoms with AI</button>
-    </div>
-
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-      <p id="loadingMsg">AI is analysing your symptoms...</p>
-    </div>
-
-    <div class="result-card" id="result">
-      <div class="result-top">
-        <div class="result-icon-wrap">🩺</div>
-        <div>
-          <div class="result-title-text">AI Analysis Complete</div>
-          <div class="result-sub-text">Based on the symptoms you described</div>
-        </div>
-      </div>
-      <div class="result-grid">
-        <div class="result-item">
-          <div class="result-item-label">Recommended Specialist</div>
-          <div class="result-item-val" id="r-specialist">—</div>
-        </div>
-        <div class="result-item">
-          <div class="result-item-label">Urgency Level</div>
-          <div class="result-item-val" id="r-urgency">—</div>
-        </div>
-        <div class="result-item">
-          <div class="result-item-label">Possible Condition</div>
-          <div class="result-item-val" id="r-condition">—</div>
-        </div>
-        <div class="result-item">
-          <div class="result-item-label">Recommended Action</div>
-          <div class="result-item-val" id="r-action">—</div>
-        </div>
-      </div>
-      <div class="result-advice" id="r-advice">—</div>
-      <div class="result-actions">
-        <button class="res-btn" onclick="window.location.href='hospitals.html'">🗺️ Find Nearby Hospital</button>
-        <button class="res-btn" onclick="window.location.href='emergency.html'">🚨 Emergency Mode</button>
-        <button class="res-btn" onclick="resetForm()">🔄 Check Again</button>
+  <div class="fcard">
+    <div class="lrow">
+      <span class="llbl">Language</span>
+      <div class="ltog">
+        <button class="lbtn on" onclick="setLang('en',this)">English</button>
+        <button class="lbtn" onclick="setLang('hi',this)">हिंदी</button>
       </div>
     </div>
-
-    <div class="disclaimer">⚠️ MediGuide is an AI-powered information tool. It does not replace professional medical advice. Always consult a qualified doctor for diagnosis and treatment.</div>
+    <label class="flbl">Describe your symptoms</label>
+    <textarea class="fta" id="si" placeholder="e.g. I have had a fever and severe headache for 2 days, feeling very weak..."></textarea>
+    <p class="hint" id="hint">💡 Mention duration, severity and any other details for a more accurate result</p>
+    <span class="clbl">Quick add symptoms</span>
+    <div class="chips">
+      <div class="chip" onclick="addC(this,'Fever')">🌡️ Fever</div>
+      <div class="chip" onclick="addC(this,'Headache')">🤕 Headache</div>
+      <div class="chip" onclick="addC(this,'Chest pain')">💔 Chest pain</div>
+      <div class="chip" onclick="addC(this,'Cough')">😷 Cough</div>
+      <div class="chip" onclick="addC(this,'Stomach ache')">🤢 Stomach ache</div>
+      <div class="chip" onclick="addC(this,'Back pain')">🦴 Back pain</div>
+      <div class="chip" onclick="addC(this,'Breathing difficulty')">😮‍💨 Breathing</div>
+      <div class="chip" onclick="addC(this,'Dizziness')">😵 Dizziness</div>
+      <div class="chip" onclick="addC(this,'Nausea')">🤮 Nausea</div>
+      <div class="chip" onclick="addC(this,'Joint pain')">🦵 Joint pain</div>
+    </div>
+    <button class="bgold" id="abtn" onclick="check()">🤖 Analyse Symptoms with AI</button>
   </div>
 
-  <script>
-    let lang = 'en';
+  <div class="ld" id="ld">
+    <div class="sp"></div>
+    <p id="lmsg">Analysing your symptoms...</p>
+  </div>
 
-    document.addEventListener('mousemove', e => {
-      document.getElementById('cursor').style.left = e.clientX + 'px';
-      document.getElementById('cursor').style.top = e.clientY + 'px';
-    });
+  <div class="rcard" id="rc">
+    <div class="rtop">
+      <div class="ricn">🩺</div>
+      <div>
+        <div class="rttl">AI Analysis Complete</div>
+        <div class="rsub">Based on the symptoms you described</div>
+      </div>
+    </div>
+    <div class="rgrid">
+      <div class="ritem"><div class="rlbl">Recommended Specialist</div><div class="rval" id="rsp">—</div></div>
+      <div class="ritem"><div class="rlbl">Urgency Level</div><div class="rval" id="rug">—</div></div>
+      <div class="ritem"><div class="rlbl">Possible Condition</div><div class="rval" id="rco">—</div></div>
+      <div class="ritem"><div class="rlbl">Recommended Action</div><div class="rval" id="rac">—</div></div>
+    </div>
+    <div class="radv" id="radv">—</div>
+    <div class="racts">
+      <button class="rbtn" onclick="location.href='hospitals.html'">🗺️ Find Hospital</button>
+      <button class="rbtn" onclick="location.href='emergency.html'">🚨 Emergency</button>
+      <button class="rbtn" onclick="reset()">🔄 Check Again</button>
+    </div>
+  </div>
 
-    function showToast(msg, type = 'success') {
-      const existing = document.querySelector('.toast-msg');
-      if (existing) existing.remove();
-      const toast = document.createElement('div');
-      toast.className = 'toast-msg';
-      toast.textContent = msg;
-      toast.style.cssText = `
-        position: fixed; bottom: 32px; right: 32px; z-index: 99999;
-        background: ${type === 'success' ? 'rgba(52,211,153,0.12)' : type === 'error' ? 'rgba(248,113,113,0.12)' : 'rgba(201,168,76,0.12)'};
-        border: 1px solid ${type === 'success' ? 'rgba(52,211,153,0.3)' : type === 'error' ? 'rgba(248,113,113,0.3)' : 'rgba(201,168,76,0.3)'};
-        color: ${type === 'success' ? '#34d399' : type === 'error' ? '#f87171' : '#c9a84c'};
-        padding: 14px 24px; border-radius: 12px; font-family: 'Inter', sans-serif;
-        font-size: 14px; font-weight: 600; backdrop-filter: blur(20px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-      `;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 3500);
-    }
+  <div class="disc">⚠️ MediGuide is an AI-powered information tool. It does not replace professional medical advice. Always consult a qualified doctor.</div>
+</div>
 
-    const s = document.createElement('style');
-    s.textContent = `@keyframes toastIn { from { opacity:0; transform: translateY(20px) scale(0.9); } to { opacity:1; transform: translateY(0) scale(1); } }`;
-    document.head.appendChild(s);
+<script>
+let lang = 'en';
 
-    window.addEventListener('scroll', () => {
-      const nav = document.querySelector('.navbar');
-      nav.style.background = window.scrollY > 50 ? 'rgba(4,4,12,0.98)' : 'rgba(4,4,12,0.85)';
-      nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(201,168,76,0.15)' : 'rgba(201,168,76,0.08)';
-      document.getElementById('hamburger').classList.remove('open');
-      document.getElementById('mobileMenu').classList.remove('open');
-    });
+function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
+function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
+window.addEventListener('scroll',()=>{document.getElementById('nav').style.background=window.scrollY>50?'rgba(0,0,0,.98)':'rgba(0,0,0,.92)';closeMenu()})
 
-    function toggleMenu() {
-      document.getElementById('hamburger').classList.toggle('open');
-      document.getElementById('mobileMenu').classList.toggle('open');
-    }
-    document.querySelectorAll('.mobile-menu a').forEach(a => {
-      a.addEventListener('click', () => {
-        document.getElementById('hamburger').classList.remove('open');
-        document.getElementById('mobileMenu').classList.remove('open');
-      });
-    });
+function toast(msg,type='g'){
+  const ex=document.querySelector('.tm');if(ex)ex.remove();
+  const t=document.createElement('div');t.className='tm';t.textContent=msg;
+  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${type==='e'?'rgba(248,113,113,.1)':type==='s'?'rgba(52,211,153,.1)':'rgba(201,168,76,.1)'};border:1px solid ${type==='e'?'rgba(248,113,113,.3)':type==='s'?'rgba(52,211,153,.3)':'rgba(201,168,76,.3)'};color:${type==='e'?'#f87171':type==='s'?'#34d399':'#c9a84c'};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s cubic-bezier(.34,1.56,.64,1) both`;
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}} @keyframes gsh{to{background-position:200% center}} @keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3500)
+}
 
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.form-card, .disclaimer').forEach(el => {
-      el.style.opacity = '0'; el.style.transform = 'translateY(24px)';
-      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-      observer.observe(el);
-    });
+const ct={
+  en:{ph:'e.g. I have had a fever and severe headache for 2 days...',ttl:'AI <span>Symptom</span> Checker',sub:"Describe what you're feeling. Our AI tells you which doctor to see, how urgent it is.",lbl:'Describe your symptoms',hint:'💡 Mention duration, severity and any other details',cl:'Quick add symptoms',btn:'🤖 Analyse Symptoms with AI'},
+  hi:{ph:'जैसे: मुझे 2 दिन से तेज़ बुखार है...',ttl:'AI <span>लक्षण</span> जाँच',sub:'अपनी तकलीफ बताएं। AI बताएगा कि कौन सा डॉक्टर दिखाएं।',lbl:'अपने लक्षण बताएं',hint:'💡 कितने दिन से है, कितना दर्द है — ये बताएं',cl:'जल्दी जोड़ें',btn:'🤖 AI से लक्षण जाँचें'}
+};
 
-    const content = {
-      en: { placeholder: 'e.g. I have had a fever and severe headache for 2 days...', title: 'AI <span>Symptom</span> Checker', sub: "Describe what you're feeling in Hindi or English. Our AI tells you which doctor to see, how urgent it is, and exactly what to do next.", label: 'Describe your symptoms', hint: '💡 Mention duration, severity and any other details for a more accurate result', chipsLabel: 'Quick add symptoms', btn: '🤖 Analyse Symptoms with AI' },
-      hi: { placeholder: 'जैसे: मुझे 2 दिन से तेज़ बुखार और सिरदर्द है...', title: 'AI <span>लक्षण</span> जाँच', sub: 'अपनी तकलीफ हिंदी या अंग्रेज़ी में बताएं। हमारा AI बताएगा कि कौन सा डॉक्टर दिखाएं।', label: 'अपने लक्षण बताएं', hint: '💡 कितने दिन से है, कितना दर्द है — ये सब बताएं', chipsLabel: 'जल्दी जोड़ें', btn: '🤖 AI से लक्षण जाँचें' }
-    };
+function setLang(l,btn){
+  lang=l;
+  document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const c=ct[l];
+  document.getElementById('si').placeholder=c.ph;
+  document.querySelector('.ptitle').innerHTML=c.ttl;
+  document.querySelector('.psub').textContent=c.sub;
+  document.querySelector('.flbl').textContent=c.lbl;
+  document.getElementById('hint').textContent=c.hint;
+  document.querySelector('.clbl').textContent=c.cl;
+  document.getElementById('abtn').textContent=c.btn;
+  toast(l==='hi'?'🌐 हिंदी में बदल दिया':'🌐 Switched to English');
+}
 
-    function setLang(l, btn) {
-      lang = l;
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const c = content[l];
-      document.getElementById('symInput').placeholder = c.placeholder;
-      document.querySelector('.page-title').innerHTML = c.title;
-      document.querySelector('.page-sub').textContent = c.sub;
-      document.querySelector('.field-label').textContent = c.label;
-      document.getElementById('charHint').textContent = c.hint;
-      document.querySelector('.chips-label').textContent = c.chipsLabel;
-      document.getElementById('analyseBtn').textContent = c.btn;
-      showToast(l === 'hi' ? '🌐 हिंदी में बदल दिया गया' : '🌐 Switched to English', 'gold');
-    }
+function addC(el,text){
+  el.classList.toggle('on');
+  const inp=document.getElementById('si');
+  if(el.classList.contains('on')){inp.value=inp.value+(inp.value?', ':'')+text;toast('✅ '+text+' added')}
+  else{inp.value=inp.value.replace(new RegExp(',?\\s*'+text,'g'),'').trim().replace(/^,/,'').trim()}
+  updateCnt();
+}
 
-    function addChip(el, text) {
-      el.classList.toggle('on');
-      const inp = document.getElementById('symInput');
-      if (el.classList.contains('on')) { inp.value = inp.value + (inp.value ? ', ' : '') + text; showToast('✅ ' + text + ' added', 'gold'); }
-      else { inp.value = inp.value.replace(new RegExp(',?\\s*' + text, 'g'), '').trim().replace(/^,/, '').trim(); }
-      updateCharCounter();
-    }
+function updateCnt(){
+  const len=document.getElementById('si').value.length;
+  const h=document.getElementById('hint');
+  if(len===0){h.style.color='#222';h.textContent='💡 Mention duration, severity and any other details'}
+  else if(len<20){h.style.color='#f87171';h.textContent=len+' chars — Add more detail'}
+  else if(len<50){h.style.color='#fbbf24';h.textContent=len+' chars — Good, add more if you can'}
+  else{h.style.color='#34d399';h.textContent=len+' chars — ✅ Great detail!'}
+}
+document.getElementById('si').addEventListener('input',updateCnt);
+document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey)check()});
 
-    function updateCharCounter() {
-      const len = document.getElementById('symInput').value.length;
-      const hint = document.getElementById('charHint');
-      if (len === 0) { hint.style.color = '#2e2e50'; hint.textContent = '💡 Mention duration, severity and any other details for a more accurate result'; }
-      else if (len < 20) { hint.style.color = '#f87171'; hint.textContent = `${len} characters — Add more detail for better results`; }
-      else if (len < 50) { hint.style.color = '#fbbf24'; hint.textContent = `${len} characters — Good, add more if you can`; }
-      else { hint.style.color = '#34d399'; hint.textContent = `${len} characters — ✅ Great detail!`; }
-    }
-    document.getElementById('symInput').addEventListener('input', updateCharCounter);
+function reset(){
+  document.getElementById('rc').classList.remove('on');
+  document.getElementById('si').value='';
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  document.getElementById('hint').style.color='#222';
+  document.getElementById('hint').textContent='💡 Mention duration, severity and any other details';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-    function validateForm() {
-      const val = document.getElementById('symInput').value.trim();
-      if (!val) { showToast('⚠️ Please describe your symptoms first', 'error'); const ta = document.getElementById('symInput'); ta.style.borderColor = 'rgba(248,113,113,0.4)'; ta.focus(); setTimeout(() => ta.style.borderColor = '', 2000); return false; }
-      if (val.length < 10) { showToast('⚠️ Please describe in more detail', 'error'); return false; }
-      return true;
-    }
+const lms=['Analysing your symptoms...','Checking medical database...','Finding the right specialist...','Almost done...'];
+let li=0,lt;
+function startL(){li=0;document.getElementById('lmsg').textContent=lms[0];lt=setInterval(()=>{li=(li+1)%lms.length;document.getElementById('lmsg').textContent=lms[li]},1200)}
+function stopL(){clearInterval(lt)}
 
-    function resetForm() {
-      document.getElementById('result').classList.remove('show');
-      document.getElementById('symInput').value = '';
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
-      document.getElementById('charHint').style.color = '#2e2e50';
-      document.getElementById('charHint').textContent = '💡 Mention duration, severity and any other details for a more accurate result';
-      showToast('🔄 Cleared — try again!', 'gold');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+// ===== SMART FALLBACK AI =====
+function smartAnalyse(symptoms) {
+  const s = symptoms.toLowerCase();
+  let specialist='General Physician', urgency='Medium', condition='General illness', action='Visit a clinic soon', advice='';
 
-    const loadingMessages = ['Analysing your symptoms...', 'Checking medical database...', 'Finding the right specialist...', 'Almost done...'];
-    let msgIndex = 0, msgTimer;
-    function startLoadingMessages() { msgIndex = 0; document.getElementById('loadingMsg').textContent = loadingMessages[0]; msgTimer = setInterval(() => { msgIndex = (msgIndex + 1) % loadingMessages.length; document.getElementById('loadingMsg').textContent = loadingMessages[msgIndex]; }, 1200); }
-    function stopLoadingMessages() { clearInterval(msgTimer); }
+  if(s.includes('chest pain')||s.includes('heart')||s.includes('chest')){
+    specialist='Cardiologist';urgency='High';condition='Possible cardiac issue';action='Go to emergency immediately';
+    advice='Chest pain can be serious. Go to the nearest emergency room immediately. Do not drive yourself — call 108 for an ambulance. Carry your Aadhaar card and any previous prescriptions.';
+  } else if(s.includes('fever')&&(s.includes('headache')||s.includes('body pain'))){
+    specialist='General Physician';urgency='Medium';condition='Viral fever or infection';action='Visit a doctor today';
+    advice='Fever with headache and body pain could indicate a viral infection or dengue. Stay hydrated, take paracetamol for fever, and visit a general physician today. Get a CBC blood test done.';
+  } else if(s.includes('fever')){
+    specialist='General Physician';urgency='Medium';condition='Viral or bacterial fever';action='Visit a clinic within 24 hours';
+    advice='Drink plenty of fluids and rest. Take paracetamol for fever above 101°F. If fever persists beyond 3 days or goes above 104°F, visit a doctor immediately.';
+  } else if(s.includes('breathing')||s.includes('breath')||s.includes('shortness')){
+    specialist='Pulmonologist';urgency='High';condition='Respiratory distress';action='Seek medical attention immediately';
+    advice='Difficulty breathing is a serious symptom. Go to the nearest hospital emergency room immediately. Call 108 if breathing is very difficult. This could be asthma, pneumonia or another respiratory issue.';
+  } else if(s.includes('headache')||s.includes('migraine')){
+    specialist='Neurologist';urgency='Low';condition='Tension headache or migraine';action='Rest and take pain relief';
+    advice='Rest in a dark, quiet room. Drink water as dehydration causes headaches. Take paracetamol or ibuprofen. If headache is very severe, sudden or with neck stiffness, go to emergency immediately.';
+  } else if(s.includes('stomach')||s.includes('abdomen')||s.includes('vomit')||s.includes('diarrhea')||s.includes('loose')){
+    specialist='Gastroenterologist';urgency='Medium';condition='Gastric infection or gastritis';action='Visit a doctor today';
+    advice='Stay hydrated with ORS water. Avoid spicy and oily food. Take ORS sachets available at any pharmacy. If vomiting blood or severe abdominal pain, go to emergency immediately.';
+  } else if(s.includes('back pain')||s.includes('back')){
+    specialist='Orthopaedic Surgeon';urgency='Low';condition='Musculoskeletal back pain';action='Rest and apply heat';
+    advice='Rest and apply a warm cloth to the affected area. Avoid lifting heavy objects. Take ibuprofen for pain relief. If pain radiates to legs or causes numbness, consult an orthopaedic surgeon.';
+  } else if(s.includes('joint')||s.includes('knee')||s.includes('elbow')){
+    specialist='Orthopaedic Surgeon';urgency='Low';condition='Joint pain or arthritis';action='Visit an orthopaedic surgeon';
+    advice='Apply ice for the first 48 hours then switch to heat. Take anti-inflammatory medicine like ibuprofen. Avoid activities that worsen the pain. Visit an orthopaedic surgeon if pain persists beyond a week.';
+  } else if(s.includes('cough')){
+    specialist='General Physician';urgency='Low';condition='Upper respiratory infection';action='Rest and stay hydrated';
+    advice='Drink warm water with honey and ginger. Steam inhalation helps relieve congestion. If cough persists beyond 2 weeks or you cough blood, visit a pulmonologist immediately.';
+  } else if(s.includes('skin')||s.includes('rash')||s.includes('itch')){
+    specialist='Dermatologist';urgency='Low';condition='Skin allergy or infection';action='Visit a dermatologist';
+    advice='Avoid scratching the affected area. Apply calamine lotion for relief. Take an antihistamine like cetirizine for itching. Visit a dermatologist if rash spreads or is accompanied by fever.';
+  } else if(s.includes('eye')||s.includes('vision')){
+    specialist='Ophthalmologist';urgency='Medium';condition='Eye infection or strain';action='Visit an eye specialist';
+    advice='Avoid rubbing your eyes. Use clean water to wash eyes gently. Visit an ophthalmologist as soon as possible. Do not wear contact lenses until the issue is resolved.';
+  } else if(s.includes('dizzy')||s.includes('dizziness')||s.includes('vertigo')){
+    specialist='Neurologist';urgency='Medium';condition='Vertigo or inner ear issue';action='Sit or lie down immediately';
+    advice='Sit or lie down immediately to avoid falling. Avoid sudden head movements. Stay hydrated. If dizziness is severe or accompanied by chest pain or facial drooping, call 108 immediately.';
+  } else if(s.includes('nausea')){
+    specialist='General Physician';urgency='Low';condition='Nausea or gastric issue';action='Rest and stay hydrated';
+    advice='Sip small amounts of water or ginger tea. Avoid strong smells and heavy food. If nausea is severe or accompanied by vomiting blood, seek emergency care immediately.';
+  } else {
+    advice='Based on your symptoms, we recommend visiting a general physician at your nearest clinic. Carry your Aadhaar card, previous prescriptions and any medical reports. Rest well and stay hydrated.';
+  }
 
-    async function checkSymptoms() {
-      if (!validateForm()) return;
-      const symptoms = document.getElementById('symInput').value.trim();
-      document.getElementById('loading').classList.add('show');
-      document.getElementById('result').classList.remove('show');
-      startLoadingMessages();
-      showToast('🤖 AI is analysing your symptoms...', 'gold');
+  if(lang==='hi'){
+    advice = 'आपके लक्षणों के आधार पर, हम सुझाव देते हैं कि आप जल्द से जल्द नज़दीकी क्लिनिक में जनरल फिजिशियन से मिलें। अपना आधार कार्ड, पुराने नुस्खे और मेडिकल रिपोर्ट साथ लेकर जाएं।';
+    if(urgency==='High') advice = '⚠️ यह एक गंभीर लक्षण है। तुरंत नज़दीकी अस्पताल के इमरजेंसी विभाग में जाएं। एम्बुलेंस के लिए 108 पर कॉल करें।';
+  }
 
-      const prompt = `You are MediGuide, a professional AI medical assistant for India. Patient says: "${symptoms}". Respond in ${lang === 'hi' ? 'Hindi' : 'English'} ONLY as valid JSON: {"specialist":"specific doctor type","urgency":"Low or Medium or High","condition":"likely condition in 3-5 words","action":"specific next step","advice":"2-3 sentences of practical advice for an Indian patient"}`;
+  return {specialist, urgency, condition, action, advice};
+}
 
-      try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [{ role: 'user', content: prompt }] }) });
-        const data = await res.json();
-        const parsed = JSON.parse(data.content[0].text.replace(/```json|```/g, '').trim());
-        document.getElementById('r-specialist').textContent = parsed.specialist;
-        document.getElementById('r-condition').textContent = parsed.condition;
-        document.getElementById('r-action').textContent = parsed.action;
-        document.getElementById('r-advice').textContent = parsed.advice;
-        const urg = document.getElementById('r-urgency');
-        urg.textContent = parsed.urgency;
-        urg.className = 'result-item-val ' + (parsed.urgency === 'High' ? 'urgency-high' : parsed.urgency === 'Medium' ? 'urgency-mid' : 'urgency-low');
-        showToast('✅ Analysis complete!', 'success');
-      } catch {
-        document.getElementById('r-specialist').textContent = 'General Physician';
-        document.getElementById('r-urgency').textContent = 'Medium';
-        document.getElementById('r-urgency').className = 'result-item-val urgency-mid';
-        document.getElementById('r-condition').textContent = 'Needs evaluation';
-        document.getElementById('r-action').textContent = 'Visit a doctor soon';
-        document.getElementById('r-advice').textContent = 'Based on your symptoms, we recommend visiting a general physician at your nearest clinic. Carry your Aadhaar card and any previous prescriptions.';
-        showToast('⚠️ AI offline — showing general advice', 'error');
-      }
+async function check(){
+  const v=document.getElementById('si').value.trim();
+  if(!v){toast('⚠️ Please describe your symptoms first','e');document.getElementById('si').style.borderColor='rgba(248,113,113,.4)';setTimeout(()=>document.getElementById('si').style.borderColor='',2000);return}
+  if(v.length<10){toast('⚠️ Please describe in more detail','e');return}
 
-      stopLoadingMessages();
-      document.getElementById('loading').classList.remove('show');
-      document.getElementById('result').classList.add('show');
-      setTimeout(() => { document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
-    }
+  document.getElementById('ld').classList.add('on');
+  document.getElementById('rc').classList.remove('on');
+  startL();
+  toast('🤖 Analysing your symptoms...');
 
-    document.getElementById('symInput').addEventListener('keydown', e => { if (e.key === 'Enter' && e.ctrlKey) checkSymptoms(); });
-    setTimeout(() => showToast('🤖 AI Symptom Checker ready!', 'gold'), 1500);
-  </script>
+  // Simulate AI thinking time
+  await new Promise(resolve => setTimeout(resolve, 2500));
+
+  const result = smartAnalyse(v);
+
+  document.getElementById('rsp').textContent = result.specialist;
+  document.getElementById('rco').textContent = result.condition;
+  document.getElementById('rac').textContent = result.action;
+  document.getElementById('radv').textContent = result.advice;
+
+  const u = document.getElementById('rug');
+  u.textContent = result.urgency;
+  u.className = 'rval ' + (result.urgency==='High'?'uhigh':result.urgency==='Medium'?'umid':'ulow');
+
+  toast('✅ Analysis complete!','s');
+  stopL();
+  document.getElementById('ld').classList.remove('on');
+  document.getElementById('rc').classList.add('on');
+  setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
+}
+
+setTimeout(()=>toast('🤖 AI Symptom Checker ready!'),1500);
+</script>
 </body>
 </html>
