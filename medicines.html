@@ -1,385 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medicine Lookup — MediGuide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --gold: #c9a84c; --gold-light: #f0d080; --gold-dim: #8a6f2e; --bg: #04040c; --card: #08081a; --border: #12122a; --text: #e8e8f8; --muted: #5a5a80; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--gold-dim), var(--gold)); border-radius: 10px; }
-
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 1001; }
-    .hamburger span { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all 0.3s; }
-    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(4,4,12,0.98); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.1); padding: 20px 24px; flex-direction: column; gap: 4px; z-index: 999; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 16px; border-radius: 10px; transition: all 0.2s; }
-    .mobile-menu a:hover { color: var(--gold-light); background: rgba(201,168,76,0.06); }
-    .mobile-menu .mob-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c !important; font-weight: 700 !important; margin-top: 8px; text-align: center; }
-
-    @media (max-width: 768px) {
-      .navbar { padding: 0 20px; }
-      .nav-links { display: none; }
-      .nav-right { display: none; }
-      .hamburger { display: flex; }
-      .page-wrap { padding: 100px 16px 60px; }
-      .page-title { font-size: 32px; letter-spacing: -1px; }
-      .search-bar { flex-direction: column; }
-      .btn-gold { width: 100%; }
-      .med-hero-top { flex-direction: column; }
-      .med-info-grid { grid-template-columns: 1fr 1fr; }
-      .result-actions { flex-direction: column; }
-      .res-btn { min-width: unset; width: 100%; }
-      .common-grid { grid-template-columns: 1fr 1fr; }
-      .section-title { font-size: 24px; }
-    }
-    @media (max-width: 480px) {
-      .med-info-grid { grid-template-columns: 1fr; }
-      .common-grid { grid-template-columns: 1fr; }
-    }
-
-    body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
-    .center-glow { position: fixed; width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 0; border-radius: 50%; }
-    .cursor { width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,0.025), transparent 70%); position: fixed; border-radius: 50%; pointer-events: none; z-index: 1; transform: translate(-50%,-50%); transition: left 0.15s ease, top 0.15s ease; }
-
-    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 72px; background: rgba(4,4,12,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.08); transition: all 0.3s; }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--gold-dim), var(--gold)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); }
-    .nav-links { display: flex; align-items: center; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
-    .nav-links a:hover { color: var(--text); background: rgba(201,168,76,0.06); }
-    .nav-links a.active { color: var(--gold-light); background: rgba(201,168,76,0.06); }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-signin { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
-    .nav-signin:hover { color: var(--gold-light); }
-    .nav-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 0 24px rgba(201,168,76,0.2); }
-
-    .page-wrap { max-width: 860px; margin: 0 auto; padding: 130px 24px 100px; position: relative; z-index: 2; }
-    .page-eyebrow { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); color: var(--gold); font-size: 11px; font-weight: 600; padding: 7px 18px; border-radius: 100px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
-    .page-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; letter-spacing: -1.5px; color: #f0f0ff; margin-bottom: 16px; line-height: 1.05; animation: fadeUp 0.5s ease 0.1s both; }
-    .page-title span { background: linear-gradient(135deg, var(--gold-dim), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .page-sub { font-size: 16px; color: var(--muted); line-height: 1.8; margin-bottom: 48px; animation: fadeUp 0.5s ease 0.2s both; }
-    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-    @keyframes goldShimmer { to { background-position: 200% center; } }
-
-    .history-wrap { margin-bottom: 28px; display: none; animation: fadeUp 0.4s ease; }
-    .history-wrap.show { display: block; }
-    .history-label { font-size: 11px; font-weight: 700; color: rgba(201,168,76,0.4); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-    .history-clear { font-size: 11px; color: #2a2a45; cursor: pointer; font-weight: 500; transition: color 0.2s; }
-    .history-clear:hover { color: var(--muted); }
-    .history-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .history-chip { background: var(--bg); border: 1px solid rgba(201,168,76,0.06); color: #4a4a70; font-size: 12px; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-    .history-chip:hover { color: var(--gold-light); border-color: rgba(201,168,76,0.2); }
-
-    .search-card { background: var(--card); border: 1px solid rgba(201,168,76,0.08); border-radius: 24px; padding: 36px; margin-bottom: 28px; animation: fadeUp 0.5s ease 0.3s both; }
-    .field-label { font-size: 11px; font-weight: 700; color: rgba(201,168,76,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; display: block; }
-    .search-bar { display: flex; gap: 12px; margin-bottom: 20px; }
-    .med-input { flex: 1; background: var(--bg); border: 1px solid rgba(201,168,76,0.08); border-radius: 12px; padding: 15px 20px; color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
-    .med-input:focus { border-color: rgba(201,168,76,0.25); box-shadow: 0 0 0 3px rgba(201,168,76,0.04); }
-    .med-input::placeholder { color: #1e1e38; }
-    .btn-gold { display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #8a6f2e, var(--gold), #8a6f2e); background-size: 200% auto; color: #04040c; font-size: 14px; font-weight: 700; padding: 15px 28px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.03em; box-shadow: 0 0 40px rgba(201,168,76,0.2); transition: all 0.3s; animation: goldShimmer 4s linear infinite; white-space: nowrap; }
-    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(201,168,76,0.35); }
-    .popular-label { font-size: 11px; font-weight: 700; color: rgba(201,168,76,0.4); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; display: block; }
-    .popular-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pop-chip { background: var(--bg); border: 1px solid rgba(201,168,76,0.08); color: var(--muted); font-size: 12px; font-weight: 500; padding: 7px 16px; border-radius: 100px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-    .pop-chip:hover { background: rgba(201,168,76,0.06); border-color: rgba(201,168,76,0.2); color: var(--gold-light); }
-
-    .loading { display: none; text-align: center; padding: 60px; }
-    .loading.show { display: block; }
-    .spinner { width: 36px; height: 36px; border: 2px solid rgba(201,168,76,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 16px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading p { color: var(--muted); font-size: 14px; }
-
-    .result-wrap { display: none; animation: fadeUp 0.5s ease; }
-    .result-wrap.show { display: block; }
-    .med-hero { background: var(--card); border: 1px solid rgba(201,168,76,0.1); border-radius: 24px; padding: 36px; margin-bottom: 16px; }
-    .med-hero-top { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid rgba(201,168,76,0.06); flex-wrap: wrap; }
-    .med-icon-wrap { width: 64px; height: 64px; border-radius: 18px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.15); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
-    .med-name-big { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: #f0f0ff; letter-spacing: -0.5px; margin-bottom: 6px; }
-    .med-generic-line { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-    .med-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .med-tag { font-size: 11px; padding: 4px 12px; border-radius: 100px; font-weight: 600; }
-    .tag-type { background: rgba(201,168,76,0.08); color: var(--gold); border: 1px solid rgba(201,168,76,0.15); }
-    .tag-rx { background: rgba(96,165,250,0.08); color: #60a5fa; border: 1px solid rgba(96,165,250,0.15); }
-    .tag-safe { background: rgba(52,211,153,0.08); color: #34d399; border: 1px solid rgba(52,211,153,0.15); }
-    .med-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
-    .med-info-item { background: var(--bg); border: 1px solid rgba(201,168,76,0.06); border-radius: 14px; padding: 16px 18px; }
-    .med-info-label { font-size: 10px; color: rgba(201,168,76,0.4); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 8px; }
-    .med-info-val { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; }
-
-    .med-section { background: var(--card); border: 1px solid rgba(201,168,76,0.06); border-radius: 20px; padding: 28px; margin-bottom: 16px; }
-    .med-section-title { font-size: 12px; font-weight: 700; color: rgba(201,168,76,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
-    .med-section-title::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.06); }
-    .side-effects-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
-    .side-tag { font-size: 12px; padding: 6px 14px; border-radius: 100px; background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.12); color: #f87171; font-weight: 500; }
-    .generic-card { background: linear-gradient(135deg, rgba(52,211,153,0.04), transparent); border: 1px solid rgba(52,211,153,0.1); border-radius: 16px; padding: 20px; }
-    .generic-title { font-size: 15px; font-weight: 700; color: #34d399; margin-bottom: 8px; }
-    .generic-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
-    .generic-savings { font-size: 13px; color: #34d399; font-weight: 600; }
-    .warning-box { background: rgba(251,191,36,0.04); border: 1px solid rgba(251,191,36,0.1); border-radius: 14px; padding: 16px 18px; font-size: 13px; color: #92794a; line-height: 1.7; margin-top: 12px; }
-
-    .result-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-    .res-btn { flex: 1; padding: 13px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(201,168,76,0.15); background: rgba(201,168,76,0.05); color: var(--gold-light); min-width: 150px; }
-    .res-btn:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3); transform: translateY(-1px); }
-
-    .section-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; margin-top: 48px; }
-    .eyebrow-tag { font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-    .eyebrow-rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,168,76,0.2), transparent); max-width: 80px; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: #f0f0ff; letter-spacing: -0.5px; margin-bottom: 8px; }
-    .section-desc { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
-    .common-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-    .common-card { background: var(--card); border: 1px solid rgba(201,168,76,0.06); border-radius: 18px; padding: 22px; transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden; }
-    .common-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); opacity: 0; transition: opacity 0.3s; }
-    .common-card:hover { border-color: rgba(201,168,76,0.18); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
-    .common-card:hover::before { opacity: 1; }
-    .common-icon { font-size: 24px; margin-bottom: 12px; display: block; }
-    .common-name { font-size: 14px; font-weight: 700; color: #d0d0e8; margin-bottom: 4px; }
-    .common-use { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
-    .common-btn { font-size: 11px; color: var(--gold); font-weight: 600; background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.04em; padding: 0; transition: color 0.2s; }
-    .common-btn:hover { color: var(--gold-light); }
-    .disclaimer { margin-top: 28px; padding: 16px 20px; border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; font-size: 12px; color: #2a2a45; line-height: 1.7; text-align: center; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medicine Lookup — MediGuide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff;--mt:#555}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(var(--gd),var(--gold));border-radius:10px}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111;transition:all .3s}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-i{width:34px;height:34px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-t{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--gl)}
+.nav-mid{display:flex;align-items:center;gap:2px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-mid a{color:#555;text-decoration:none;font-size:13px;font-weight:500;padding:7px 14px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nav-mid a:hover,.nav-mid a.act{color:#fff;background:#111}
+.nav-mid a.act{color:var(--gl)!important}
+.nav-r{display:flex;align-items:center;gap:10px}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap}
+.nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
+.hbg span{display:block;width:22px;height:2px;background:var(--gl);border-radius:2px;transition:all .3s}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mmenu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(0,0,0,.98);backdrop-filter:blur(20px);border-bottom:1px solid #111;padding:16px 20px;flex-direction:column;gap:2px;z-index:999}
+.mmenu.open{display:flex}
+.mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
+.mmenu a:hover{color:var(--gl)}
+.mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
+.wrap{max-width:860px;margin:0 auto;padding:120px 22px 90px;position:relative;z-index:2}
+.eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.ptitle{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,56px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.05}
+.ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.psub{font-size:15px;color:#444;line-height:1.8;margin-bottom:40px}
+@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gsh{to{background-position:200% center}}
+@keyframes sp{to{transform:rotate(360deg)}}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
+.ai-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);color:#34d399;font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+.ai-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
+.hist-wrap{margin-bottom:22px;display:none}
+.hist-wrap.on{display:block}
+.hist-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.hist-lbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase}
+.hist-clr{font-size:11px;color:#222;cursor:pointer;transition:color .2s}
+.hist-clr:hover{color:#555}
+.hist-chips{display:flex;flex-wrap:wrap;gap:7px}
+.hchip{background:#0a0a0a;border:1px solid #111;color:#333;font-size:12px;padding:5px 13px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.hchip:hover{color:var(--gl);border-color:rgba(201,168,76,.2)}
+.scard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:22px;padding:28px;margin-bottom:20px}
+.flbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;display:block}
+.sbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.sinp{flex:1;min-width:200px;background:#000;border:1px solid #1a1a1a;border-radius:11px;padding:13px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.sinp:focus{border-color:rgba(201,168,76,.28)}
+.sinp::placeholder{color:#1a1a1a}
+.bgold{display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#8a6f2e,var(--gold),#8a6f2e);background-size:200% auto;color:#000;font-size:14px;font-weight:700;padding:13px 28px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 0 36px rgba(201,168,76,.2);transition:all .3s;animation:gsh 4s linear infinite;white-space:nowrap}
+.bgold:hover{transform:translateY(-2px)}
+.bgold:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.pop-lbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:block}
+.pchips{display:flex;flex-wrap:wrap;gap:7px}
+.pchip{background:#000;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:500;padding:7px 14px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.pchip:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.22);color:var(--gl)}
+.ld{display:none;text-align:center;padding:44px}
+.ld.on{display:block}
+.sp{width:34px;height:34px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite;margin:0 auto 14px}
+.ld p{color:#333;font-size:14px}
+.rcard{display:none;animation:fup .5s ease}
+.rcard.on{display:block}
+.med-hero{background:#0a0a0a;border:1px solid rgba(201,168,76,.12);border-radius:22px;padding:32px;margin-bottom:14px}
+.med-top{display:flex;align-items:flex-start;gap:18px;margin-bottom:24px;padding-bottom:22px;border-bottom:1px solid #111;flex-wrap:wrap}
+.med-ico{width:60px;height:60px;border-radius:16px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.14);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.med-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:5px}
+.med-gen{font-size:13px;color:#444;margin-bottom:10px}
+.med-tags{display:flex;gap:7px;flex-wrap:wrap}
+.med-tag{font-size:11px;padding:3px 11px;border-radius:100px;font-weight:600}
+.tt{background:rgba(201,168,76,.06);color:var(--gold);border:1px solid rgba(201,168,76,.12)}
+.tr{background:rgba(96,165,250,.06);color:#60a5fa;border:1px solid rgba(96,165,250,.12)}
+.ts{background:rgba(52,211,153,.06);color:#34d399;border:1px solid rgba(52,211,153,.12)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.mbox{background:#000;border:1px solid #111;border-radius:12px;padding:14px 16px}
+.mbox-lbl{font-size:10px;color:rgba(201,168,76,.35);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:6px}
+.mbox-val{font-size:14px;font-weight:600;color:#fff;line-height:1.5}
+.msec{background:#0a0a0a;border:1px solid #111;border-radius:18px;padding:24px;margin-bottom:14px}
+.msec-ttl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.msec-ttl::after{content:'';flex:1;height:1px;background:#111}
+.se-wrap{display:flex;flex-wrap:wrap;gap:7px}
+.se-tag{font-size:12px;padding:5px 13px;border-radius:100px;background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.1);color:#f87171;font-weight:500}
+.gen-card{background:linear-gradient(135deg,rgba(52,211,153,.03),transparent);border:1px solid rgba(52,211,153,.1);border-radius:14px;padding:18px}
+.gen-name{font-size:15px;font-weight:700;color:#34d399;margin-bottom:7px}
+.gen-desc{font-size:13px;color:#444;line-height:1.7;margin-bottom:10px}
+.gen-save{font-size:13px;color:#34d399;font-weight:600}
+.warn-box{background:rgba(251,191,36,.03);border:1px solid rgba(251,191,36,.1);border-radius:12px;padding:14px 16px;font-size:13px;color:#92794a;line-height:1.7;margin-top:12px}
+.racts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.rbtn{flex:1;padding:12px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid #1a1a1a;background:#0a0a0a;color:#555;min-width:140px}
+.rbtn:hover{border-color:rgba(201,168,76,.2);color:var(--gl)}
+.sew{display:flex;align-items:center;gap:12px;margin-bottom:12px;margin-top:48px}
+.set{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.ser{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.25),transparent);max-width:70px}
+.stitle{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:7px}
+.sdesc{font-size:14px;color:#444;margin-bottom:22px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.ccard{background:#0a0a0a;border:1px solid #111;border-radius:16px;padding:20px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+.ccard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);opacity:0;transition:opacity .3s}
+.ccard:hover{border-color:#1a1a1a;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.ccard:hover::before{opacity:1}
+.ccico{font-size:22px;margin-bottom:10px;display:block}
+.ccname{font-size:14px;font-weight:700;color:#ddd;margin-bottom:4px}
+.ccuse{font-size:12px;color:#333;margin-bottom:12px;line-height:1.5}
+.ccbtn{font-size:11px;color:var(--gold);font-weight:600;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;padding:0}
+.disc{margin-top:24px;padding:14px 18px;border:1px solid #0d0d0d;border-radius:11px;font-size:12px;color:#1a1a1a;line-height:1.7;text-align:center}
+@media(max-width:900px){
+  .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
+  .wrap{padding:100px 16px 60px}.ptitle{font-size:28px!important}
+  .sbar{flex-direction:column}.mgrid{grid-template-columns:1fr 1fr}
+  .racts{flex-direction:column}.rbtn{min-width:unset;width:100%}
+  .cgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){.mgrid,.cgrid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
+<nav class="nav" id="nav">
+  <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
+  <div class="nav-mid">
+    <a href="index.html">Home</a><a href="symptoms.html">Symptoms</a>
+    <a href="hospitals.html">Hospitals</a><a href="emergency.html">Emergency</a>
+    <a href="medicines.html" class="act">Medicines</a><a href="helplines.html">Helplines</a>
+  </div>
+  <div class="nav-r">
+    <a href="login.html" class="nav-si">Sign in</a>
+    <a href="login.html" class="nav-ct">Get Started →</a>
+  </div>
+  <button class="hbg" id="hbg" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mmenu" id="mmenu">
+  <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+  <a href="symptoms.html" onclick="closeMenu()">🤖 Symptoms</a>
+  <a href="hospitals.html" onclick="closeMenu()">🗺️ Hospitals</a>
+  <a href="emergency.html" onclick="closeMenu()">🚨 Emergency</a>
+  <a href="medicines.html" onclick="closeMenu()">💊 Medicines</a>
+  <a href="helplines.html" onclick="closeMenu()">📞 Helplines</a>
+  <a href="login.html" class="mcta" onclick="closeMenu()">Get Started →</a>
+</div>
 
-  <div class="cursor" id="cursor"></div>
-  <div class="center-glow"></div>
+<div class="wrap">
+  <div class="ai-badge"><div class="ai-dot"></div>Powered by Groq AI — Live</div>
+  <div class="eye">💊 AI Medicine Lookup</div>
+  <h1 class="ptitle"><span>Medicine</span> Information</h1>
+  <p class="psub">Search any medicine to instantly get dosage, uses, side effects and cheaper generic alternatives available in India.</p>
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">
-      <div class="logo-icon">⚕️</div>
-      <span class="logo-text">MediGuide</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="symptoms.html">Symptoms</a>
-      <a href="hospitals.html">Hospitals</a>
-      <a href="emergency.html">Emergency</a>
-      <a href="medicines.html" class="active">Medicines</a>
-      <a href="helplines.html">Helplines</a>
+  <div class="hist-wrap" id="hw">
+    <div class="hist-top">
+      <span class="hist-lbl">Recent Searches</span>
+      <span class="hist-clr" onclick="clearHist()">Clear all</span>
     </div>
-    <div class="nav-right">
-      <a href="login.html" class="nav-signin">Sign in</a>
-      <a href="login.html" class="nav-cta">Get Started →</a>
-    </div>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">🏠 Home</a>
-    <a href="symptoms.html">🤖 Symptom Checker</a>
-    <a href="hospitals.html">🗺️ Find Hospital</a>
-    <a href="emergency.html">🚨 Emergency</a>
-    <a href="medicines.html">💊 Medicines</a>
-    <a href="helplines.html">📞 Helplines</a>
-    <a href="login.html" class="mob-cta">Get Started →</a>
+    <div class="hist-chips" id="hchips"></div>
   </div>
 
-  <div class="page-wrap">
-    <div class="page-eyebrow">💊 AI Medicine Lookup</div>
-    <h1 class="page-title"><span>Medicine</span> Information</h1>
-    <p class="page-sub">Search any medicine to instantly get dosage, uses, side effects and cheaper generic alternatives available in India.</p>
-
-    <div class="history-wrap" id="historyWrap">
-      <div class="history-label">Recent Searches <span class="history-clear" onclick="clearHistory()">Clear all</span></div>
-      <div class="history-chips" id="historyChips"></div>
+  <div class="scard">
+    <label class="flbl">Search Medicine Name</label>
+    <div class="sbar">
+      <input class="sinp" id="mi" placeholder="e.g. Paracetamol, Crocin, Dolo 650, Azithromycin..."/>
+      <button class="bgold" id="sbtn" onclick="searchMed()">💊 Search</button>
     </div>
-
-    <div class="search-card">
-      <label class="field-label">Search Medicine Name</label>
-      <div class="search-bar">
-        <input class="med-input" id="medInput" placeholder="e.g. Paracetamol, Crocin, Dolo 650, Azithromycin..." />
-        <button class="btn-gold" onclick="searchMedicine()" id="searchBtn">💊 Search</button>
-      </div>
-      <span class="popular-label">Popular searches</span>
-      <div class="popular-chips">
-        <div class="pop-chip" onclick="quickSearch('Paracetamol')">Paracetamol</div>
-        <div class="pop-chip" onclick="quickSearch('Azithromycin')">Azithromycin</div>
-        <div class="pop-chip" onclick="quickSearch('Metformin')">Metformin</div>
-        <div class="pop-chip" onclick="quickSearch('Omeprazole')">Omeprazole</div>
-        <div class="pop-chip" onclick="quickSearch('Cetirizine')">Cetirizine</div>
-        <div class="pop-chip" onclick="quickSearch('Ibuprofen')">Ibuprofen</div>
-        <div class="pop-chip" onclick="quickSearch('Amoxicillin')">Amoxicillin</div>
-        <div class="pop-chip" onclick="quickSearch('Atorvastatin')">Atorvastatin</div>
-      </div>
+    <span class="pop-lbl">Popular searches</span>
+    <div class="pchips">
+      <div class="pchip" onclick="quick('Paracetamol')">Paracetamol</div>
+      <div class="pchip" onclick="quick('Azithromycin')">Azithromycin</div>
+      <div class="pchip" onclick="quick('Metformin')">Metformin</div>
+      <div class="pchip" onclick="quick('Omeprazole')">Omeprazole</div>
+      <div class="pchip" onclick="quick('Cetirizine')">Cetirizine</div>
+      <div class="pchip" onclick="quick('Ibuprofen')">Ibuprofen</div>
+      <div class="pchip" onclick="quick('Amoxicillin')">Amoxicillin</div>
+      <div class="pchip" onclick="quick('Atorvastatin')">Atorvastatin</div>
     </div>
+  </div>
 
-    <div class="loading" id="loading"><div class="spinner"></div><p id="loadingMsg">Looking up medicine information...</p></div>
+  <div class="ld" id="ld"><div class="sp"></div><p id="lmsg">Looking up medicine...</p></div>
 
-    <div class="result-wrap" id="resultWrap">
-      <div class="med-hero">
-        <div class="med-hero-top">
-          <div class="med-icon-wrap">💊</div>
-          <div style="flex:1">
-            <div class="med-name-big" id="r-name">—</div>
-            <div class="med-generic-line" id="r-generic">—</div>
-            <div class="med-tags">
-              <span class="med-tag tag-type" id="r-type">—</span>
-              <span class="med-tag tag-rx" id="r-rx">—</span>
-              <span class="med-tag tag-safe" id="r-safe">—</span>
-            </div>
+  <div class="rcard" id="rc">
+    <div class="med-hero">
+      <div class="med-top">
+        <div class="med-ico">💊</div>
+        <div style="flex:1">
+          <div class="med-name" id="mn">—</div>
+          <div class="med-gen" id="mg">—</div>
+          <div class="med-tags">
+            <span class="med-tag tt" id="mt">—</span>
+            <span class="med-tag tr" id="mr">—</span>
+            <span class="med-tag ts" id="ms">—</span>
           </div>
         </div>
-        <div class="med-info-grid">
-          <div class="med-info-item"><div class="med-info-label">Primary Use</div><div class="med-info-val" id="r-use">—</div></div>
-          <div class="med-info-item"><div class="med-info-label">Typical Dosage</div><div class="med-info-val" id="r-dose">—</div></div>
-          <div class="med-info-item"><div class="med-info-label">Available As</div><div class="med-info-val" id="r-form">—</div></div>
-          <div class="med-info-item"><div class="med-info-label">Approx. Price</div><div class="med-info-val" id="r-price">—</div></div>
-        </div>
       </div>
-      <div class="med-section">
-        <div class="med-section-title">Common Side Effects</div>
-        <div class="side-effects-wrap" id="r-sideeffects"></div>
-      </div>
-      <div class="med-section">
-        <div class="med-section-title">Cheaper Generic Alternative</div>
-        <div class="generic-card">
-          <div class="generic-title" id="r-generic-name">—</div>
-          <div class="generic-desc" id="r-generic-desc">—</div>
-          <div class="generic-savings" id="r-savings">—</div>
-        </div>
-        <div class="warning-box" id="r-warning">—</div>
-      </div>
-      <div class="result-actions">
-        <button class="res-btn" onclick="window.location.href='symptoms.html'">🤖 Check Symptoms</button>
-        <button class="res-btn" onclick="window.location.href='hospitals.html'">🗺️ Find Pharmacy</button>
-        <button class="res-btn" onclick="resetSearch()">🔄 Search Another</button>
-        <button class="res-btn" onclick="shareResult()">📤 Share Result</button>
+      <div class="mgrid">
+        <div class="mbox"><div class="mbox-lbl">Primary Use</div><div class="mbox-val" id="mu">—</div></div>
+        <div class="mbox"><div class="mbox-lbl">Typical Dosage</div><div class="mbox-val" id="md">—</div></div>
+        <div class="mbox"><div class="mbox-lbl">Available As</div><div class="mbox-val" id="mf">—</div></div>
+        <div class="mbox"><div class="mbox-lbl">Approx. Price</div><div class="mbox-val" id="mp">—</div></div>
       </div>
     </div>
-
-    <div class="section-eyebrow"><span class="eyebrow-tag">Common Medicines</span><div class="eyebrow-rule"></div></div>
-    <h2 class="section-title">Frequently Used</h2>
-    <p class="section-desc">Most commonly used medicines in Indian households — click any to look up instantly.</p>
-    <div class="common-grid">
-      <div class="common-card" onclick="quickSearch('Paracetamol')"><span class="common-icon">🌡️</span><div class="common-name">Paracetamol</div><div class="common-use">Fever, headache, mild to moderate pain relief</div><button class="common-btn">Look up instantly →</button></div>
-      <div class="common-card" onclick="quickSearch('Ibuprofen')"><span class="common-icon">💊</span><div class="common-name">Ibuprofen</div><div class="common-use">Pain, inflammation, fever, menstrual cramps</div><button class="common-btn">Look up instantly →</button></div>
-      <div class="common-card" onclick="quickSearch('Omeprazole')"><span class="common-icon">🫃</span><div class="common-name">Omeprazole</div><div class="common-use">Acidity, GERD, stomach ulcers relief</div><button class="common-btn">Look up instantly →</button></div>
-      <div class="common-card" onclick="quickSearch('Cetirizine')"><span class="common-icon">🤧</span><div class="common-name">Cetirizine</div><div class="common-use">Allergies, runny nose, skin rashes, itching</div><button class="common-btn">Look up instantly →</button></div>
-      <div class="common-card" onclick="quickSearch('Azithromycin')"><span class="common-icon">🦠</span><div class="common-name">Azithromycin</div><div class="common-use">Bacterial infections — throat, chest, skin</div><button class="common-btn">Look up instantly →</button></div>
-      <div class="common-card" onclick="quickSearch('Metformin')"><span class="common-icon">🩸</span><div class="common-name">Metformin</div><div class="common-use">Type 2 diabetes — controls blood sugar levels</div><button class="common-btn">Look up instantly →</button></div>
+    <div class="msec">
+      <div class="msec-ttl">Common Side Effects</div>
+      <div class="se-wrap" id="mse"></div>
     </div>
-    <div class="disclaimer">⚠️ MediGuide provides general medicine information only. Always consult a registered doctor or pharmacist before taking any medication. Do not self-medicate.</div>
+    <div class="msec">
+      <div class="msec-ttl">Cheaper Generic Alternative</div>
+      <div class="gen-card">
+        <div class="gen-name" id="mgn">—</div>
+        <div class="gen-desc" id="mgd">—</div>
+        <div class="gen-save" id="mgs">—</div>
+      </div>
+      <div class="warn-box" id="mw">—</div>
+    </div>
+    <div class="racts">
+      <button class="rbtn" onclick="location.href='symptoms.html'">🤖 Check Symptoms</button>
+      <button class="rbtn" onclick="location.href='hospitals.html'">🗺️ Find Pharmacy</button>
+      <button class="rbtn" onclick="resetSearch()">🔄 Search Another</button>
+    </div>
   </div>
 
-  <script>
-    let searchHistory = JSON.parse(localStorage.getItem('med_history') || '[]');
+  <div class="sew"><span class="set">Common Medicines</span><div class="ser"></div></div>
+  <h2 class="stitle">Frequently Used</h2>
+  <p class="sdesc">Most commonly used medicines in Indian households — click any to look up instantly.</p>
+  <div class="cgrid">
+    <div class="ccard" onclick="quick('Paracetamol')"><span class="ccico">🌡️</span><div class="ccname">Paracetamol</div><div class="ccuse">Fever, headache, mild to moderate pain relief</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Ibuprofen')"><span class="ccico">💊</span><div class="ccname">Ibuprofen</div><div class="ccuse">Pain, inflammation, fever, menstrual cramps</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Omeprazole')"><span class="ccico">🫃</span><div class="ccname">Omeprazole</div><div class="ccuse">Acidity, GERD, stomach ulcers</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Cetirizine')"><span class="ccico">🤧</span><div class="ccname">Cetirizine</div><div class="ccuse">Allergies, runny nose, skin rashes, itching</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Azithromycin')"><span class="ccico">🦠</span><div class="ccname">Azithromycin</div><div class="ccuse">Bacterial infections — throat, chest, skin</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Metformin')"><span class="ccico">🩸</span><div class="ccname">Metformin</div><div class="ccuse">Type 2 diabetes blood sugar control</div><button class="ccbtn">Look up instantly →</button></div>
+  </div>
+  <div class="disc">⚠️ MediGuide provides general medicine information only. Always consult a registered doctor or pharmacist before taking any medication.</div>
+</div>
 
-    document.addEventListener('mousemove', e => { document.getElementById('cursor').style.left = e.clientX + 'px'; document.getElementById('cursor').style.top = e.clientY + 'px'; });
+<script>
+const GROQ_KEY='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';
+let hist=JSON.parse(localStorage.getItem('med_hist')||'[]');
 
-    function showToast(msg, type = 'success') {
-      const existing = document.querySelector('.toast-msg'); if (existing) existing.remove();
-      const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
-      toast.style.cssText = `position: fixed; bottom: 32px; right: 32px; z-index: 99999; background: ${type === 'success' ? 'rgba(52,211,153,0.12)' : type === 'error' ? 'rgba(248,113,113,0.12)' : 'rgba(201,168,76,0.12)'}; border: 1px solid ${type === 'success' ? 'rgba(52,211,153,0.3)' : type === 'error' ? 'rgba(248,113,113,0.3)' : 'rgba(201,168,76,0.3)'}; color: ${type === 'success' ? '#34d399' : type === 'error' ? '#f87171' : '#c9a84c'}; padding: 14px 24px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;`;
-      document.body.appendChild(toast); setTimeout(() => toast.remove(), 3500);
-    }
-    const s = document.createElement('style'); s.textContent = `@keyframes toastIn { from { opacity:0; transform: translateY(20px) scale(0.9); } to { opacity:1; transform: translateY(0) scale(1); } }`; document.head.appendChild(s);
+function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
+function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
+window.addEventListener('scroll',()=>{document.getElementById('nav').style.background=window.scrollY>50?'rgba(0,0,0,.98)':'rgba(0,0,0,.92)';closeMenu()})
 
-    window.addEventListener('scroll', () => {
-      const nav = document.querySelector('.navbar');
-      nav.style.background = window.scrollY > 50 ? 'rgba(4,4,12,0.98)' : 'rgba(4,4,12,0.85)';
-      nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(201,168,76,0.15)' : 'rgba(201,168,76,0.08)';
-      document.getElementById('hamburger').classList.remove('open');
-      document.getElementById('mobileMenu').classList.remove('open');
+function toast(msg,type='g'){
+  const ex=document.querySelector('.tm');if(ex)ex.remove();
+  const t=document.createElement('div');t.className='tm';t.textContent=msg;
+  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${type==='e'?'rgba(248,113,113,.1)':type==='s'?'rgba(52,211,153,.1)':'rgba(201,168,76,.1)'};border:1px solid ${type==='e'?'rgba(248,113,113,.3)':type==='s'?'rgba(52,211,153,.3)':'rgba(201,168,76,.3)'};color:${type==='e'?'#f87171':type==='s'?'#34d399':'#c9a84c'};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s cubic-bezier(.34,1.56,.64,1) both`;
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}} @keyframes gsh{to{background-position:200% center}} @keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3500)
+}
+
+function renderHist(){
+  if(hist.length===0){document.getElementById('hw').classList.remove('on');return}
+  document.getElementById('hw').classList.add('on');
+  document.getElementById('hchips').innerHTML=hist.slice(0,6).map(h=>`<div class="hchip" onclick="quick('${h}')">🕐 ${h}</div>`).join('');
+}
+function addHist(name){hist=[name,...hist.filter(h=>h!==name)].slice(0,8);localStorage.setItem('med_hist',JSON.stringify(hist));renderHist()}
+function clearHist(){hist=[];localStorage.removeItem('med_hist');renderHist();toast('🗑️ History cleared')}
+renderHist();
+
+const lms=['Looking up medicine...','Checking dosage database...','Finding generic alternatives...','Almost ready...'];
+let li=0,lt;
+function startL(){li=0;document.getElementById('lmsg').textContent=lms[0];lt=setInterval(()=>{li=(li+1)%lms.length;document.getElementById('lmsg').textContent=lms[li]},1200)}
+function stopL(){clearInterval(lt)}
+
+function quick(name){document.getElementById('mi').value=name;searchMed()}
+function resetSearch(){document.getElementById('rc').classList.remove('on');document.getElementById('mi').value='';window.scrollTo({top:0,behavior:'smooth'});toast('🔄 Search another medicine')}
+
+document.getElementById('mi').addEventListener('keydown',e=>{if(e.key==='Enter')searchMed()})
+
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}}),{threshold:.1})
+document.querySelectorAll('.ccard').forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition=`opacity .5s ease ${i*.07}s,transform .5s ease ${i*.07}s`;obs.observe(el)})
+
+async function searchMed(){
+  const med=document.getElementById('mi').value.trim();
+  if(!med){toast('⚠️ Please enter a medicine name','e');return}
+  if(med.length<2){toast('⚠️ Please enter at least 2 characters','e');return}
+
+  const btn=document.getElementById('sbtn');
+  btn.disabled=true;
+  document.getElementById('ld').classList.add('on');
+  document.getElementById('rc').classList.remove('on');
+  startL();
+  toast('💊 Looking up '+med+'...');
+
+  const prompt=`You are MediGuide, an AI medical assistant for India. Give information about the medicine: "${med}". Respond ONLY as valid JSON with no extra text: {"name":"brand/generic name","generic":"Salt: generic name","type":"medicine category","rx":"OTC or Prescription Required","safe":"Generally Safe or Use with Caution","use":"primary use in simple words","dose":"typical adult dosage","form":"tablet/syrup/injection/cream","price":"approximate Indian MRP price","sideEffects":["effect1","effect2","effect3","effect4","effect5"],"genericName":"cheaper generic alternative available in India","genericDesc":"why this generic works the same and where to find it in India","savings":"save X% vs branded","warning":"one important warning for Indian patients"}`;
+
+  try{
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      body:JSON.stringify({
+        model:'llama3-8b-8192',
+        messages:[
+          {role:'system',content:'You are a medical AI assistant. Always respond with valid JSON only. No markdown, no extra text, no code blocks.'},
+          {role:'user',content:prompt}
+        ],
+        temperature:0.2,
+        max_tokens:600
+      })
     });
 
-    function toggleMenu() { document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
-    document.querySelectorAll('.mobile-menu a').forEach(a => { a.addEventListener('click', () => { document.getElementById('hamburger').classList.remove('open'); document.getElementById('mobileMenu').classList.remove('open'); }); });
+    const data=await res.json();
+    if(!res.ok){throw new Error(data.error?.message||'API error')}
 
-    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } }); }, { threshold: 0.1 });
-    document.querySelectorAll('.common-card, .search-card').forEach((el, i) => { el.style.opacity = '0'; el.style.transform = 'translateY(24px)'; el.style.transition = `opacity 0.5s ease ${i * 0.08}s, transform 0.5s ease ${i * 0.08}s`; observer.observe(el); });
+    const text=data.choices[0].message.content.trim();
+    const clean=text.replace(/```json|```/g,'').trim();
+    const p=JSON.parse(clean);
 
-    function renderHistory() {
-      if (searchHistory.length === 0) { document.getElementById('historyWrap').classList.remove('show'); return; }
-      document.getElementById('historyWrap').classList.add('show');
-      document.getElementById('historyChips').innerHTML = searchHistory.slice(0, 6).map(h => `<div class="history-chip" onclick="quickSearch('${h}')">🕐 ${h}</div>`).join('');
-    }
-    function addToHistory(name) { searchHistory = [name, ...searchHistory.filter(h => h !== name)].slice(0, 8); localStorage.setItem('med_history', JSON.stringify(searchHistory)); renderHistory(); }
-    function clearHistory() { searchHistory = []; localStorage.removeItem('med_history'); renderHistory(); showToast('🗑️ Search history cleared', 'gold'); }
-    renderHistory();
+    document.getElementById('mn').textContent=p.name||med;
+    document.getElementById('mg').textContent=p.generic||'Generic info unavailable';
+    document.getElementById('mt').textContent=p.type||'Medicine';
+    document.getElementById('mr').textContent=p.rx||'Consult Pharmacist';
+    document.getElementById('ms').textContent=p.safe||'Use with Caution';
+    document.getElementById('mu').textContent=p.use||'—';
+    document.getElementById('md').textContent=p.dose||'As prescribed';
+    document.getElementById('mf').textContent=p.form||'Varies';
+    document.getElementById('mp').textContent=p.price||'Check at pharmacy';
+    document.getElementById('mgn').textContent='💚 '+(p.genericName||'Ask your pharmacist');
+    document.getElementById('mgd').textContent=p.genericDesc||'A pharmacist can recommend a generic alternative.';
+    document.getElementById('mgs').textContent='💰 '+(p.savings||'Generics save 40-80% vs branded');
+    document.getElementById('mw').textContent='⚠️ '+(p.warning||'Always consult a doctor before taking any medicine.');
 
-    const loadingMsgs = ['Looking up medicine information...', 'Checking dosage database...', 'Finding generic alternatives...', 'Almost ready...'];
-    let msgIndex = 0, msgTimer;
-    function startLoading() { msgIndex = 0; document.getElementById('loadingMsg').textContent = loadingMsgs[0]; msgTimer = setInterval(() => { msgIndex = (msgIndex + 1) % loadingMsgs.length; document.getElementById('loadingMsg').textContent = loadingMsgs[msgIndex]; }, 1200); }
-    function stopLoading() { clearInterval(msgTimer); }
+    const seWrap=document.getElementById('mse');
+    seWrap.innerHTML='';
+    (p.sideEffects||['Consult doctor for details']).forEach(se=>{
+      const tag=document.createElement('div');tag.className='se-tag';tag.textContent=se;seWrap.appendChild(tag);
+    });
 
-    function quickSearch(name) { document.getElementById('medInput').value = name; searchMedicine(); }
-    function resetSearch() { document.getElementById('resultWrap').classList.remove('show'); document.getElementById('medInput').value = ''; showToast('🔄 Cleared — search another medicine', 'gold'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    function shareResult() { const name = document.getElementById('r-name').textContent; const use = document.getElementById('r-use').textContent; const text = `MediGuide — ${name}\nUse: ${use}\nCheck more at MediGuide India`; if (navigator.share) { navigator.share({ title: 'MediGuide — ' + name, text }); } else { navigator.clipboard.writeText(text).then(() => showToast('📋 Medicine info copied!', 'gold')); } }
+    addHist(p.name||med);
+    toast('✅ Medicine info loaded!','s');
 
-    function validateSearch() {
-      const val = document.getElementById('medInput').value.trim();
-      if (!val) { showToast('⚠️ Please enter a medicine name first', 'error'); document.getElementById('medInput').focus(); document.getElementById('medInput').style.borderColor = 'rgba(248,113,113,0.4)'; setTimeout(() => document.getElementById('medInput').style.borderColor = '', 2000); return false; }
-      if (val.length < 3) { showToast('⚠️ Please enter at least 3 characters', 'error'); return false; }
-      return true;
-    }
+  }catch(e){
+    console.log('Groq error:',e);
+    document.getElementById('mn').textContent=med;
+    document.getElementById('mg').textContent='Salt information unavailable';
+    document.getElementById('mt').textContent='Medicine';
+    document.getElementById('mr').textContent='Consult Pharmacist';
+    document.getElementById('ms').textContent='Use with Caution';
+    document.getElementById('mu').textContent='Please consult a pharmacist for complete information.';
+    document.getElementById('md').textContent='As prescribed by doctor';
+    document.getElementById('mf').textContent='Varies';
+    document.getElementById('mp').textContent='Check at pharmacy';
+    document.getElementById('mgn').textContent='💚 Ask your pharmacist';
+    document.getElementById('mgd').textContent='A pharmacist can recommend a generic alternative that costs significantly less than the branded version.';
+    document.getElementById('mgs').textContent='💰 Generics can save 40-80% vs branded';
+    document.getElementById('mw').textContent='⚠️ Always consult a registered doctor before taking any medicine. Do not self-medicate.';
+    document.getElementById('mse').innerHTML='<div class="se-tag">Consult doctor for details</div>';
+    toast('⚠️ Using offline info','e');
+  }
 
-    async function searchMedicine() {
-      if (!validateSearch()) return;
-      const med = document.getElementById('medInput').value.trim();
-      document.getElementById('loading').classList.add('show');
-      document.getElementById('resultWrap').classList.remove('show');
-      startLoading();
-      showToast('💊 Looking up ' + med + '...', 'gold');
+  btn.disabled=false;
+  stopL();
+  document.getElementById('ld').classList.remove('on');
+  document.getElementById('rc').classList.add('on');
+  setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
+}
 
-      const prompt = `You are MediGuide, an AI medical assistant for India. Give information about: "${med}". Respond ONLY as valid JSON: {"name":"brand name","generic":"Salt: generic name","type":"medicine category","rx":"OTC or Prescription Required","safe":"Generally Safe or Use with Caution","use":"primary use in simple words","dose":"typical adult dosage","form":"tablet/syrup/injection/cream","price":"approximate Indian price","sideEffects":["effect1","effect2","effect3","effect4","effect5"],"genericName":"cheaper generic alternative name available in India","genericDesc":"why this generic works the same and where to find it","savings":"save X% vs branded","warning":"one key warning for Indian patients"}`;
-
-      try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 800, messages: [{ role: 'user', content: prompt }] }) });
-        const data = await res.json();
-        const parsed = JSON.parse(data.content[0].text.replace(/```json|```/g, '').trim());
-        document.getElementById('r-name').textContent = parsed.name;
-        document.getElementById('r-generic').textContent = parsed.generic;
-        document.getElementById('r-type').textContent = parsed.type;
-        document.getElementById('r-rx').textContent = parsed.rx;
-        document.getElementById('r-safe').textContent = parsed.safe;
-        document.getElementById('r-use').textContent = parsed.use;
-        document.getElementById('r-dose').textContent = parsed.dose;
-        document.getElementById('r-form').textContent = parsed.form;
-        document.getElementById('r-price').textContent = parsed.price;
-        document.getElementById('r-generic-name').textContent = '💚 ' + parsed.genericName;
-        document.getElementById('r-generic-desc').textContent = parsed.genericDesc;
-        document.getElementById('r-savings').textContent = '💰 ' + parsed.savings;
-        document.getElementById('r-warning').textContent = '⚠️ ' + parsed.warning;
-        const seWrap = document.getElementById('r-sideeffects'); seWrap.innerHTML = '';
-        parsed.sideEffects.forEach(se => { const tag = document.createElement('div'); tag.className = 'side-tag'; tag.textContent = se; seWrap.appendChild(tag); });
-        addToHistory(parsed.name);
-        showToast('✅ Medicine info loaded!', 'success');
-      } catch {
-        document.getElementById('r-name').textContent = med;
-        document.getElementById('r-generic').textContent = 'Salt information unavailable';
-        document.getElementById('r-type').textContent = 'Medicine';
-        document.getElementById('r-rx').textContent = 'Consult Pharmacist';
-        document.getElementById('r-safe').textContent = 'Use with Caution';
-        document.getElementById('r-use').textContent = 'Please consult a pharmacist for complete information.';
-        document.getElementById('r-dose').textContent = 'As prescribed by doctor';
-        document.getElementById('r-form').textContent = 'Varies';
-        document.getElementById('r-price').textContent = 'Check at pharmacy';
-        document.getElementById('r-generic-name').textContent = '💚 Ask your pharmacist';
-        document.getElementById('r-generic-desc').textContent = 'A pharmacist can recommend a generic alternative that costs significantly less than the branded version.';
-        document.getElementById('r-savings').textContent = '💰 Generics can save 40–80% vs branded';
-        document.getElementById('r-warning').textContent = '⚠️ Always consult a registered doctor before taking any medicine.';
-        document.getElementById('r-sideeffects').innerHTML = '<div class="side-tag">Consult doctor for details</div>';
-        showToast('⚠️ AI offline — showing general info', 'error');
-      }
-
-      stopLoading();
-      document.getElementById('loading').classList.remove('show');
-      document.getElementById('resultWrap').classList.add('show');
-      setTimeout(() => { document.getElementById('resultWrap').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
-    }
-
-    document.getElementById('medInput').addEventListener('keydown', e => { if (e.key === 'Enter') searchMedicine(); });
-    setTimeout(() => showToast('💊 Medicine lookup ready!', 'gold'), 1500);
-  </script>
+setTimeout(()=>toast('💊 Groq AI Medicine Lookup ready!'),1500);
+</script>
 </body>
 </html>
