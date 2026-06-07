@@ -238,7 +238,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <script>
-const GROQ_KEY='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';
 let hist=JSON.parse(localStorage.getItem('med_hist')||'[]');
 
 function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
@@ -269,7 +268,6 @@ function stopL(){clearInterval(lt)}
 
 function quick(name){document.getElementById('mi').value=name;searchMed()}
 function resetSearch(){document.getElementById('rc').classList.remove('on');document.getElementById('mi').value='';window.scrollTo({top:0,behavior:'smooth'});toast('🔄 Search another medicine')}
-
 document.getElementById('mi').addEventListener('keydown',e=>{if(e.key==='Enter')searchMed()})
 
 const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}}),{threshold:.1})
@@ -279,7 +277,6 @@ async function searchMed(){
   const med=document.getElementById('mi').value.trim();
   if(!med){toast('⚠️ Please enter a medicine name','e');return}
   if(med.length<2){toast('⚠️ Please enter at least 2 characters','e');return}
-
   const btn=document.getElementById('sbtn');
   btn.disabled=true;
   document.getElementById('ld').classList.add('on');
@@ -290,11 +287,10 @@ async function searchMed(){
   const prompt=`You are MediGuide, an AI medical assistant for India. Give information about the medicine: "${med}". Respond ONLY as valid JSON with no extra text: {"name":"brand/generic name","generic":"Salt: generic name","type":"medicine category","rx":"OTC or Prescription Required","safe":"Generally Safe or Use with Caution","use":"primary use in simple words","dose":"typical adult dosage","form":"tablet/syrup/injection/cream","price":"approximate Indian MRP price","sideEffects":["effect1","effect2","effect3","effect4","effect5"],"genericName":"cheaper generic alternative available in India","genericDesc":"why this generic works the same and where to find it in India","savings":"save X% vs branded","warning":"one important warning for Indian patients"}`;
 
   try{
-    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    const res=await fetch('/api/groq',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'llama3-8b-8192',
         messages:[
           {role:'system',content:'You are a medical AI assistant. Always respond with valid JSON only. No markdown, no extra text, no code blocks.'},
           {role:'user',content:prompt}
@@ -303,14 +299,11 @@ async function searchMed(){
         max_tokens:600
       })
     });
-
     const data=await res.json();
-    if(!res.ok){throw new Error(data.error?.message||'API error')}
-
+    if(!res.ok){throw new Error(data.error||'API error')}
     const text=data.choices[0].message.content.trim();
     const clean=text.replace(/```json|```/g,'').trim();
     const p=JSON.parse(clean);
-
     document.getElementById('mn').textContent=p.name||med;
     document.getElementById('mg').textContent=p.generic||'Generic info unavailable';
     document.getElementById('mt').textContent=p.type||'Medicine';
@@ -324,18 +317,12 @@ async function searchMed(){
     document.getElementById('mgd').textContent=p.genericDesc||'A pharmacist can recommend a generic alternative.';
     document.getElementById('mgs').textContent='💰 '+(p.savings||'Generics save 40-80% vs branded');
     document.getElementById('mw').textContent='⚠️ '+(p.warning||'Always consult a doctor before taking any medicine.');
-
-    const seWrap=document.getElementById('mse');
-    seWrap.innerHTML='';
-    (p.sideEffects||['Consult doctor for details']).forEach(se=>{
-      const tag=document.createElement('div');tag.className='se-tag';tag.textContent=se;seWrap.appendChild(tag);
-    });
-
+    const seWrap=document.getElementById('mse');seWrap.innerHTML='';
+    (p.sideEffects||['Consult doctor for details']).forEach(se=>{const tag=document.createElement('div');tag.className='se-tag';tag.textContent=se;seWrap.appendChild(tag)});
     addHist(p.name||med);
     toast('✅ Medicine info loaded!','s');
-
   }catch(e){
-    console.log('Groq error:',e);
+    console.log('Error:',e);
     document.getElementById('mn').textContent=med;
     document.getElementById('mg').textContent='Salt information unavailable';
     document.getElementById('mt').textContent='Medicine';
@@ -346,20 +333,18 @@ async function searchMed(){
     document.getElementById('mf').textContent='Varies';
     document.getElementById('mp').textContent='Check at pharmacy';
     document.getElementById('mgn').textContent='💚 Ask your pharmacist';
-    document.getElementById('mgd').textContent='A pharmacist can recommend a generic alternative that costs significantly less than the branded version.';
+    document.getElementById('mgd').textContent='A pharmacist can recommend a generic alternative that costs less than the branded version.';
     document.getElementById('mgs').textContent='💰 Generics can save 40-80% vs branded';
-    document.getElementById('mw').textContent='⚠️ Always consult a registered doctor before taking any medicine. Do not self-medicate.';
+    document.getElementById('mw').textContent='⚠️ Always consult a registered doctor before taking any medicine.';
     document.getElementById('mse').innerHTML='<div class="se-tag">Consult doctor for details</div>';
     toast('⚠️ Using offline info','e');
   }
-
   btn.disabled=false;
   stopL();
   document.getElementById('ld').classList.remove('on');
   document.getElementById('rc').classList.add('on');
   setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
 }
-
 setTimeout(()=>toast('💊 Groq AI Medicine Lookup ready!'),1500);
 </script>
 </body>
