@@ -44,6 +44,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 @keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes gsh{to{background-position:200% center}}
 @keyframes sp{to{transform:rotate(360deg)}}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
+.ai-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);color:#34d399;font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px;margin-bottom:20px}
+.ai-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
 .fcard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:22px;padding:32px;margin-bottom:18px}
 .lrow{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
 .llbl{font-size:11px;color:#333;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
@@ -82,9 +85,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .rbtn{flex:1;padding:12px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid #1a1a1a;background:#0a0a0a;color:#555;min-width:120px}
 .rbtn:hover{border-color:rgba(201,168,76,.2);color:var(--gl)}
 .disc{margin-top:18px;padding:14px 18px;border:1px solid #0d0d0d;border-radius:11px;font-size:12px;color:#1a1a1a;line-height:1.7;text-align:center}
-.ai-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);color:#34d399;font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px;margin-bottom:20px}
-.ai-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
-@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
 @media(max-width:900px){
   .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
   .wrap{padding:100px 16px 60px}.ptitle{font-size:28px!important}
@@ -121,7 +121,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <svg class="ecg" viewBox="0 0 800 36" preserveAspectRatio="none">
     <polyline class="ecgp" points="0,18 80,18 110,18 124,2 138,34 152,6 166,30 180,18 260,18 290,18 304,2 318,34 332,6 346,30 360,18 440,18 470,18 484,2 498,34 512,6 526,30 540,18 620,18 650,18 664,2 678,34 692,6 706,30 720,18 800,18"/>
   </svg>
-
   <div class="ai-badge"><div class="ai-dot"></div>Powered by Groq AI — Live</div>
   <div class="eye">⚕️ AI Symptom Checker</div>
   <h1 class="ptitle">AI <span>Symptom</span> Checker</h1>
@@ -154,10 +153,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <button class="bgold" id="abtn" onclick="check()">🤖 Analyse Symptoms with AI</button>
   </div>
 
-  <div class="ld" id="ld">
-    <div class="sp"></div>
-    <p id="lmsg">Analysing your symptoms...</p>
-  </div>
+  <div class="ld" id="ld"><div class="sp"></div><p id="lmsg">Analysing your symptoms...</p></div>
 
   <div class="rcard" id="rc">
     <div class="rtop">
@@ -185,7 +181,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 <script>
 let lang='en';
-const GROQ_KEY='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';
 
 function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
 function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
@@ -200,7 +195,7 @@ function toast(msg,type='g'){
 }
 
 const ct={
-  en:{ph:'e.g. I have had a fever and severe headache for 2 days, feeling very weak...',ttl:'AI <span>Symptom</span> Checker',sub:"Describe what you're feeling. Our AI tells you which doctor to see, how urgent it is.",lbl:'Describe your symptoms',hint:'💡 Mention duration, severity and any other details',cl:'Quick add symptoms',btn:'🤖 Analyse Symptoms with AI'},
+  en:{ph:'e.g. I have had a fever and severe headache for 2 days...',ttl:'AI <span>Symptom</span> Checker',sub:"Describe what you're feeling. Our AI tells you which doctor to see.",lbl:'Describe your symptoms',hint:'💡 Mention duration, severity and any other details',cl:'Quick add symptoms',btn:'🤖 Analyse Symptoms with AI'},
   hi:{ph:'जैसे: मुझे 2 दिन से तेज़ बुखार और सिरदर्द है...',ttl:'AI <span>लक्षण</span> जाँच',sub:'अपनी तकलीफ बताएं। AI बताएगा कि कौन सा डॉक्टर दिखाएं।',lbl:'अपने लक्षण बताएं',hint:'💡 कितने दिन से है, कितना दर्द है — ये बताएं',cl:'जल्दी जोड़ें',btn:'🤖 AI से लक्षण जाँचें'}
 };
 
@@ -252,25 +247,26 @@ let li=0,lt;
 function startL(){li=0;document.getElementById('lmsg').textContent=lms[0];lt=setInterval(()=>{li=(li+1)%lms.length;document.getElementById('lmsg').textContent=lms[li]},1200)}
 function stopL(){clearInterval(lt)}
 
-// ===== SMART FALLBACK =====
 function smartFallback(s){
   s=s.toLowerCase();
   let specialist='General Physician',urgency='Medium',condition='General illness',action='Visit a clinic soon',advice='Based on your symptoms, we recommend visiting a general physician at your nearest clinic. Carry your Aadhaar card and any previous prescriptions.';
   if(s.includes('chest pain')||s.includes('heart')){specialist='Cardiologist';urgency='High';condition='Possible cardiac issue';action='Go to emergency immediately';advice='Chest pain can be serious. Go to the nearest emergency room immediately. Call 108 for an ambulance. Do not drive yourself.'}
   else if(s.includes('fever')&&s.includes('headache')){specialist='General Physician';urgency='Medium';condition='Viral fever or dengue';action='Visit a doctor today';advice='Fever with headache could indicate viral infection or dengue. Stay hydrated, take paracetamol, and get a CBC blood test done today.'}
-  else if(s.includes('fever')){specialist='General Physician';urgency='Medium';condition='Viral or bacterial fever';action='Visit a clinic within 24 hours';advice='Drink plenty of fluids and rest. Take paracetamol for fever. If fever persists beyond 3 days or goes above 104°F, visit a doctor immediately.'}
-  else if(s.includes('breath')||s.includes('breathing')){specialist='Pulmonologist';urgency='High';condition='Respiratory distress';action='Seek emergency care immediately';advice='Difficulty breathing is serious. Go to the nearest hospital emergency immediately. Call 108 if breathing is very difficult.'}
-  else if(s.includes('headache')||s.includes('migraine')){specialist='Neurologist';urgency='Low';condition='Tension headache or migraine';action='Rest and take pain relief';advice='Rest in a dark room. Drink water as dehydration causes headaches. Take paracetamol. If very severe or sudden, go to emergency.'}
-  else if(s.includes('stomach')||s.includes('vomit')||s.includes('diarrhea')){specialist='Gastroenterologist';urgency='Medium';condition='Gastric infection';action='Visit a doctor today';advice='Stay hydrated with ORS water. Avoid spicy food. Take ORS sachets. If vomiting blood, seek emergency care immediately.'}
-  return {specialist,urgency,condition,action,advice};
+  else if(s.includes('fever')){specialist='General Physician';urgency='Medium';condition='Viral or bacterial fever';action='Visit a clinic within 24 hours';advice='Drink plenty of fluids and rest. Take paracetamol for fever. If fever persists beyond 3 days or exceeds 104°F, see a doctor immediately.'}
+  else if(s.includes('breath')){specialist='Pulmonologist';urgency='High';condition='Respiratory distress';action='Seek emergency care immediately';advice='Difficulty breathing is serious. Go to the nearest hospital emergency immediately. Call 108 if very difficult.'}
+  else if(s.includes('headache')||s.includes('migraine')){specialist='Neurologist';urgency='Low';condition='Tension headache or migraine';action='Rest and take pain relief';advice='Rest in a dark room. Drink water. Take paracetamol. If very severe or sudden, go to emergency.'}
+  else if(s.includes('stomach')||s.includes('vomit')||s.includes('diarrhea')){specialist='Gastroenterologist';urgency='Medium';condition='Gastric infection';action='Visit a doctor today';advice='Stay hydrated with ORS water. Avoid spicy food. If vomiting blood, seek emergency care immediately.'}
+  else if(s.includes('back')){specialist='Orthopaedic Surgeon';urgency='Low';condition='Musculoskeletal back pain';action='Rest and apply heat';advice='Rest and apply a warm cloth. Avoid lifting heavy objects. Take ibuprofen for pain. If pain radiates to legs, see an orthopaedic surgeon.'}
+  else if(s.includes('joint')||s.includes('knee')){specialist='Orthopaedic Surgeon';urgency='Low';condition='Joint pain or arthritis';action='Visit an orthopaedic surgeon';advice='Apply ice for first 48 hours then heat. Take anti-inflammatory medicine. Visit an orthopaedic surgeon if pain persists.'}
+  else if(s.includes('cough')){specialist='General Physician';urgency='Low';condition='Upper respiratory infection';action='Rest and stay hydrated';advice='Drink warm water with honey and ginger. Steam inhalation helps. If cough persists beyond 2 weeks, visit a pulmonologist.'}
+  else if(s.includes('dizzy')||s.includes('dizziness')){specialist='Neurologist';urgency='Medium';condition='Vertigo or inner ear issue';action='Sit down immediately';advice='Sit or lie down to avoid falling. Avoid sudden head movements. Stay hydrated. If severe, go to emergency.'}
+  return{specialist,urgency,condition,action,advice};
 }
 
-// ===== MAIN AI FUNCTION =====
 async function check(){
   const v=document.getElementById('si').value.trim();
   if(!v){toast('⚠️ Please describe your symptoms first','e');document.getElementById('si').style.borderColor='rgba(248,113,113,.4)';setTimeout(()=>document.getElementById('si').style.borderColor='',2000);return}
   if(v.length<10){toast('⚠️ Please describe in more detail','e');return}
-
   const btn=document.getElementById('abtn');
   btn.disabled=true;
   document.getElementById('ld').classList.add('on');
@@ -278,14 +274,13 @@ async function check(){
   startL();
   toast('🤖 AI is analysing your symptoms...');
 
-  const prompt=`You are MediGuide, an expert AI medical assistant for India. A patient says: "${v}". Respond in ${lang==='hi'?'Hindi':'English'} ONLY as valid JSON with no extra text: {"specialist":"specific doctor type","urgency":"Low or Medium or High","condition":"likely condition in 3-5 words","action":"specific next step in one line","advice":"2-3 sentences of practical advice for an Indian patient mentioning Aadhaar card or government hospital if relevant"}`;
+  const prompt=`You are MediGuide, an expert AI medical assistant for India. A patient says: "${v}". Respond in ${lang==='hi'?'Hindi':'English'} ONLY as valid JSON with no extra text: {"specialist":"specific doctor type","urgency":"Low or Medium or High","condition":"likely condition in 3-5 words","action":"specific next step in one line","advice":"2-3 sentences of practical advice for an Indian patient"}`;
 
   try{
-    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    const res=await fetch('/api/groq',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'llama3-8b-8192',
         messages:[
           {role:'system',content:'You are a medical AI assistant for India. Always respond with valid JSON only. No markdown, no extra text.'},
           {role:'user',content:prompt}
@@ -294,28 +289,21 @@ async function check(){
         max_tokens:400
       })
     });
-
     const data=await res.json();
-
-    if(!res.ok){throw new Error(data.error?.message||'API error')}
-
+    if(!res.ok){throw new Error(data.error||'API error')}
     const text=data.choices[0].message.content.trim();
     const clean=text.replace(/```json|```/g,'').trim();
     const parsed=JSON.parse(clean);
-
     document.getElementById('rsp').textContent=parsed.specialist||'General Physician';
     document.getElementById('rco').textContent=parsed.condition||'Needs evaluation';
     document.getElementById('rac').textContent=parsed.action||'Visit a doctor soon';
     document.getElementById('radv').textContent=parsed.advice||'Please consult a doctor.';
-
     const u=document.getElementById('rug');
     u.textContent=parsed.urgency||'Medium';
     u.className='rval '+(parsed.urgency==='High'?'uhigh':parsed.urgency==='Medium'?'umid':'ulow');
-
     toast('✅ AI Analysis complete!','s');
-
   }catch(e){
-    console.log('Groq error:',e);
+    console.log('Error:',e);
     const fb=smartFallback(v);
     document.getElementById('rsp').textContent=fb.specialist;
     document.getElementById('rco').textContent=fb.condition;
@@ -326,14 +314,12 @@ async function check(){
     u.className='rval '+(fb.urgency==='High'?'uhigh':fb.urgency==='Medium'?'umid':'ulow');
     toast('⚠️ Using smart fallback analysis','e');
   }
-
   btn.disabled=false;
   stopL();
   document.getElementById('ld').classList.remove('on');
   document.getElementById('rc').classList.add('on');
   setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
 }
-
 setTimeout(()=>toast('🤖 Groq AI Symptom Checker ready!'),1500);
 </script>
 </body>
