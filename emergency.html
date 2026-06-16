@@ -1,344 +1,547 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emergency — MediGuide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --gold: #c9a84c; --gold-light: #f0d080; --gold-dim: #8a6f2e; --bg: #04040c; --card: #08081a; --border: #12122a; --text: #e8e8f8; --muted: #5a5a80; --red: #dc2626; --red-dim: #7f1d1d; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--red-dim), var(--red)); border-radius: 10px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency — MediGuide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(#7f1d1d,#dc2626);border-radius:10px}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
 
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 1001; }
-    .hamburger span { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all 0.3s; }
-    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(4,4,12,0.98); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.1); padding: 20px 24px; flex-direction: column; gap: 4px; z-index: 999; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 16px; border-radius: 10px; transition: all 0.2s; }
-    .mobile-menu a:hover { color: var(--gold-light); background: rgba(201,168,76,0.06); }
-    .mobile-menu .mob-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c !important; font-weight: 700 !important; margin-top: 8px; text-align: center; }
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111;transition:all .3s}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-i{width:34px;height:34px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-t{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--gl)}
+.nav-mid{display:flex;align-items:center;gap:2px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-mid a{color:#555;text-decoration:none;font-size:13px;font-weight:500;padding:7px 14px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nav-mid a:hover{color:#fff;background:#111}
+.nav-mid a.act{color:#fca5a5!important;background:rgba(220,38,38,.08)!important}
+.nav-r{display:flex;align-items:center;gap:10px}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap}
+.nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
+.hbg span{display:block;width:22px;height:2px;background:var(--gl);border-radius:2px;transition:all .3s}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mmenu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(0,0,0,.98);backdrop-filter:blur(20px);border-bottom:1px solid #111;padding:16px 20px;flex-direction:column;gap:2px;z-index:999}
+.mmenu.open{display:flex}
+.mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
+.mmenu a:hover{color:var(--gl)}
+.mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
 
-    @media (max-width: 768px) {
-      .navbar { padding: 0 20px; }
-      .nav-links { display: none; }
-      .nav-right { display: none; }
-      .hamburger { display: flex; }
-      .page-wrap { padding: 100px 16px 60px; }
-      .sos-title { font-size: 32px; letter-spacing: -1px; }
-      .sos-btn { width: 140px; height: 140px; font-size: 24px; }
-      .helplines-grid { grid-template-columns: 1fr; }
-      .firstaid-grid { grid-template-columns: 1fr; }
-      .er-grid { grid-template-columns: 1fr; }
-      .contacts-row { flex-direction: column; }
-      .contact-input { min-width: unset; width: 100%; }
-      .section-title { font-size: 24px; }
-    }
+.wrap{max-width:860px;margin:0 auto;padding:100px 22px 90px;position:relative;z-index:2}
 
-    body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
-    .center-glow { position: fixed; width: 700px; height: 700px; background: radial-gradient(circle, rgba(220,38,38,0.04) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 0; border-radius: 50%; }
-    .cursor { width: 500px; height: 500px; background: radial-gradient(circle, rgba(220,38,38,0.02), transparent 70%); position: fixed; border-radius: 50%; pointer-events: none; z-index: 1; transform: translate(-50%,-50%); transition: left 0.15s ease, top 0.15s ease; }
+/* ANIMATIONS */
+@keyframes ping{0%{transform:scale(.9);opacity:1}100%{transform:scale(1.6);opacity:0}}
+@keyframes spulse{0%,100%{box-shadow:0 0 50px rgba(220,38,38,.4),0 0 100px rgba(220,38,38,.15)}50%{box-shadow:0 0 80px rgba(220,38,38,.7),0 0 160px rgba(220,38,38,.3)}}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 72px; background: rgba(4,4,12,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(201,168,76,0.08); transition: all 0.3s; }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--gold-dim), var(--gold)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); }
-    .nav-links { display: flex; align-items: center; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
-    .nav-links a:hover { color: var(--text); background: rgba(201,168,76,0.06); }
-    .nav-links a.active { color: #fca5a5; background: rgba(220,38,38,0.06); }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-signin { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
-    .nav-signin:hover { color: var(--gold-light); }
-    .nav-cta { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: #04040c; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 0 24px rgba(201,168,76,0.2); }
+/* SOS HERO */
+.sos-sec{text-align:center;margin-bottom:52px;animation:fup .6s ease both}
+.sos-eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(220,38,38,.2);background:rgba(220,38,38,.04);color:#f87171;font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.sos-ttl{font-family:'Playfair Display',serif;font-size:clamp(28px,6vw,60px);font-weight:900;letter-spacing:-2px;color:#fca5a5;margin-bottom:14px;line-height:1.05}
+.sos-sub{font-size:15px;color:#7f5050;line-height:1.8;margin-bottom:44px;max-width:460px;margin-left:auto;margin-right:auto}
+.sos-wrap{position:relative;display:inline-block;margin-bottom:24px}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(220,38,38,.18);animation:ping 2s ease-out infinite}
+.ring1{inset:-20px;animation-delay:0s}
+.ring2{inset:-40px;animation-delay:.65s}
+.ring3{inset:-60px;animation-delay:1.3s}
+.sos-btn{width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#7f1d1d,#dc2626,#7f1d1d);border:none;cursor:pointer;font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;animation:spulse 2s ease-in-out infinite;transition:transform .2s;position:relative;z-index:1}
+.sos-btn:hover{transform:scale(1.06)}
+.sos-btn:active{transform:scale(.96)}
+.sos-sub2{font-size:10px;font-family:'Inter',sans-serif;font-weight:700;letter-spacing:.14em;opacity:.8}
+.sos-stat{font-size:13px;color:#2a0505;margin-top:16px;min-height:20px;transition:color .3s;font-weight:500}
+.sos-stat.on{color:#f87171}
 
-    .page-wrap { max-width: 860px; margin: 0 auto; padding: 130px 24px 100px; position: relative; z-index: 2; }
-    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+/* QUICK CALL GRID */
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:40px}
+.qcard{background:#0a0a0a;border:1px solid rgba(220,38,38,.1);border-radius:16px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .3s}
+.qcard:hover{border-color:rgba(220,38,38,.3);transform:translateY(-2px)}
+.qico{font-size:24px;margin-bottom:8px;display:block}
+.qnum{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#f87171;margin-bottom:4px}
+.qlbl{font-size:11px;color:#444;font-weight:500}
+.qbtn{margin-top:10px;width:100%;padding:9px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1px solid rgba(220,38,38,.15);background:rgba(220,38,38,.06);color:#f87171;transition:all .2s}
+.qbtn:hover{background:rgba(220,38,38,.15)}
 
-    .sos-section { text-align: center; margin-bottom: 72px; animation: fadeUp 0.5s ease both; }
-    .sos-eyebrow { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(220,38,38,0.2); background: rgba(220,38,38,0.04); color: #f87171; font-size: 11px; font-weight: 600; padding: 7px 18px; border-radius: 100px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 32px; }
-    .sos-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 64px); font-weight: 900; letter-spacing: -2px; color: #fca5a5; margin-bottom: 16px; line-height: 1.05; }
-    .sos-sub { font-size: 16px; color: #7f5050; line-height: 1.8; margin-bottom: 48px; max-width: 480px; margin-left: auto; margin-right: auto; }
-    .sos-btn-wrap { position: relative; display: inline-block; margin-bottom: 28px; }
-    .sos-ring { position: absolute; inset: -20px; border-radius: 50%; border: 1px solid rgba(220,38,38,0.2); animation: sosPing 2s ease-out infinite; }
-    .sos-ring2 { position: absolute; inset: -40px; border-radius: 50%; border: 1px solid rgba(220,38,38,0.1); animation: sosPing 2s ease-out infinite 0.6s; }
-    .sos-ring3 { position: absolute; inset: -60px; border-radius: 50%; border: 1px solid rgba(220,38,38,0.05); animation: sosPing 2s ease-out infinite 1.2s; }
-    @keyframes sosPing { 0% { transform: scale(0.9); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
-    .sos-btn { width: 170px; height: 170px; border-radius: 50%; background: linear-gradient(135deg, #7f1d1d, #dc2626, #7f1d1d); border: none; cursor: pointer; font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 0 60px rgba(220,38,38,0.4), 0 0 120px rgba(220,38,38,0.15); animation: sosPulse 2s ease-in-out infinite; transition: transform 0.2s; position: relative; z-index: 1; }
-    .sos-btn:hover { transform: scale(1.06); }
-    .sos-btn:active { transform: scale(0.97); }
-    .sos-btn-sub { font-size: 11px; font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.12em; opacity: 0.85; }
-    @keyframes sosPulse { 0%,100% { box-shadow: 0 0 60px rgba(220,38,38,0.4), 0 0 120px rgba(220,38,38,0.15); } 50% { box-shadow: 0 0 90px rgba(220,38,38,0.65), 0 0 180px rgba(220,38,38,0.25); } }
-    .sos-status { font-size: 13px; color: #3a1a1a; margin-top: 12px; min-height: 20px; transition: color 0.3s; }
-    .sos-status.active { color: #f87171; }
+/* EMERGENCY CONTACTS */
+.sec-head{margin-bottom:18px}
+.sec-eye{font-size:11px;font-weight:700;color:rgba(248,113,113,.5);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sec-eye::after{content:'';flex:1;height:1px;background:rgba(220,38,38,.08)}
+.sec-ttl{font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:6px}
+.sec-sub{font-size:13px;color:#333;line-height:1.6}
 
-    .contacts-card { background: var(--card); border: 1px solid rgba(220,38,38,0.08); border-radius: 20px; padding: 28px; margin-bottom: 40px; animation: fadeUp 0.5s ease 0.15s both; }
-    .contacts-title { font-size: 13px; font-weight: 700; color: rgba(248,113,113,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .contacts-title::after { content: ''; flex: 1; height: 1px; background: rgba(220,38,38,0.08); }
-    .contacts-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .contact-input { flex: 1; min-width: 200px; background: var(--bg); border: 1px solid rgba(220,38,38,0.08); border-radius: 10px; padding: 11px 16px; color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
-    .contact-input:focus { border-color: rgba(220,38,38,0.25); }
-    .contact-input::placeholder { color: #1e1e38; }
-    .save-btn { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2); color: #f87171; font-size: 12px; font-weight: 700; padding: 11px 20px; border-radius: 10px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
-    .save-btn:hover { background: rgba(220,38,38,0.15); }
+.ccard{background:#0a0a0a;border:1px solid rgba(220,38,38,.08);border-radius:18px;padding:22px;margin-bottom:36px}
+.crow{display:flex;gap:9px;flex-wrap:wrap}
+.cinp{flex:1;min-width:180px;background:#000;border:1px solid rgba(220,38,38,.1);border-radius:9px;padding:11px 14px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.cinp:focus{border-color:rgba(220,38,38,.3)}
+.cinp::placeholder{color:#111}
+.csave{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);color:#f87171;font-size:12px;font-weight:700;padding:11px 20px;border-radius:9px;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s}
+.csave:hover{background:rgba(220,38,38,.18)}
 
-    .section-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-    .eyebrow-tag { font-size: 11px; color: #f87171; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-    .eyebrow-rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(220,38,38,0.2), transparent); max-width: 80px; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3vw, 36px); font-weight: 900; color: #f0f0ff; letter-spacing: -0.5px; margin-bottom: 10px; }
-    .section-desc { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.7; }
+/* FIRST AID */
+.fagrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:44px}
+.facard{background:#0a0a0a;border:1px solid #111;border-radius:16px;padding:22px;cursor:pointer;transition:all .3s;user-select:none}
+.facard:hover{border-color:rgba(201,168,76,.12);transform:translateY(-2px)}
+.facard.exp{border-color:rgba(201,168,76,.2)}
+.fanum{font-size:10px;color:#111;font-weight:700;letter-spacing:.1em;margin-bottom:10px;display:block}
+.faico{font-size:24px;margin-bottom:10px;display:block}
+.fattl{font-size:14px;font-weight:700;color:#ddd;margin-bottom:3px;display:flex;align-items:center;justify-content:space-between}
+.faarr{font-size:12px;color:#222;transition:transform .3s}
+.facard.exp .faarr{transform:rotate(180deg)}
+.fath{font-size:11px;color:#111;margin-top:3px}
+.fast{list-style:none;max-height:0;overflow:hidden;transition:max-height .4s ease}
+.facard.exp .fast{max-height:320px}
+.fast li{font-size:12px;color:#444;padding:7px 0;border-bottom:1px solid #0a0a0a;line-height:1.5;display:flex;gap:8px;align-items:flex-start}
+.fast li:last-child{border-bottom:none}
+.fsd{color:rgba(201,168,76,.4);flex-shrink:0;margin-top:1px}
 
-    .helplines-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 56px; animation: fadeUp 0.5s ease 0.2s both; }
-    .helpline-card { background: var(--card); border: 1px solid rgba(220,38,38,0.08); border-radius: 18px; padding: 24px; transition: all 0.3s; }
-    .helpline-card:hover { border-color: rgba(220,38,38,0.2); transform: translateY(-2px); }
-    .helpline-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .helpline-icon { font-size: 24px; }
-    .helpline-num { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: #f87171; letter-spacing: -0.5px; cursor: pointer; }
-    .helpline-num:hover { opacity: 0.8; }
-    .helpline-name { font-size: 14px; font-weight: 700; color: #d0d0e8; margin-bottom: 4px; }
-    .helpline-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
-    .call-btn { width: 100%; padding: 11px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(220,38,38,0.2); background: rgba(220,38,38,0.05); color: #f87171; letter-spacing: 0.04em; text-transform: uppercase; }
-    .call-btn:hover { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.4); }
+/* NEAREST ER */
+.ergrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.ercard{background:linear-gradient(135deg,#080000,#0f0000);border:1px solid rgba(220,38,38,.1);border-radius:16px;padding:22px;transition:all .3s}
+.ercard:hover{border-color:rgba(220,38,38,.25);transform:translateY(-2px)}
+.ertop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px;gap:8px}
+.ern{font-size:14px;font-weight:700;color:#fca5a5;margin-bottom:3px}
+.era{font-size:12px;color:#7f5050;line-height:1.4}
+.erd{font-size:10px;color:#f87171;background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.12);padding:3px 9px;border-radius:100px;font-weight:600;flex-shrink:0;white-space:nowrap}
+.ert{font-size:11px;color:#7f5050;margin-bottom:12px;margin-top:6px}
+.erbtn{width:100%;padding:10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1px solid rgba(220,38,38,.15);background:rgba(220,38,38,.05);color:#f87171;transition:all .2s}
+.erbtn:hover{background:rgba(220,38,38,.14)}
 
-    .firstaid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 56px; animation: fadeUp 0.5s ease 0.3s both; }
-    .firstaid-card { background: var(--card); border: 1px solid rgba(201,168,76,0.06); border-radius: 18px; padding: 24px; transition: all 0.3s; cursor: pointer; }
-    .firstaid-card:hover { border-color: rgba(201,168,76,0.15); transform: translateY(-2px); }
-    .firstaid-card.expanded { border-color: rgba(201,168,76,0.2); }
-    .fa-num { font-family: 'Playfair Display', serif; font-size: 11px; color: rgba(201,168,76,0.3); font-weight: 700; letter-spacing: 0.1em; margin-bottom: 12px; display: block; }
-    .fa-icon { font-size: 26px; margin-bottom: 12px; display: block; }
-    .fa-title { font-size: 14px; font-weight: 700; color: #d0d0e8; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
-    .fa-arrow { font-size: 12px; color: rgba(201,168,76,0.3); transition: transform 0.3s; }
-    .firstaid-card.expanded .fa-arrow { transform: rotate(180deg); }
-    .fa-steps { list-style: none; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-    .firstaid-card.expanded .fa-steps { max-height: 300px; }
-    .fa-steps li { font-size: 12px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); line-height: 1.5; display: flex; gap: 8px; }
-    .fa-steps li:last-child { border-bottom: none; }
-    .step-dot { color: rgba(201,168,76,0.4); flex-shrink: 0; }
-    .fa-tap-hint { font-size: 11px; color: #2a2a45; margin-top: 6px; }
-
-    .er-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; animation: fadeUp 0.5s ease 0.4s both; }
-    .er-card { background: linear-gradient(135deg, #100808, #180a0a); border: 1px solid rgba(220,38,38,0.1); border-radius: 18px; padding: 24px; transition: all 0.3s; }
-    .er-card:hover { border-color: rgba(220,38,38,0.25); transform: translateY(-2px); }
-    .er-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
-    .er-name { font-size: 14px; font-weight: 700; color: #fca5a5; margin-bottom: 4px; }
-    .er-address { font-size: 12px; color: #7f5050; margin-bottom: 10px; line-height: 1.5; }
-    .er-dist { font-size: 11px; color: #f87171; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.15); padding: 3px 10px; border-radius: 100px; font-weight: 600; flex-shrink: 0; }
-    .er-time { font-size: 11px; color: #7f5050; margin-bottom: 14px; }
-    .er-btn { width: 100%; padding: 11px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; border: 1px solid rgba(220,38,38,0.2); background: rgba(220,38,38,0.05); color: #f87171; }
-    .er-btn:hover { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.4); }
-    .copy-hint { font-size: 11px; color: #2a2a45; text-align: center; margin-top: 8px; }
-  </style>
+/* RESPONSIVE */
+@media(max-width:900px){
+.nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
+.wrap{padding:86px 16px 60px}
+.sos-btn{width:140px;height:140px;font-size:24px}
+.qgrid{grid-template-columns:1fr 1fr}
+.fagrid,.ergrid{grid-template-columns:1fr}
+.crow{flex-direction:column}
+.cinp{min-width:unset;width:100%}
+}
+@media(max-width:380px){
+.qgrid{grid-template-columns:1fr 1fr}
+.sos-ttl{font-size:26px!important;letter-spacing:-1px}
+}
+</style>
 </head>
 <body>
+<nav class="nav" id="nav">
+  <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
+  <div class="nav-mid">
+    <a href="index.html">Home</a>
+    <a href="symptoms.html">Symptoms</a>
+    <a href="hospitals.html">Hospitals</a>
+    <a href="opd.html">OPD</a>
+    <a href="emergency.html" class="act">Emergency</a>
+    <a href="medicines.html">Medicines</a>
+    <a href="helplines.html">Helplines</a>
+  </div>
+  <div class="nav-r">
+    <a href="login.html" class="nav-si">Sign in</a>
+    <a href="login.html" class="nav-ct">Get Started →</a>
+  </div>
+  <button class="hbg" id="hbg" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mmenu" id="mmenu">
+  <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+  <a href="symptoms.html" onclick="closeMenu()">🤖 Symptoms</a>
+  <a href="hospitals.html" onclick="closeMenu()">🗺️ Hospitals</a>
+  <a href="opd.html" onclick="closeMenu()">🏥 OPD Timings</a>
+  <a href="emergency.html" onclick="closeMenu()">🚨 Emergency</a>
+  <a href="medicines.html" onclick="closeMenu()">💊 Medicines</a>
+  <a href="helplines.html" onclick="closeMenu()">📞 Helplines</a>
+  <a href="login.html" class="mcta" onclick="closeMenu()">Get Started →</a>
+</div>
 
-  <div class="cursor" id="cursor"></div>
-  <div class="center-glow"></div>
+<div class="wrap">
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">
-      <div class="logo-icon">⚕️</div>
-      <span class="logo-text">MediGuide</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="symptoms.html">Symptoms</a>
-      <a href="hospitals.html">Hospitals</a>
-      <a href="emergency.html" class="active">Emergency</a>
-      <a href="medicines.html">Medicines</a>
-      <a href="helplines.html">Helplines</a>
+  <!-- SOS -->
+  <div class="sos-sec">
+    <div class="sos-eye">🚨 Emergency Mode</div>
+    <h1 class="sos-ttl">Medical Emergency?<br>Don't Wait.</h1>
+    <p class="sos-sub">Press SOS to instantly detect your location and find the nearest hospital. Call 108 for free ambulance anywhere in India.</p>
+    <div class="sos-wrap">
+      <div class="ring ring1"></div>
+      <div class="ring ring2"></div>
+      <div class="ring ring3"></div>
+      <button class="sos-btn" id="sosBtn" onclick="activateSOS()">
+        SOS
+        <span class="sos-sub2">TAP NOW</span>
+      </button>
     </div>
-    <div class="nav-right">
-      <a href="login.html" class="nav-signin">Sign in</a>
-      <a href="login.html" class="nav-cta">Get Started →</a>
-    </div>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">🏠 Home</a>
-    <a href="symptoms.html">🤖 Symptom Checker</a>
-    <a href="hospitals.html">🗺️ Find Hospital</a>
-    <a href="emergency.html">🚨 Emergency</a>
-    <a href="medicines.html">💊 Medicines</a>
-    <a href="helplines.html">📞 Helplines</a>
-    <a href="login.html" class="mob-cta">Get Started →</a>
+    <p class="sos-stat" id="sosStat">Tap to detect your location and find nearest hospital</p>
   </div>
 
-  <div class="page-wrap">
-    <div class="sos-section">
-      <div class="sos-eyebrow">🚨 Emergency Mode</div>
-      <h1 class="sos-title">Medical Emergency?<br>Don't Wait.</h1>
-      <p class="sos-sub">Press SOS to instantly detect your location, alert your emergency contacts, and find the nearest hospital.</p>
-      <div class="sos-btn-wrap">
-        <div class="sos-ring"></div>
-        <div class="sos-ring2"></div>
-        <div class="sos-ring3"></div>
-        <button class="sos-btn" onclick="activateSOS()" id="sosBtn">SOS<span class="sos-btn-sub">TAP NOW</span></button>
-      </div>
-      <p class="sos-status" id="sosStatus">Sends your live location to saved contacts</p>
+  <!-- QUICK CALL -->
+  <div class="sec-head">
+    <div class="sec-eye">📞 Emergency Numbers</div>
+    <h2 class="sec-ttl">Call Instantly</h2>
+    <p class="sec-sub">Tap any button below to call directly. Click the number to copy it.</p>
+  </div>
+  <div class="qgrid">
+    <div class="qcard">
+      <span class="qico">🚑</span>
+      <div class="qnum" onclick="copyN('108')">108</div>
+      <div class="qlbl">Ambulance — Free</div>
+      <button class="qbtn" onclick="callN('108')">📞 Call 108</button>
     </div>
-
-    <div class="contacts-card">
-      <div class="contacts-title">Your Emergency Contacts</div>
-      <div class="contacts-row">
-        <input class="contact-input" id="contact1" placeholder="Contact 1 name — e.g. Mummy" />
-        <input class="contact-input" id="contact1phone" placeholder="Phone number" type="tel" />
-        <input class="contact-input" id="contact2" placeholder="Contact 2 name — e.g. Papa" />
-        <input class="contact-input" id="contact2phone" placeholder="Phone number" type="tel" />
-        <button class="save-btn" onclick="saveContacts()">💾 Save</button>
-      </div>
+    <div class="qcard">
+      <span class="qico">🆘</span>
+      <div class="qnum" onclick="copyN('112')">112</div>
+      <div class="qlbl">National Emergency</div>
+      <button class="qbtn" onclick="callN('112')">📞 Call 112</button>
     </div>
-
-    <div class="section-eyebrow"><span class="eyebrow-tag">Emergency Helplines</span><div class="eyebrow-rule"></div></div>
-    <h2 class="section-title">Call Instantly</h2>
-    <p class="section-desc">All India emergency helplines — tap to call directly. Click number to copy.</p>
-
-    <div class="helplines-grid">
-      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🚑</span><span class="helpline-num" onclick="copyNum('108')">108</span></div><div class="helpline-name">Ambulance</div><div class="helpline-desc">National ambulance service — 24/7 across India. Free of cost.</div><button class="call-btn" onclick="callNum('108')">📞 Call 108</button></div>
-      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🚔</span><span class="helpline-num" onclick="copyNum('100')">100</span></div><div class="helpline-name">Police</div><div class="helpline-desc">Police emergency helpline — immediate law enforcement assistance.</div><button class="call-btn" onclick="callNum('100')">📞 Call 100</button></div>
-      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🔥</span><span class="helpline-num" onclick="copyNum('101')">101</span></div><div class="helpline-name">Fire Brigade</div><div class="helpline-desc">Fire emergency — 24/7 rapid response across all cities.</div><button class="call-btn" onclick="callNum('101')">📞 Call 101</button></div>
-      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🆘</span><span class="helpline-num" onclick="copyNum('112')">112</span></div><div class="helpline-name">National Emergency</div><div class="helpline-desc">Single number — connects to police, ambulance and fire.</div><button class="call-btn" onclick="callNum('112')">📞 Call 112</button></div>
-      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">🧠</span><span class="helpline-num" onclick="copyNum('9152987821')" style="font-size:16px">iCall</span></div><div class="helpline-name">Mental Health</div><div class="helpline-desc">Free psychological counselling — 9152987821. Mon–Sat, 8AM–10PM.</div><button class="call-btn" onclick="callNum('9152987821')">📞 Call iCall</button></div>
-      <div class="helpline-card"><div class="helpline-top"><span class="helpline-icon">☠️</span><span class="helpline-num" onclick="copyNum('18001116117')" style="font-size:16px">1800</span></div><div class="helpline-name">Poison Control</div><div class="helpline-desc">AIIMS Poison Control — 1800-11-6117. Free, 24/7.</div><button class="call-btn" onclick="callNum('18001116117')">📞 Call Helpline</button></div>
+    <div class="qcard">
+      <span class="qico">🚔</span>
+      <div class="qnum" onclick="copyN('100')">100</div>
+      <div class="qlbl">Police</div>
+      <button class="qbtn" onclick="callN('100')">📞 Call 100</button>
     </div>
-    <p class="copy-hint">💡 Click any number to copy it to clipboard</p>
-
-    <div class="section-eyebrow"><span class="eyebrow-tag">First Aid Guide</span><div class="eyebrow-rule"></div></div>
-    <h2 class="section-title">What To Do Right Now</h2>
-    <p class="section-desc">Tap any card to expand step-by-step first aid instructions.</p>
-
-    <div class="firstaid-grid">
-      <div class="firstaid-card" onclick="toggleFirstAid(this)">
-        <span class="fa-num">01</span><span class="fa-icon">💔</span>
-        <div class="fa-title">Heart Attack <span class="fa-arrow">▼</span></div>
-        <p class="fa-tap-hint">Tap to expand steps</p>
-        <ul class="fa-steps"><li><span class="step-dot">→</span>Call 108 immediately</li><li><span class="step-dot">→</span>Make person sit or lie down comfortably</li><li><span class="step-dot">→</span>Loosen tight clothing around chest and neck</li><li><span class="step-dot">→</span>Give aspirin if available and not allergic</li><li><span class="step-dot">→</span>Do not leave them alone — stay calm</li></ul>
-      </div>
-      <div class="firstaid-card" onclick="toggleFirstAid(this)">
-        <span class="fa-num">02</span><span class="fa-icon">🫁</span>
-        <div class="fa-title">Choking <span class="fa-arrow">▼</span></div>
-        <p class="fa-tap-hint">Tap to expand steps</p>
-        <ul class="fa-steps"><li><span class="step-dot">→</span>Ask if they can speak or cough</li><li><span class="step-dot">→</span>Encourage forceful coughing first</li><li><span class="step-dot">→</span>Give 5 firm back blows between shoulder blades</li><li><span class="step-dot">→</span>Give 5 abdominal thrusts (Heimlich)</li><li><span class="step-dot">→</span>Call 108 if object not dislodged</li></ul>
-      </div>
-      <div class="firstaid-card" onclick="toggleFirstAid(this)">
-        <span class="fa-num">03</span><span class="fa-icon">🩸</span>
-        <div class="fa-title">Severe Bleeding <span class="fa-arrow">▼</span></div>
-        <p class="fa-tap-hint">Tap to expand steps</p>
-        <ul class="fa-steps"><li><span class="step-dot">→</span>Press firmly on wound with clean cloth</li><li><span class="step-dot">→</span>Keep continuous pressure for 10+ minutes</li><li><span class="step-dot">→</span>Do NOT remove cloth if soaked — add more on top</li><li><span class="step-dot">→</span>Elevate injured area above heart level if possible</li><li><span class="step-dot">→</span>Call 108 immediately for deep wounds</li></ul>
-      </div>
-      <div class="firstaid-card" onclick="toggleFirstAid(this)">
-        <span class="fa-num">04</span><span class="fa-icon">⚡</span>
-        <div class="fa-title">Electric Shock <span class="fa-arrow">▼</span></div>
-        <p class="fa-tap-hint">Tap to expand steps</p>
-        <ul class="fa-steps"><li><span class="step-dot">→</span>Do NOT touch the person directly</li><li><span class="step-dot">→</span>Switch off main power source first</li><li><span class="step-dot">→</span>Use dry wood or rubber to move them away</li><li><span class="step-dot">→</span>Check breathing and pulse — call 108</li><li><span class="step-dot">→</span>Start CPR if person is unconscious</li></ul>
-      </div>
-      <div class="firstaid-card" onclick="toggleFirstAid(this)">
-        <span class="fa-num">05</span><span class="fa-icon">🔥</span>
-        <div class="fa-title">Burns <span class="fa-arrow">▼</span></div>
-        <p class="fa-tap-hint">Tap to expand steps</p>
-        <ul class="fa-steps"><li><span class="step-dot">→</span>Cool burn under running water for 10 minutes</li><li><span class="step-dot">→</span>Do NOT use ice, butter or toothpaste</li><li><span class="step-dot">→</span>Remove jewellery near burn area gently</li><li><span class="step-dot">→</span>Cover loosely with clean bandage</li><li><span class="step-dot">→</span>Go to hospital for large or deep burns</li></ul>
-      </div>
-      <div class="firstaid-card" onclick="toggleFirstAid(this)">
-        <span class="fa-num">06</span><span class="fa-icon">😵</span>
-        <div class="fa-title">Unconscious Person <span class="fa-arrow">▼</span></div>
-        <p class="fa-tap-hint">Tap to expand steps</p>
-        <ul class="fa-steps"><li><span class="step-dot">→</span>Call 108 immediately</li><li><span class="step-dot">→</span>Check if they are breathing normally</li><li><span class="step-dot">→</span>Place in recovery position (on their side)</li><li><span class="step-dot">→</span>Tilt head back gently to open airway</li><li><span class="step-dot">→</span>Start CPR if no breathing detected</li></ul>
-      </div>
+    <div class="qcard">
+      <span class="qico">🔥</span>
+      <div class="qnum" onclick="copyN('101')">101</div>
+      <div class="qlbl">Fire Brigade</div>
+      <button class="qbtn" onclick="callN('101')">📞 Call 101</button>
     </div>
-
-    <div class="section-eyebrow"><span class="eyebrow-tag">Nearest Emergency Rooms</span><div class="eyebrow-rule"></div></div>
-    <h2 class="section-title">Go Here Right Now</h2>
-    <p class="section-desc">Nearest 24/7 emergency rooms in Delhi NCR — open right now.</p>
-
-    <div class="er-grid">
-      <div class="er-card"><div class="er-top"><div><div class="er-name">AIIMS Trauma Centre</div><div class="er-address">Sri Aurobindo Marg, New Delhi — 110029</div></div><span class="er-dist">3.1 km</span></div><div class="er-time">🕐 Open 24/7 · Ambulance: 108</div><button class="er-btn" onclick="goToER('AIIMS Trauma Centre Delhi')">🚨 Get Directions Now</button></div>
-      <div class="er-card"><div class="er-top"><div><div class="er-name">Safdarjung Hospital ER</div><div class="er-address">Ring Road, Safdarjung, New Delhi — 110029</div></div><span class="er-dist">2.4 km</span></div><div class="er-time">🕐 Open 24/7 · Ambulance: 108</div><button class="er-btn" onclick="goToER('Safdarjung Hospital Emergency Delhi')">🚨 Get Directions Now</button></div>
-      <div class="er-card"><div class="er-top"><div><div class="er-name">Max Hospital Emergency</div><div class="er-address">Press Enclave Road, Saket, New Delhi — 110017</div></div><span class="er-dist">4.7 km</span></div><div class="er-time">🕐 Open 24/7 · Tel: 011-26515050</div><button class="er-btn" onclick="goToER('Max Hospital Saket Emergency Delhi')">🚨 Get Directions Now</button></div>
+    <div class="qcard">
+      <span class="qico">🧠</span>
+      <div class="qnum" onclick="copyN('9152987821')" style="font-size:15px">iCall</div>
+      <div class="qlbl">Mental Health</div>
+      <button class="qbtn" onclick="callN('9152987821')">📞 Call iCall</button>
+    </div>
+    <div class="qcard">
+      <span class="qico">☠️</span>
+      <div class="qnum" onclick="copyN('18001116117')" style="font-size:13px">Poison</div>
+      <div class="qlbl">Poison Control</div>
+      <button class="qbtn" onclick="callN('18001116117')">📞 Call Now</button>
     </div>
   </div>
 
-  <script>
-    document.addEventListener('mousemove', e => { document.getElementById('cursor').style.left = e.clientX + 'px'; document.getElementById('cursor').style.top = e.clientY + 'px'; });
+  <!-- EMERGENCY CONTACTS -->
+  <div class="sec-head">
+    <div class="sec-eye">👤 Personal Contacts</div>
+    <h2 class="sec-ttl">Your Emergency Contacts</h2>
+    <p class="sec-sub">Save two contacts to quickly reach family in an emergency. Saved locally on your device.</p>
+  </div>
+  <div class="ccard">
+    <div class="crow">
+      <input class="cinp" id="c1" placeholder="Contact 1 name — e.g. Mummy" />
+      <input class="cinp" id="c1p" placeholder="Phone number" type="tel"/>
+      <input class="cinp" id="c2" placeholder="Contact 2 name — e.g. Papa"/>
+      <input class="cinp" id="c2p" placeholder="Phone number" type="tel"/>
+      <button class="csave" onclick="saveContacts()">💾 Save</button>
+    </div>
+  </div>
 
-    function showToast(msg, type = 'success') {
-      const existing = document.querySelector('.toast-msg'); if (existing) existing.remove();
-      const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
-      toast.style.cssText = `position: fixed; bottom: 32px; right: 32px; z-index: 99999; background: ${type === 'success' ? 'rgba(52,211,153,0.12)' : type === 'error' ? 'rgba(248,113,113,0.12)' : 'rgba(201,168,76,0.12)'}; border: 1px solid ${type === 'success' ? 'rgba(52,211,153,0.3)' : type === 'error' ? 'rgba(248,113,113,0.3)' : 'rgba(201,168,76,0.3)'}; color: ${type === 'success' ? '#34d399' : type === 'error' ? '#f87171' : '#c9a84c'}; padding: 14px 24px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;`;
-      document.body.appendChild(toast); setTimeout(() => toast.remove(), 3500);
-    }
-    const s = document.createElement('style'); s.textContent = `@keyframes toastIn { from { opacity:0; transform: translateY(20px) scale(0.9); } to { opacity:1; transform: translateY(0) scale(1); } }`; document.head.appendChild(s);
+  <!-- FIRST AID -->
+  <div class="sec-head">
+    <div class="sec-eye">🩹 First Aid Guide</div>
+    <h2 class="sec-ttl">What To Do Right Now</h2>
+    <p class="sec-sub">Tap any card to expand step-by-step first aid instructions.</p>
+  </div>
+  <div class="fagrid">
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">01</span>
+      <span class="faico">💔</span>
+      <div class="fattl">Heart Attack <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Call 108 immediately — do not delay even one minute</li>
+        <li><span class="fsd">→</span>Make the person sit or lie down in a comfortable position</li>
+        <li><span class="fsd">→</span>Loosen any tight clothing around the chest and neck</li>
+        <li><span class="fsd">→</span>Give one aspirin tablet to chew slowly if not allergic</li>
+        <li><span class="fsd">→</span>Stay with the person — do not leave them alone under any condition</li>
+      </ul>
+    </div>
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">02</span>
+      <span class="faico">🫁</span>
+      <div class="fattl">Choking <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Ask if they can speak or cough — encourage forceful coughing</li>
+        <li><span class="fsd">→</span>Stand behind them and lean them slightly forward</li>
+        <li><span class="fsd">→</span>Give 5 firm back blows between the shoulder blades</li>
+        <li><span class="fsd">→</span>Give 5 abdominal thrusts (Heimlich manoeuvre) if object remains</li>
+        <li><span class="fsd">→</span>Call 108 immediately if object is not dislodged</li>
+      </ul>
+    </div>
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">03</span>
+      <span class="faico">🩸</span>
+      <div class="fattl">Severe Bleeding <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Press firmly on the wound with a clean cloth or bandage</li>
+        <li><span class="fsd">→</span>Keep continuous pressure for at least 10 minutes without removing</li>
+        <li><span class="fsd">→</span>Do NOT remove cloth if soaked — add more cloth on top</li>
+        <li><span class="fsd">→</span>Elevate the injured area above the level of the heart if possible</li>
+        <li><span class="fsd">→</span>Call 108 immediately for deep wounds or arterial bleeding</li>
+      </ul>
+    </div>
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">04</span>
+      <span class="faico">⚡</span>
+      <div class="fattl">Electric Shock <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Do NOT touch the person directly with your bare hands</li>
+        <li><span class="fsd">→</span>Switch off the main power source at the fuse board immediately</li>
+        <li><span class="fsd">→</span>Use a dry wooden stick or rubber material to move them away</li>
+        <li><span class="fsd">→</span>Check breathing and pulse then call 108 immediately</li>
+        <li><span class="fsd">→</span>Start CPR if the person is unconscious and not breathing</li>
+      </ul>
+    </div>
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">05</span>
+      <span class="faico">🔥</span>
+      <div class="fattl">Burns <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Cool the burn under cold running water for 10 to 20 minutes</li>
+        <li><span class="fsd">→</span>Do NOT use ice, butter, toothpaste, oil or any home remedies</li>
+        <li><span class="fsd">→</span>Carefully remove jewellery or clothing near the burn area</li>
+        <li><span class="fsd">→</span>Cover loosely with a clean non-fluffy sterile bandage or cloth</li>
+        <li><span class="fsd">→</span>Go to hospital immediately for large, deep or chemical burns</li>
+      </ul>
+    </div>
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">06</span>
+      <span class="faico">😵</span>
+      <div class="fattl">Unconscious Person <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Call 108 immediately without any delay</li>
+        <li><span class="fsd">→</span>Check if the person is breathing normally — look, listen, feel</li>
+        <li><span class="fsd">→</span>Place them in recovery position — on their side with head tilted back</li>
+        <li><span class="fsd">→</span>Tilt head back gently and lift chin to open the airway</li>
+        <li><span class="fsd">→</span>Start CPR immediately if no breathing is detected</li>
+      </ul>
+    </div>
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">07</span>
+      <span class="faico">🐍</span>
+      <div class="fattl">Snake Bite <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Keep the person calm and still — movement spreads venom faster</li>
+        <li><span class="fsd">→</span>Call 108 immediately and go to nearest government hospital</li>
+        <li><span class="fsd">→</span>Remove any rings, watches or tight clothing near the bite</li>
+        <li><span class="fsd">→</span>Do NOT cut the wound, suck the venom or apply tourniquet</li>
+        <li><span class="fsd">→</span>Note the colour and pattern of the snake if seen safely</li>
+      </ul>
+    </div>
+    <div class="facard" onclick="toggleFA(this)">
+      <span class="fanum">08</span>
+      <span class="faico">🫀</span>
+      <div class="fattl">CPR Guide <span class="faarr">▼</span></div>
+      <p class="fath">Tap to expand steps</p>
+      <ul class="fast">
+        <li><span class="fsd">→</span>Place heel of hand on centre of chest between nipples</li>
+        <li><span class="fsd">→</span>Push down hard and fast — at least 5 cm deep, 100 times per minute</li>
+        <li><span class="fsd">→</span>Allow chest to fully rise between compressions</li>
+        <li><span class="fsd">→</span>After 30 compressions give 2 rescue breaths if trained</li>
+        <li><span class="fsd">→</span>Continue until ambulance arrives or person regains consciousness</li>
+      </ul>
+    </div>
+  </div>
 
-    window.addEventListener('scroll', () => {
-      const nav = document.querySelector('.navbar');
-      nav.style.background = window.scrollY > 50 ? 'rgba(4,4,12,0.98)' : 'rgba(4,4,12,0.85)';
-      nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(201,168,76,0.15)' : 'rgba(201,168,76,0.08)';
-      document.getElementById('hamburger').classList.remove('open');
-      document.getElementById('mobileMenu').classList.remove('open');
-    });
+  <!-- NEAREST ER -->
+  <div class="sec-head">
+    <div class="sec-eye">🏥 Nearest ERs</div>
+    <h2 class="sec-ttl">Go Here Right Now</h2>
+    <p class="sec-sub">Nearest 24/7 emergency rooms in Delhi NCR — open right now.</p>
+  </div>
+  <div class="ergrid">
+    <div class="ercard">
+      <div class="ertop">
+        <div>
+          <div class="ern">AIIMS Trauma Centre</div>
+          <div class="era">Sri Aurobindo Marg, New Delhi — 110029</div>
+        </div>
+        <span class="erd">24/7 Open</span>
+      </div>
+      <div class="ert">🆓 Free · Government Hospital · Ambulance: 108</div>
+      <button class="erbtn" onclick="goER('AIIMS Trauma Centre New Delhi')">🚨 Get Directions Now</button>
+    </div>
+    <div class="ercard">
+      <div class="ertop">
+        <div>
+          <div class="ern">Safdarjung Hospital ER</div>
+          <div class="era">Ring Road, Safdarjung, New Delhi — 110029</div>
+        </div>
+        <span class="erd">24/7 Open</span>
+      </div>
+      <div class="ert">🆓 Free · Government Hospital · Ambulance: 108</div>
+      <button class="erbtn" onclick="goER('Safdarjung Hospital New Delhi')">🚨 Get Directions Now</button>
+    </div>
+    <div class="ercard">
+      <div class="ertop">
+        <div>
+          <div class="ern">RML Hospital ER</div>
+          <div class="era">Baba Kharak Singh Marg, New Delhi — 110001</div>
+        </div>
+        <span class="erd">24/7 Open</span>
+      </div>
+      <div class="ert">🆓 Free · Government Hospital · Tel: 011-23404000</div>
+      <button class="erbtn" onclick="goER('RML Hospital New Delhi')">🚨 Get Directions Now</button>
+    </div>
+    <div class="ercard">
+      <div class="ertop">
+        <div>
+          <div class="ern">Max Hospital Emergency</div>
+          <div class="era">Press Enclave Road, Saket, New Delhi — 110017</div>
+        </div>
+        <span class="erd">24/7 Open</span>
+      </div>
+      <div class="ert">💳 Private · Tel: 011-26515050</div>
+      <button class="erbtn" onclick="goER('Max Hospital Saket New Delhi')">🚨 Get Directions Now</button>
+    </div>
+    <div class="ercard">
+      <div class="ertop">
+        <div>
+          <div class="ern">Apollo Hospital Emergency</div>
+          <div class="era">Sarita Vihar, Mathura Road, New Delhi — 110076</div>
+        </div>
+        <span class="erd">24/7 Open</span>
+      </div>
+      <div class="ert">💳 Private · Tel: 011-71791090</div>
+      <button class="erbtn" onclick="goER('Apollo Hospital Sarita Vihar New Delhi')">🚨 Get Directions Now</button>
+    </div>
+    <div class="ercard">
+      <div class="ertop">
+        <div>
+          <div class="ern">Fortis Hospital Emergency</div>
+          <div class="era">Vasant Kunj, New Delhi — 110070</div>
+        </div>
+        <span class="erd">24/7 Open</span>
+      </div>
+      <div class="ert">💳 Private · Tel: 011-42776222</div>
+      <button class="erbtn" onclick="goER('Fortis Hospital Vasant Kunj New Delhi')">🚨 Get Directions Now</button>
+    </div>
+  </div>
 
-    function toggleMenu() { document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
-    document.querySelectorAll('.mobile-menu a').forEach(a => { a.addEventListener('click', () => { document.getElementById('hamburger').classList.remove('open'); document.getElementById('mobileMenu').classList.remove('open'); }); });
+</div>
 
-    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } }); }, { threshold: 0.1 });
-    document.querySelectorAll('.helpline-card, .firstaid-card, .er-card, .contacts-card').forEach((el, i) => { el.style.opacity = '0'; el.style.transform = 'translateY(24px)'; el.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s ease ${i * 0.06}s`; observer.observe(el); });
+<script>
+function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
+function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
+window.addEventListener('scroll',()=>{document.getElementById('nav').style.background=window.scrollY>50?'rgba(0,0,0,.98)':'rgba(0,0,0,.92)';closeMenu()})
 
-    function saveContacts() {
-      const c1 = document.getElementById('contact1').value.trim(); const c1p = document.getElementById('contact1phone').value.trim();
-      const c2 = document.getElementById('contact2').value.trim(); const c2p = document.getElementById('contact2phone').value.trim();
-      if (!c1 || !c1p) { showToast('⚠️ Please enter at least Contact 1 details', 'error'); return; }
-      localStorage.setItem('emg_contact1', c1); localStorage.setItem('emg_contact1phone', c1p);
-      localStorage.setItem('emg_contact2', c2); localStorage.setItem('emg_contact2phone', c2p);
-      showToast('✅ Emergency contacts saved!', 'success');
-    }
+function toast(msg,type='g'){
+  const ex=document.querySelector('.tm');if(ex)ex.remove();
+  const t=document.createElement('div');t.className='tm';t.textContent=msg;
+  const colors={e:['rgba(248,113,113,.12)','rgba(248,113,113,.35)','#f87171'],s:['rgba(52,211,153,.12)','rgba(52,211,153,.35)','#34d399'],g:['rgba(201,168,76,.12)','rgba(201,168,76,.35)','#c9a84c']};
+  const c=colors[type]||colors.g;
+  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${c[0]};border:1px solid ${c[1]};color:${c[2]};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s ease both;max-width:calc(100vw - 40px)`;
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}';document.head.appendChild(s);
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
+}
 
-    window.addEventListener('load', () => {
-      document.getElementById('contact1').value = localStorage.getItem('emg_contact1') || '';
-      document.getElementById('contact1phone').value = localStorage.getItem('emg_contact1phone') || '';
-      document.getElementById('contact2').value = localStorage.getItem('emg_contact2') || '';
-      document.getElementById('contact2phone').value = localStorage.getItem('emg_contact2phone') || '';
-    });
+// Load saved contacts
+window.addEventListener('load',()=>{
+  document.getElementById('c1').value=localStorage.getItem('emg_c1')||'';
+  document.getElementById('c1p').value=localStorage.getItem('emg_c1p')||'';
+  document.getElementById('c2').value=localStorage.getItem('emg_c2')||'';
+  document.getElementById('c2p').value=localStorage.getItem('emg_c2p')||'';
+});
 
-    let sosActivated = false;
-    function activateSOS() {
-      if (sosActivated) return;
-      sosActivated = true;
-      const btn = document.getElementById('sosBtn'); const status = document.getElementById('sosStatus');
-      btn.style.background = 'linear-gradient(135deg, #991b1b, #ef4444, #991b1b)';
-      status.classList.add('active'); status.textContent = '📍 Detecting your location...';
-      showToast('🚨 SOS Activated! Getting location...', 'error');
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          const { latitude, longitude } = pos.coords;
-          status.textContent = '✅ Location found! Showing nearest hospitals...';
-          showToast('📍 Location detected! Opening nearest hospitals...', 'success');
-          setTimeout(() => { window.open(`https://www.google.com/maps/search/emergency+hospital/@${latitude},${longitude},14z`, '_blank'); }, 800);
-          setTimeout(() => { sosActivated = false; btn.style.background = ''; status.classList.remove('active'); status.textContent = 'Sends your live location to saved contacts'; }, 5000);
-        }, () => {
-          status.textContent = '⚠️ Location unavailable — Call 108 now!';
-          showToast('⚠️ Location failed — Call 108 immediately!', 'error');
-          window.open('tel:108');
-          setTimeout(() => { sosActivated = false; btn.style.background = ''; status.classList.remove('active'); status.textContent = 'Sends your live location to saved contacts'; }, 4000);
-        });
-      } else { status.textContent = '📞 Please call 108 immediately!'; window.open('tel:108'); setTimeout(() => { sosActivated = false; btn.style.background = ''; status.classList.remove('active'); status.textContent = 'Sends your live location to saved contacts'; }, 4000); }
-    }
+function saveContacts(){
+  const c1=document.getElementById('c1').value.trim();
+  const c1p=document.getElementById('c1p').value.trim();
+  if(!c1||!c1p){toast('⚠️ Please enter at least Contact 1 name and number','e');return}
+  localStorage.setItem('emg_c1',c1);
+  localStorage.setItem('emg_c1p',c1p);
+  localStorage.setItem('emg_c2',document.getElementById('c2').value.trim());
+  localStorage.setItem('emg_c2p',document.getElementById('c2p').value.trim());
+  toast('✅ Emergency contacts saved!','s');
+}
 
-    function toggleFirstAid(card) {
-      const isExpanded = card.classList.contains('expanded');
-      document.querySelectorAll('.firstaid-card').forEach(c => c.classList.remove('expanded'));
-      if (!isExpanded) { card.classList.add('expanded'); showToast('📋 ' + card.querySelector('.fa-title').childNodes[0].textContent.trim(), 'gold'); }
-    }
+let sosActive=false;
+function activateSOS(){
+  if(sosActive)return;
+  sosActive=true;
+  const btn=document.getElementById('sosBtn');
+  const stat=document.getElementById('sosStat');
+  btn.style.background='linear-gradient(135deg,#991b1b,#ef4444,#991b1b)';
+  stat.classList.add('on');
+  stat.textContent='📍 Detecting your location...';
+  toast('🚨 SOS Activated!','e');
 
-    function callNum(num) { showToast('📞 Calling ' + num + '...', 'error'); setTimeout(() => window.open('tel:' + num), 500); }
-    function copyNum(num) { navigator.clipboard.writeText(num).then(() => { showToast('📋 ' + num + ' copied to clipboard!', 'gold'); }).catch(() => { showToast('📋 Number: ' + num, 'gold'); }); }
-    function goToER(place) { showToast('🚨 Opening directions...', 'error'); setTimeout(() => { window.open('https://www.google.com/maps/search/' + encodeURIComponent(place), '_blank'); }, 500); }
+  if(!navigator.geolocation){
+    stat.textContent='📞 Call 108 immediately — location unavailable!';
+    window.open('tel:108');
+    setTimeout(resetSOS,5000);
+    return;
+  }
 
-    setTimeout(() => showToast('🚨 Emergency page ready — stay safe!', 'gold'), 1500);
-  </script>
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      const{latitude:lat,longitude:lng}=pos.coords;
+      stat.textContent='✅ Location found! Opening nearest hospitals...';
+      toast('📍 Location detected — opening map!','s');
+      setTimeout(()=>{
+        window.open(`https://www.google.com/maps/search/emergency+hospital+near+me/@${lat},${lng},14z`,'_blank');
+        setTimeout(resetSOS,5000);
+      },800);
+    },
+    ()=>{
+      stat.textContent='⚠️ Location denied — calling 108 now!';
+      toast('⚠️ Call 108 immediately!','e');
+      window.open('tel:108');
+      setTimeout(resetSOS,5000);
+    },
+    {timeout:8000,enableHighAccuracy:true}
+  );
+}
+
+function resetSOS(){
+  sosActive=false;
+  document.getElementById('sosBtn').style.background='';
+  const s=document.getElementById('sosStat');
+  s.classList.remove('on');
+  s.textContent='Tap to detect your location and find nearest hospital';
+}
+
+function toggleFA(card){
+  const isOpen=card.classList.contains('exp');
+  document.querySelectorAll('.facard').forEach(c=>c.classList.remove('exp'));
+  if(!isOpen){
+    card.classList.add('exp');
+    toast('📋 '+card.querySelector('.fattl').childNodes[0].textContent.trim());
+  }
+}
+
+function callN(num){toast('📞 Calling '+num+'...','e');setTimeout(()=>window.open('tel:'+num),500)}
+function copyN(num){
+  navigator.clipboard.writeText(num)
+    .then(()=>toast('📋 '+num+' copied to clipboard!'))
+    .catch(()=>toast('📋 Number: '+num));
+}
+function goER(place){
+  toast('🚨 Opening directions...','e');
+  setTimeout(()=>window.open('https://www.google.com/maps/search/'+encodeURIComponent(place),'_blank'),400);
+}
+
+// Scroll animations
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}
+}),{threshold:.08})
+document.querySelectorAll('.qcard,.facard,.ercard,.ccard').forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';
+  el.style.transition=`opacity .5s ease ${i*.05}s,transform .5s ease ${i*.05}s`;
+  obs.observe(el);
+});
+
+setTimeout(()=>toast('🚨 Emergency page loaded — stay safe!'),1200);
+</script>
 </body>
 </html>
