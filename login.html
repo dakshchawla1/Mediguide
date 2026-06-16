@@ -3,349 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign In — MediGuide</title>
+<title>Login — MediGuide</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff;--mt:#555}
-body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px 60px}
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(var(--gd),var(--gold));border-radius:10px}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
-.glow{position:fixed;width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,.04),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;border-radius:50%}
-
-.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111;transition:all .3s}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
 .logo-i{width:34px;height:34px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
 .logo-t{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--gl)}
-.nav-back{color:#444;text-decoration:none;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;transition:color .2s}
-.nav-back:hover{color:var(--gl)}
+.nav-mid{display:flex;align-items:center;gap:2px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-mid a{color:#555;text-decoration:none;font-size:13px;font-weight:500;padding:7px 14px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nav-mid a:hover,.nav-mid a.act{color:#fff;background:#111}
+.nav-mid a.act{color:var(--gl)!important}
+.nav-r{display:flex;align-items:center;gap:10px}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap}
+.nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
+.hbg span{display:block;width:22px;height:2px;background:var(--gl);border-radius:2px;transition:all .3s}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mmenu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(0,0,0,.98);backdrop-filter:blur(20px);border-bottom:1px solid #111;padding:16px 20px;flex-direction:column;gap:2px;z-index:999}
+.mmenu.open{display:flex}
+.mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
+.mmenu a:hover{color:var(--gl)}
+.mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
 
-@keyframes fup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-@keyframes gsh{to{background-position:200% center}}
-@keyframes tin{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* PAGE */
+.page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:88px 22px 40px;position:relative}
+.bg-orb{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.03) 0%,transparent 70%);pointer-events:none}
 
-.wrap{width:100%;max-width:440px;position:relative;z-index:2;animation:fup .6s ease both}
-
-/* LOADING STATE */
-.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:60px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:24px}
-.lsp{width:36px;height:36px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:spin .9s linear infinite}
-.ltxt{font-size:14px;color:#444}
-
-/* LOGGED IN STATE */
-.loggedin{background:#0a0a0a;border:1px solid rgba(201,168,76,.12);border-radius:24px;padding:40px;text-align:center;display:none}
-.loggedin.show{display:block}
-.user-avatar{width:80px;height:80px;border-radius:50%;border:2px solid rgba(201,168,76,.2);margin:0 auto 16px;display:block;object-fit:cover}
-.user-avatar-placeholder{width:80px;height:80px;border-radius:50%;border:2px solid rgba(201,168,76,.2);margin:0 auto 16px;background:linear-gradient(135deg,var(--gd),var(--gold));display:flex;align-items:center;justify-content:center;font-size:32px}
-.user-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#fff;margin-bottom:6px}
-.user-email{font-size:13px;color:#444;margin-bottom:28px}
-.user-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);color:#34d399;font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;margin-bottom:28px}
-.badge-dot{width:6px;height:6px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
-@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
-
-.go-home{display:block;background:linear-gradient(135deg,#8a6f2e,var(--gold),#8a6f2e);background-size:200% auto;color:#000;font-size:14px;font-weight:700;padding:14px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;animation:gsh 4s linear infinite;margin-bottom:12px;width:100%;text-decoration:none;text-align:center}
-.signout-btn{width:100%;padding:12px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid #1a1a1a;background:transparent;color:#444}
-.signout-btn:hover{border-color:rgba(248,113,113,.2);color:#f87171}
-
-.feat-row{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding-top:20px;border-top:1px solid #0d0d0d;margin-top:20px}
-.feat{text-align:center}
-.feat-e{font-size:20px;display:block;margin-bottom:5px}
-.feat-t{font-size:11px;color:#1a1a1a}
-
-/* LOGIN CARD */
-.card{background:#0a0a0a;border:1px solid rgba(201,168,76,.1);border-radius:24px;padding:44px 36px;display:none}
-.card.show{display:block}
-
-.card-top{text-align:center;margin-bottom:32px}
-.card-ico{width:64px;height:64px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px;box-shadow:0 0 36px rgba(201,168,76,.2)}
-.card-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;margin-bottom:7px}
-.card-sub{font-size:13px;color:#444;line-height:1.6}
-
-/* GOOGLE BTN */
-.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:11px;background:#fff;color:#111;font-size:14px;font-weight:600;padding:14px 22px;border-radius:13px;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;box-shadow:0 4px 20px rgba(0,0,0,.4);margin-bottom:18px}
-.gbtn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5)}
-.gbtn:active{transform:translateY(0)}
-.gbtn.loading{opacity:.7;cursor:not-allowed}
-
-.divider{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.dline{flex:1;height:1px;background:#111}
-.dtext{font-size:12px;color:#222;font-weight:500}
+/* AUTH CARD */
+.acard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:28px;padding:44px;width:100%;max-width:440px;position:relative;z-index:2}
+.acard-top{text-align:center;margin-bottom:36px}
+.a-logo{width:56px;height:56px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+.a-ttl{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;margin-bottom:7px}
+.a-sub{font-size:13px;color:#333;line-height:1.6}
 
 /* TABS */
-.tabs{display:flex;background:#000;border:1px solid #111;border-radius:11px;overflow:hidden;margin-bottom:22px}
-.tab{flex:1;padding:10px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:'Inter',sans-serif;background:transparent;color:#333;transition:all .2s}
-.tab.on{background:rgba(201,168,76,.09);color:var(--gl)}
+.tabs{display:flex;background:#000;border:1px solid #111;border-radius:11px;padding:3px;margin-bottom:28px}
+.tab{flex:1;padding:10px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;border:none;background:transparent;color:#333;transition:all .2s}
+.tab.on{background:#0a0a0a;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 
-.panel{display:none}.panel.on{display:block}
+/* INPUTS */
+.flbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:block}
+.finp{width:100%;background:#000;border:1px solid #1a1a1a;border-radius:11px;padding:14px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;margin-bottom:14px}
+.finp:focus{border-color:rgba(201,168,76,.3)}
+.finp::placeholder{color:#111}
 
-/* FORM */
-.fg{margin-bottom:14px}
-.fl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:block}
-.fi{width:100%;background:#000;border:1px solid #111;border-radius:11px;padding:13px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:all .2s}
-.fi:focus{border-color:rgba(201,168,76,.28);box-shadow:0 0 0 3px rgba(201,168,76,.04)}
-.fi::placeholder{color:#1a1a1a}
+/* BUTTONS */
+.abtn{width:100%;background:linear-gradient(135deg,#8a6f2e,var(--gold),#8a6f2e);background-size:200% auto;color:#000;font-size:14px;font-weight:700;padding:15px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:14px;box-shadow:0 0 30px rgba(201,168,76,.15);transition:all .3s}
+.abtn:hover{transform:translateY(-1px);box-shadow:0 0 50px rgba(201,168,76,.25)}
+.abtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.or{display:flex;align-items:center;gap:12px;margin:18px 0;color:#111;font-size:12px}
+.or::before,.or::after{content:'';flex:1;height:1px;background:#111}
+.gbtn{width:100%;background:#0a0a0a;border:1px solid #1a1a1a;color:#aaa;font-size:14px;font-weight:600;padding:14px;border-radius:11px;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.gbtn:hover{border-color:#333;color:#fff}
+.gbtn svg{width:18px;height:18px;flex-shrink:0}
 
-.fgt{text-align:right;margin-top:-6px;margin-bottom:14px}
-.fgt a{font-size:12px;color:#222;text-decoration:none;transition:color .2s}
-.fgt a:hover{color:var(--gold)}
+/* LOGGED IN STATE */
+.logged-in{display:none;text-align:center}
+.li-avatar{width:80px;height:80px;border-radius:50%;border:3px solid rgba(201,168,76,.3);margin:0 auto 16px;object-fit:cover;background:#111;display:flex;align-items:center;justify-content:center;font-size:32px}
+.li-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:5px}
+.li-email{font-size:13px;color:#333;margin-bottom:6px}
+.li-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.15);color:#34d399;padding:4px 12px;border-radius:100px;margin-bottom:24px}
+.li-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
+.signout-btn{width:100%;background:transparent;border:1px solid #1a1a1a;color:#444;font-size:13px;font-weight:600;padding:13px;border-radius:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-bottom:12px}
+.signout-btn:hover{border-color:rgba(248,113,113,.2);color:#f87171}
+.go-home{display:block;text-align:center;color:var(--gold);font-size:13px;font-weight:600;text-decoration:none;padding:10px;transition:opacity .2s}
+.go-home:hover{opacity:.75}
 
-.sbtn2{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#8a6f2e,var(--gold),#8a6f2e);background-size:200% auto;color:#000;font-size:14px;font-weight:700;padding:14px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:.03em;box-shadow:0 0 32px rgba(201,168,76,.18);transition:all .3s;animation:gsh 4s linear infinite;margin-bottom:18px}
-.sbtn2:hover{transform:translateY(-2px);box-shadow:0 0 52px rgba(201,168,76,.32)}
-.sbtn2:disabled{opacity:.6;cursor:not-allowed;transform:none}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gsh{to{background-position:200% center}}
 
-.foot{text-align:center;font-size:12px;color:#333;margin-bottom:20px}
-.foot a{color:var(--gold);text-decoration:none;font-weight:600}
-.foot a:hover{color:var(--gl)}
-
-.trust{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#1a1a1a;margin-top:8px}
-.tdot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:blk 2s infinite}
-
-@media(max-width:480px){
-  .nav{padding:0 18px}
-  .card{padding:32px 20px}
-  .wrap{max-width:100%}
-  body{padding:80px 14px 40px}
+@media(max-width:900px){
+.nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
+.acard{padding:30px 22px}
 }
 </style>
 </head>
 <body>
-
-<div class="glow"></div>
-
-<nav class="nav">
+<nav class="nav" id="nav">
   <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
-  <a href="index.html" class="nav-back">← Back to Home</a>
+  <div class="nav-mid">
+    <a href="index.html">Home</a>
+    <a href="symptoms.html">Symptoms</a>
+    <a href="hospitals.html">Hospitals</a>
+    <a href="opd.html">OPD</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="medicines.html">Medicines</a>
+    <a href="helplines.html">Helplines</a>
+  </div>
+  <div class="nav-r">
+    <a href="login.html" class="nav-si act" style="color:var(--gl)">Sign in</a>
+    <a href="login.html" class="nav-ct">Get Started →</a>
+  </div>
+  <button class="hbg" id="hbg" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
-
-<div class="wrap">
-
-  <!-- LOADING -->
-  <div class="loading-screen" id="loadingScreen">
-    <div class="lsp"></div>
-    <div class="ltxt">Checking login status...</div>
-  </div>
-
-  <!-- LOGGED IN -->
-  <div class="loggedin" id="loggedInCard">
-    <div id="userAvatarWrap"></div>
-    <div class="user-name" id="userName">—</div>
-    <div class="user-email" id="userEmail">—</div>
-    <div class="user-badge"><div class="badge-dot"></div>Signed in with Google</div>
-    <a href="index.html" class="go-home">🏥 Go to MediGuide →</a>
-    <button class="signout-btn" onclick="signOut()">Sign out</button>
-    <div class="feat-row">
-      <div class="feat"><span class="feat-e">💾</span><div class="feat-t">History saved</div></div>
-      <div class="feat"><span class="feat-e">🚨</span><div class="feat-t">SOS contacts</div></div>
-      <div class="feat"><span class="feat-e">🔔</span><div class="feat-t">Reminders</div></div>
-      <div class="feat"><span class="feat-e">🌐</span><div class="feat-t">Bilingual</div></div>
-    </div>
-  </div>
-
-  <!-- LOGIN CARD -->
-  <div class="card" id="loginCard">
-    <div class="card-top">
-      <div class="card-ico">⚕️</div>
-      <div class="card-title">Welcome to MediGuide</div>
-      <div class="card-sub">Sign in to save your health history, emergency contacts and preferences</div>
-    </div>
-
-    <!-- GOOGLE LOGIN -->
-    <button class="gbtn" id="googleBtn" onclick="googleLogin()">
-      <svg width="20" height="20" viewBox="0 0 24 24">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-      </svg>
-      Continue with Google
-    </button>
-
-    <div class="divider"><div class="dline"></div><span class="dtext">OR</span><div class="dline"></div></div>
-
-    <!-- TABS -->
-    <div class="tabs">
-      <button class="tab on" onclick="switchTab('signin',this)">Sign In</button>
-      <button class="tab" onclick="switchTab('signup',this)">Create Account</button>
-    </div>
-
-    <!-- SIGN IN -->
-    <div class="panel on" id="panel-signin">
-      <div class="fg"><label class="fl">Email Address</label><input class="fi" id="si-email" type="email" placeholder="your@email.com"/></div>
-      <div class="fg"><label class="fl">Password</label><input class="fi" id="si-pass" type="password" placeholder="Enter your password"/></div>
-      <div class="fgt"><a href="#">Forgot password?</a></div>
-      <button class="sbtn2" onclick="emailSignIn()" id="siBtn">Sign In to MediGuide →</button>
-    </div>
-
-    <!-- SIGN UP -->
-    <div class="panel" id="panel-signup">
-      <div class="fg"><label class="fl">Full Name</label><input class="fi" id="su-name" type="text" placeholder="Your full name"/></div>
-      <div class="fg"><label class="fl">Email Address</label><input class="fi" id="su-email" type="email" placeholder="your@email.com"/></div>
-      <div class="fg"><label class="fl">Password</label><input class="fi" id="su-pass" type="password" placeholder="Create a password (min 6 chars)"/></div>
-      <button class="sbtn2" onclick="emailSignUp()" id="suBtn">Create Account →</button>
-    </div>
-
-    <div class="foot">By signing in you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>
-    <div class="trust"><div class="tdot"></div>Your data is private and secure</div>
-  </div>
-
+<div class="mmenu" id="mmenu">
+  <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+  <a href="symptoms.html" onclick="closeMenu()">🤖 Symptoms</a>
+  <a href="hospitals.html" onclick="closeMenu()">🗺️ Hospitals</a>
+  <a href="opd.html" onclick="closeMenu()">🏥 OPD Timings</a>
+  <a href="emergency.html" onclick="closeMenu()">🚨 Emergency</a>
+  <a href="medicines.html" onclick="closeMenu()">💊 Medicines</a>
+  <a href="helplines.html" onclick="closeMenu()">📞 Helplines</a>
+  <a href="login.html" class="mcta" onclick="closeMenu()">Get Started →</a>
 </div>
 
-<!-- FIREBASE SDK -->
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut as fbSignOut, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+<div class="page">
+  <div class="bg-orb"></div>
+  <div class="acard">
 
-// ===== YOUR FIREBASE CONFIG =====
-const firebaseConfig = {
-  apiKey: "AIzaSyCf8YKANsP6CLJzuZ_s8udujdcvZ5l_b2I",
-  authDomain: "mediguide-806cb.firebaseapp.com",
-  projectId: "mediguide-806cb",
-  storageBucket: "mediguide-806cb.firebasestorage.app",
-  messagingSenderId: "1023641040385",
-  appId: "1:1023641040385:web:fc7080ba8cfa98c9c33200"
+    <!-- AUTH FORM -->
+    <div id="authSection">
+      <div class="acard-top">
+        <div class="a-logo">⚕️</div>
+        <div class="a-ttl">Welcome to MediGuide</div>
+        <div class="a-sub">Sign in to save your health history and get personalised guidance</div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab on" onclick="setTab('signin',this)">Sign In</button>
+        <button class="tab" onclick="setTab('signup',this)">Sign Up</button>
+      </div>
+
+      <div id="signinSection">
+        <label class="flbl">Email Address</label>
+        <input class="finp" id="siEmail" type="email" placeholder="your@email.com"/>
+        <label class="flbl">Password</label>
+        <input class="finp" id="siPass" type="password" placeholder="Your password"/>
+        <button class="abtn" id="siBtn" onclick="emailSignIn()">Sign In →</button>
+        <div class="or">or continue with</div>
+        <button class="gbtn" onclick="googleSignIn()">
+          <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M5.27 9.76A7.08 7.08 0 0 1 12 4.9c1.69 0 3.22.56 4.42 1.49l3.31-3.31A11.95 11.95 0 0 0 12 1C8.23 1 4.96 3.05 3.06 6.09l2.21 3.67Z"/><path fill="#34A853" d="M16.04 18.01A7.07 7.07 0 0 1 12 19.1c-2.93 0-5.43-1.78-6.59-4.34l-3.28 2.52C4.21 20.78 7.85 23 12 23c2.91 0 5.67-1.07 7.75-3l-3.71-1.99Z"/><path fill="#FBBC05" d="M19.75 20c2.16-2.02 3.25-5 3.25-8 0-.58-.07-1.2-.18-1.78H12v4.55h6.18a5.2 5.2 0 0 1-2.25 3.46l3.82 1.77Z"/><path fill="#EA4335" d="M5.41 14.76A7.14 7.14 0 0 1 4.9 12c0-.96.18-1.88.51-2.73L3.09 5.6A11.98 11.98 0 0 0 1 12c0 1.95.47 3.79 1.29 5.42l3.12-2.66Z"/></svg>
+          Continue with Google
+        </button>
+      </div>
+
+      <div id="signupSection" style="display:none">
+        <label class="flbl">Full Name</label>
+        <input class="finp" id="suName" type="text" placeholder="Your full name"/>
+        <label class="flbl">Email Address</label>
+        <input class="finp" id="suEmail" type="email" placeholder="your@email.com"/>
+        <label class="flbl">Password (min 6 characters)</label>
+        <input class="finp" id="suPass" type="password" placeholder="Create a strong password"/>
+        <button class="abtn" id="suBtn" onclick="emailSignUp()">Create Account →</button>
+        <div class="or">or sign up with</div>
+        <button class="gbtn" onclick="googleSignIn()">
+          <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M5.27 9.76A7.08 7.08 0 0 1 12 4.9c1.69 0 3.22.56 4.42 1.49l3.31-3.31A11.95 11.95 0 0 0 12 1C8.23 1 4.96 3.05 3.06 6.09l2.21 3.67Z"/><path fill="#34A853" d="M16.04 18.01A7.07 7.07 0 0 1 12 19.1c-2.93 0-5.43-1.78-6.59-4.34l-3.28 2.52C4.21 20.78 7.85 23 12 23c2.91 0 5.67-1.07 7.75-3l-3.71-1.99Z"/><path fill="#FBBC05" d="M19.75 20c2.16-2.02 3.25-5 3.25-8 0-.58-.07-1.2-.18-1.78H12v4.55h6.18a5.2 5.2 0 0 1-2.25 3.46l3.82 1.77Z"/><path fill="#EA4335" d="M5.41 14.76A7.14 7.14 0 0 1 4.9 12c0-.96.18-1.88.51-2.73L3.09 5.6A11.98 11.98 0 0 0 1 12c0 1.95.47 3.79 1.29 5.42l3.12-2.66Z"/></svg>
+          Continue with Google
+        </button>
+      </div>
+    </div>
+
+    <!-- LOGGED IN -->
+    <div class="logged-in" id="loggedInSection">
+      <div class="li-avatar" id="liAvatar">👤</div>
+      <div class="li-name" id="liName">—</div>
+      <div class="li-email" id="liEmail">—</div>
+      <div class="li-badge"><div class="li-dot"></div>Signed In</div>
+      <button class="signout-btn" onclick="fbSignOut()">🚪 Sign Out</button>
+      <a href="index.html" class="go-home">← Back to MediGuide</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getAuth,signInWithPopup,GoogleAuthProvider,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import{getFirestore,doc,setDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const fbConfig={
+  apiKey:"AIzaSyCf8YKANsP6CLJzuZ_s8udujdcvZ5l_b2I",
+  authDomain:"mediguide-806cb.firebaseapp.com",
+  projectId:"mediguide-806cb",
+  storageBucket:"mediguide-806cb.appspot.com",
+  messagingSenderId:"your-sender-id",
+  appId:"your-app-id"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
+const app=initializeApp(fbConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const provider=new GoogleAuthProvider();
 
-// ===== TOAST =====
-function toast(msg, type='g') {
-  const ex = document.querySelector('.tm'); if(ex) ex.remove();
-  const t = document.createElement('div'); t.className='tm'; t.textContent=msg;
-  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${type==='e'?'rgba(248,113,113,.1)':type==='s'?'rgba(52,211,153,.1)':'rgba(201,168,76,.1)'};border:1px solid ${type==='e'?'rgba(248,113,113,.3)':type==='s'?'rgba(52,211,153,.3)':'rgba(201,168,76,.3)'};color:${type==='e'?'#f87171':type==='s'?'#34d399':'#c9a84c'};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s cubic-bezier(.34,1.56,.64,1) both;`;
-  document.body.appendChild(t); setTimeout(()=>t.remove(),3500);
+function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
+function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
+window.addEventListener('scroll',()=>{document.getElementById('nav').style.background=window.scrollY>50?'rgba(0,0,0,.98)':'rgba(0,0,0,.92)';closeMenu()})
+window.toggleMenu=toggleMenu;window.closeMenu=closeMenu;
+
+function toast(msg,type='g'){
+  const ex=document.querySelector('.tm');if(ex)ex.remove();
+  const t=document.createElement('div');t.className='tm';t.textContent=msg;
+  const colors={e:['rgba(248,113,113,.12)','rgba(248,113,113,.35)','#f87171'],s:['rgba(52,211,153,.12)','rgba(52,211,153,.35)','#34d399'],g:['rgba(201,168,76,.12)','rgba(201,168,76,.35)','#c9a84c']};
+  const c=colors[type]||colors.g;
+  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${c[0]};border:1px solid ${c[1]};color:${c[2]};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s ease both`;
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}';document.head.appendChild(s);
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 
-// ===== SAVE USER TO FIRESTORE =====
-async function saveUserToDB(user) {
-  try {
-    await setDoc(doc(db, 'users', user.uid), {
-      name: user.displayName || 'MediGuide User',
-      email: user.email,
-      photo: user.photoURL || '',
-      lastLogin: new Date().toISOString(),
-      createdAt: new Date().toISOString()
-    }, { merge: true });
-  } catch(e) { console.log('DB save error:', e); }
+function setBtn(id,loading){
+  const btn=document.getElementById(id);
+  if(!btn)return;
+  btn.disabled=loading;
+  btn.textContent=loading?'Please wait...':id==='siBtn'?'Sign In →':'Create Account →';
 }
 
-// ===== SHOW LOGGED IN UI =====
-function showLoggedIn(user) {
-  document.getElementById('loadingScreen').style.display = 'none';
-  document.getElementById('loginCard').classList.remove('show');
-  document.getElementById('loggedInCard').classList.add('show');
-  document.getElementById('userName').textContent = user.displayName || 'MediGuide User';
-  document.getElementById('userEmail').textContent = user.email;
-  const wrap = document.getElementById('userAvatarWrap');
-  if(user.photoURL) {
-    wrap.innerHTML = `<img src="${user.photoURL}" class="user-avatar" alt="Profile"/>`;
-  } else {
-    wrap.innerHTML = `<div class="user-avatar-placeholder">👤</div>`;
+async function saveUser(user){
+  try{
+    await setDoc(doc(db,'users',user.uid),{
+      name:user.displayName||'MediGuide User',
+      email:user.email,
+      photo:user.photoURL||'',
+      lastLogin:serverTimestamp(),
+      uid:user.uid
+    },{merge:true});
+  }catch(e){console.warn('Firestore save error:',e)}
+}
+
+function showLoggedIn(user){
+  document.getElementById('authSection').style.display='none';
+  document.getElementById('loggedInSection').style.display='block';
+  document.getElementById('liName').textContent=user.displayName||'MediGuide User';
+  document.getElementById('liEmail').textContent=user.email||'';
+  const av=document.getElementById('liAvatar');
+  if(user.photoURL){
+    const img=document.createElement('img');
+    img.src=user.photoURL;img.alt='avatar';
+    img.style.cssText='width:80px;height:80px;border-radius:50%;border:3px solid rgba(201,168,76,.3);object-fit:cover';
+    av.innerHTML='';av.appendChild(img);
+  }else{av.textContent='👤'}
+}
+
+onAuthStateChanged(auth,user=>{
+  if(user){showLoggedIn(user)}
+  else{
+    document.getElementById('authSection').style.display='block';
+    document.getElementById('loggedInSection').style.display='none';
   }
-}
-
-// ===== SHOW LOGIN UI =====
-function showLogin() {
-  document.getElementById('loadingScreen').style.display = 'none';
-  document.getElementById('loggedInCard').classList.remove('show');
-  document.getElementById('loginCard').classList.add('show');
-}
-
-// ===== AUTH STATE LISTENER =====
-onAuthStateChanged(auth, (user) => {
-  if(user) { showLoggedIn(user); }
-  else { showLogin(); }
 });
 
-// ===== GOOGLE LOGIN =====
-window.googleLogin = async function() {
-  const btn = document.getElementById('googleBtn');
-  btn.classList.add('loading');
-  btn.textContent = 'Signing in...';
-  try {
-    const result = await signInWithPopup(auth, provider);
-    await saveUserToDB(result.user);
-    toast('✅ Welcome ' + (result.user.displayName || 'to MediGuide') + '!', 's');
-    setTimeout(() => window.location.href = 'index.html', 1500);
-  } catch(e) {
-    btn.classList.remove('loading');
-    btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Continue with Google`;
-    if(e.code === 'auth/popup-blocked') { toast('⚠️ Popup blocked — allow popups in your browser!', 'e'); }
-    else if(e.code === 'auth/cancelled-popup-request') { toast('⚠️ Sign-in cancelled', 'e'); }
-    else { toast('⚠️ Google sign-in failed — try again', 'e'); }
-  }
-}
-
-// ===== EMAIL SIGN IN =====
-window.emailSignIn = async function() {
-  const email = document.getElementById('si-email').value.trim();
-  const pass = document.getElementById('si-pass').value.trim();
-  if(!email || !pass) { toast('⚠️ Please fill in all fields', 'e'); return; }
-  if(!email.includes('@')) { toast('⚠️ Please enter a valid email', 'e'); return; }
-  const btn = document.getElementById('siBtn');
-  btn.textContent = 'Signing in...'; btn.disabled = true;
-  try {
-    const result = await signInWithEmailAndPassword(auth, email, pass);
-    toast('✅ Welcome back!', 's');
-    setTimeout(() => window.location.href = 'index.html', 1500);
-  } catch(e) {
-    btn.textContent = 'Sign In to MediGuide →'; btn.disabled = false;
-    if(e.code === 'auth/user-not-found') { toast('⚠️ No account found — create one first!', 'e'); }
-    else if(e.code === 'auth/wrong-password') { toast('⚠️ Wrong password — try again', 'e'); }
-    else if(e.code === 'auth/invalid-email') { toast('⚠️ Invalid email address', 'e'); }
-    else if(e.code === 'auth/invalid-credential') { toast('⚠️ Wrong email or password', 'e'); }
-    else { toast('⚠️ Sign-in failed — try again', 'e'); }
-  }
-}
-
-// ===== EMAIL SIGN UP =====
-window.emailSignUp = async function() {
-  const name = document.getElementById('su-name').value.trim();
-  const email = document.getElementById('su-email').value.trim();
-  const pass = document.getElementById('su-pass').value.trim();
-  if(!name || !email || !pass) { toast('⚠️ Please fill in all fields', 'e'); return; }
-  if(!email.includes('@')) { toast('⚠️ Please enter a valid email', 'e'); return; }
-  if(pass.length < 6) { toast('⚠️ Password must be at least 6 characters', 'e'); return; }
-  const btn = document.getElementById('suBtn');
-  btn.textContent = 'Creating account...'; btn.disabled = true;
-  try {
-    const result = await createUserWithEmailAndPassword(auth, email, pass);
-    await updateProfile(result.user, { displayName: name });
-    await saveUserToDB({ ...result.user, displayName: name });
-    toast('✅ Account created! Welcome ' + name + '!', 's');
-    setTimeout(() => window.location.href = 'index.html', 1500);
-  } catch(e) {
-    btn.textContent = 'Create Account →'; btn.disabled = false;
-    if(e.code === 'auth/email-already-in-use') { toast('⚠️ Email already registered — sign in instead!', 'e'); }
-    else if(e.code === 'auth/weak-password') { toast('⚠️ Password too weak — use 6+ characters', 'e'); }
-    else { toast('⚠️ Account creation failed — try again', 'e'); }
-  }
-}
-
-// ===== SIGN OUT =====
-window.signOut = async function() {
-  try {
-    await fbSignOut(auth);
-    toast('👋 Signed out successfully');
-    setTimeout(() => window.location.href = 'index.html', 1000);
-  } catch(e) { toast('⚠️ Sign out failed', 'e'); }
-}
-
-// ===== TAB SWITCH =====
-window.switchTab = function(tab, btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+window.setTab=function(tab,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  document.getElementById('panel-' + tab).classList.add('on');
+  document.getElementById('signinSection').style.display=tab==='signin'?'block':'none';
+  document.getElementById('signupSection').style.display=tab==='signup'?'block':'none';
 }
 
-const s = document.createElement('style');
-s.textContent = '@keyframes tin{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}} @keyframes gsh{to{background-position:200% center}} @keyframes spin{to{transform:rotate(360deg)}}';
-document.head.appendChild(s);
+window.googleSignIn=async function(){
+  try{
+    toast('🔄 Opening Google Sign-In...');
+    const result=await signInWithPopup(auth,provider);
+    await saveUser(result.user);
+    toast('✅ Welcome '+result.user.displayName+'!','s');
+  }catch(e){
+    const msgs={
+      'auth/popup-blocked':'Popup blocked — please allow popups for this site',
+      'auth/popup-closed-by-user':'Sign-in cancelled',
+      'auth/network-request-failed':'Network error — check your connection'
+    };
+    toast('⚠️ '+(msgs[e.code]||e.message),'e');
+  }
+}
 
+window.emailSignIn=async function(){
+  const email=document.getElementById('siEmail').value.trim();
+  const pass=document.getElementById('siPass').value;
+  if(!email||!pass){toast('⚠️ Please enter email and password','e');return}
+  setBtn('siBtn',true);
+  try{
+    const result=await signInWithEmailAndPassword(auth,email,pass);
+    await saveUser(result.user);
+    toast('✅ Welcome back!','s');
+  }catch(e){
+    const msgs={
+      'auth/user-not-found':'No account found with this email',
+      'auth/wrong-password':'Incorrect password',
+      'auth/invalid-email':'Please enter a valid email address',
+      'auth/invalid-credential':'Email or password is incorrect',
+      'auth/too-many-requests':'Too many failed attempts — try again later',
+      'auth/network-request-failed':'Network error — check your connection'
+    };
+    toast('⚠️ '+(msgs[e.code]||'Sign in failed — try again'),'e');
+  }
+  setBtn('siBtn',false);
+}
+
+window.emailSignUp=async function(){
+  const name=document.getElementById('suName').value.trim();
+  const email=document.getElementById('suEmail').value.trim();
+  const pass=document.getElementById('suPass').value;
+  if(!name||!email||!pass){toast('⚠️ Please fill in all fields','e');return}
+  if(pass.length<6){toast('⚠️ Password must be at least 6 characters','e');return}
+  setBtn('suBtn',true);
+  try{
+    const result=await createUserWithEmailAndPassword(auth,email,pass);
+    await updateProfile(result.user,{displayName:name});
+    await saveUser(result.user);
+    toast('✅ Account created! Welcome '+name+'!','s');
+  }catch(e){
+    const msgs={
+      'auth/email-already-in-use':'An account with this email already exists',
+      'auth/invalid-email':'Please enter a valid email address',
+      'auth/weak-password':'Password is too weak — use at least 6 characters',
+      'auth/network-request-failed':'Network error — check your connection'
+    };
+    toast('⚠️ '+(msgs[e.code]||'Sign up failed — try again'),'e');
+  }
+  setBtn('suBtn',false);
+}
+
+window.fbSignOut=async function(){
+  try{
+    await signOut(auth);
+    toast('👋 Signed out successfully');
+  }catch(e){toast('⚠️ Sign out failed','e')}
+}
 </script>
 </body>
 </html>
