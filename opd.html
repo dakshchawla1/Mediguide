@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPD Timings — MediGuide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(var(--gd),var(--gold));border-radius:10px}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111;transition:all .3s}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-i{width:34px;height:34px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-t{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--gl)}
+.nav-mid{display:flex;align-items:center;gap:2px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-mid a{color:#555;text-decoration:none;font-size:13px;font-weight:500;padding:7px 14px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nav-mid a:hover,.nav-mid a.act{color:#fff;background:#111}
+.nav-mid a.act{color:var(--gl)!important}
+.nav-r{display:flex;align-items:center;gap:10px}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap;transition:color .2s}
+.nav-si:hover{color:var(--gl)}
+.nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
+.hbg span{display:block;width:22px;height:2px;background:var(--gl);border-radius:2px;transition:all .3s}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mmenu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(0,0,0,.98);backdrop-filter:blur(20px);border-bottom:1px solid #111;padding:16px 20px;flex-direction:column;gap:2px;z-index:999}
+.mmenu.open{display:flex}
+.mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
+.mmenu a:hover{color:var(--gl)}
+.mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
+
+.wrap{max-width:1000px;margin:0 auto;padding:120px 22px 90px;position:relative;z-index:2}
+
+/* ANIMATIONS */
+@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gsh{to{background-position:200% center}}
+
+/* PAGE HEADER */
+.eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.ptitle{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.05}
+.ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.psub{font-size:15px;color:#444;line-height:1.8;margin-bottom:28px}
+
+/* LIVE CLOCK */
+.clock-bar{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;padding:18px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.clock-left{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.clock-time{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--gl);letter-spacing:-1px}
+.clock-date{font-size:13px;color:#333}
+.clock-day{font-size:12px;font-weight:700;color:var(--gold);background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.15);padding:5px 14px;border-radius:100px}
+
+/* SEARCH */
+.srch-wrap{position:relative;margin-bottom:14px}
+.srch-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.sinp{width:100%;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;padding:14px 20px 14px 44px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.sinp:focus{border-color:rgba(201,168,76,.3)}
+.sinp::placeholder{color:#1a1a1a}
+
+/* FILTERS */
+.cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:32px}
+.cat{background:#0a0a0a;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:600;padding:8px 16px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;white-space:nowrap}
+.cat:hover,.cat.on{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.25);color:var(--gl)}
+
+/* SECTION HEADS */
+.sew{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.set{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.ser{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.2),transparent)}
+.sttl{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:18px}
+
+/* HOSPITAL CARDS */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:48px}
+
+.hcard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:22px;padding:24px;transition:all .3s;position:relative;overflow:hidden}
+.hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);opacity:0;transition:opacity .3s}
+.hcard:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.6);border-color:#1a1a1a}
+.hcard:hover::before{opacity:1}
+.hcard.hidden{display:none!important}
+
+/* CARD TOP */
+.htop{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.hico{width:46px;height:46px;border-radius:13px;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.hinfo{flex:1;min-width:0}
+.hname{font-family:'Playfair Display',serif;font-size:16px;font-weight:800;color:#fff;margin-bottom:4px;line-height:1.2}
+.hloc{font-size:11px;color:#333;margin-bottom:7px;line-height:1.4}
+.hbadge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.05em;text-transform:uppercase}
+.hb-gov{background:rgba(52,211,153,.06);color:#34d399;border:1px solid rgba(52,211,153,.12)}
+.hb-priv{background:rgba(96,165,250,.06);color:#60a5fa;border:1px solid rgba(96,165,250,.12)}
+.hb-aiims{background:rgba(201,168,76,.07);color:var(--gold);border:1px solid rgba(201,168,76,.14)}
+
+/* STATUS */
+.hstatus{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;margin-top:6px}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.open-now .sdot{background:#34d399;animation:blk 2s infinite}
+.open-now{color:#34d399}
+.closed-now .sdot{background:#f87171}
+.closed-now{color:#f87171}
+
+/* DEPARTMENTS */
+.dept-wrap{margin-top:16px;border-top:1px solid #111;padding-top:16px}
+.dept-ttl{font-size:10px;font-weight:700;color:rgba(201,168,76,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.dept-list{display:flex;flex-direction:column;gap:6px}
+.dept-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#000;border-radius:10px;border:1px solid #0d0d0d;gap:8px}
+.dept-name{font-size:12px;font-weight:600;color:#888;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.dept-ico{font-size:14px}
+.dept-time{text-align:right}
+.dept-time strong{display:block;color:var(--gold);font-size:12px;font-weight:700}
+.dept-time span{display:block;font-size:10px;color:#222;margin-top:1px}
+
+/* CARD FOOTER */
+.hfooter{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.hbtn{flex:1;padding:10px 14px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.05);color:var(--gl);white-space:nowrap;min-width:100px}
+.hbtn:hover{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.3)}
+.hbtn-s{background:transparent;border:1px solid #1a1a1a;color:#444}
+.hbtn-s:hover{border-color:#333;color:#888}
+
+/* NO RESULTS */
+.nores{display:none;text-align:center;padding:52px 22px}
+.nores.on{display:block}
+.nores p{font-size:15px;color:#333;margin-bottom:6px}
+.nores span{font-size:13px;color:#111}
+
+/* TIPS */
+.tip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:48px}
+.tip-card{background:#0a0a0a;border:1px solid #111;border-radius:16px;padding:20px}
+.tip-ico{font-size:22px;margin-bottom:10px;display:block}
+.tip-ttl{font-size:13px;font-weight:700;color:#ddd;margin-bottom:6px}
+.tip-txt{font-size:12px;color:#333;line-height:1.65}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+.nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
+.wrap{padding:100px 16px 60px}.ptitle{font-size:26px!important}
+.hgrid{grid-template-columns:1fr}
+.cats{gap:5px}.cat{font-size:11px;padding:6px 12px}
+.clock-bar{flex-direction:column;gap:8px}
+.clock-time{font-size:26px}
+.tip-grid{grid-template-columns:1fr 1fr}
+.hfooter{flex-direction:column}
+.hbtn{min-width:unset;width:100%}
+}
+@media(max-width:480px){
+.tip-grid{grid-template-columns:1fr}
+.ptitle{font-size:22px!important}
+.dept-row{flex-direction:column;align-items:flex-start;gap:4px}
+.dept-time{text-align:left}
+}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav">
+  <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
+  <div class="nav-mid">
+    <a href="index.html">Home</a>
+    <a href="symptoms.html">Symptoms</a>
+    <a href="hospitals.html">Hospitals</a>
+    <a href="opd.html" class="act">OPD</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="medicines.html">Medicines</a>
+    <a href="helplines.html">Helplines</a>
+  </div>
+  <div class="nav-r">
+    <a href="login.html" class="nav-si">Sign in</a>
+    <a href="login.html" class="nav-ct">Get Started →</a>
+  </div>
+  <button class="hbg" id="hbg" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mmenu" id="mmenu">
+  <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+  <a href="symptoms.html" onclick="closeMenu()">🤖 Symptoms</a>
+  <a href="hospitals.html" onclick="closeMenu()">🗺️ Hospitals</a>
+  <a href="opd.html" onclick="closeMenu()">🏥 OPD Timings</a>
+  <a href="emergency.html" onclick="closeMenu()">🚨 Emergency</a>
+  <a href="medicines.html" onclick="closeMenu()">💊 Medicines</a>
+  <a href="helplines.html" onclick="closeMenu()">📞 Helplines</a>
+  <a href="login.html" class="mcta" onclick="closeMenu()">Get Started →</a>
+</div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="eye">🏥 OPD Timings</div>
+  <h1 class="ptitle">Hospital <span>OPD</span> Timings</h1>
+  <p class="psub">Department-wise OPD timings for major government and private hospitals in Delhi NCR. See which departments are open right now and plan your visit.</p>
+
+  <!-- LIVE CLOCK -->
+  <div class="clock-bar">
+    <div class="clock-left">
+      <div class="clock-time" id="clockTime">--:--:--</div>
+      <div class="clock-date" id="clockDate">Loading...</div>
+    </div>
+    <div class="clock-day" id="clockDay">---</div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="srch-wrap">
+    <span class="srch-ico">🔍</span>
+    <input class="sinp" id="srch" placeholder="Search hospitals or departments — e.g. AIIMS, Cardiology, Eye, Skin, Ortho..."/>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="cats">
+    <button class="cat on" onclick="setCat('all',this)">🏥 All Hospitals</button>
+    <button class="cat" onclick="setCat('govt',this)">🏛️ Government</button>
+    <button class="cat" onclick="setCat('private',this)">🏨 Private</button>
+    <button class="cat" onclick="setCat('aiims',this)">⭐ AIIMS</button>
+    <button class="cat" onclick="setCat('open',this)">🟢 Open Now</button>
+  </div>
+
+  <div class="nores" id="nores"><p>😕 No hospitals found</p><span>Try a different search or filter</span></div>
+
+  <!-- GOVERNMENT HOSPITALS -->
+  <div class="sew"><span class="set">Government Hospitals</span><div class="ser"></div></div>
+  <div class="sttl">Free Treatment Available</div>
+  <div class="hgrid">
+
+    <!-- AIIMS NEW DELHI -->
+    <div class="hcard" data-cat="govt aiims" data-s="aiims all india institute medical sciences new delhi cardiology neurology ortho eye ent pulmonology medicine">
+      <div class="htop">
+        <div class="hico">🏥</div>
+        <div class="hinfo">
+          <div class="hname">AIIMS New Delhi</div>
+          <div class="hloc">📍 Sri Aurobindo Marg, Ansari Nagar, New Delhi — 110029</div>
+          <span class="hbadge hb-aiims">⭐ Premier Institute</span>
+          <div class="hstatus" id="st-aiims"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">❤️</span>Cardiology</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Fri · OPD Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Neurology</span><div class="dept-time"><strong>9:00 AM – 12:00 PM</strong><span>Mon–Fri · Neurosciences Centre</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · OPD Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👁️</span>Ophthalmology</span><div class="dept-time"><strong>8:00 AM – 12:30 PM</strong><span>Mon–Fri · Eye Centre</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫁</span>Pulmonology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · Medicine OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Main OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👂</span>ENT</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · ENT OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔴</span>Dermatology</span><div class="dept-time"><strong>9:00 AM – 12:00 PM</strong><span>Mon–Fri · Skin OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('AIIMS New Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-26588500')">📞 26588500</button>
+      </div>
+    </div>
+
+    <!-- SAFDARJUNG -->
+    <div class="hcard" data-cat="govt" data-s="safdarjung hospital new delhi general medicine surgery dermatology gynaecology paediatrics ortho">
+      <div class="htop">
+        <div class="hico">🏛️</div>
+        <div class="hinfo">
+          <div class="hname">Safdarjung Hospital</div>
+          <div class="hloc">📍 Ring Road, Safdarjung, New Delhi — 110029</div>
+          <span class="hbadge hb-gov">🏛️ Government</span>
+          <div class="hstatus" id="st-sfj"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Main OPD Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔪</span>General Surgery</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Surgery OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👩</span>Gynaecology</span><div class="dept-time"><strong>8:00 AM – 12:00 PM</strong><span>Mon–Sat · Gynae OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔴</span>Dermatology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · Skin OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👶</span>Paediatrics</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Children OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Ortho OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👁️</span>Ophthalmology</span><div class="dept-time"><strong>9:00 AM – 12:30 PM</strong><span>Mon–Fri · Eye OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👂</span>ENT</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Sat · ENT OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('Safdarjung Hospital New Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-26707444')">📞 26707444</button>
+      </div>
+    </div>
+
+    <!-- RML HOSPITAL -->
+    <div class="hcard" data-cat="govt" data-s="rml ram manohar lohia hospital new delhi cardiology ent psychiatry gastroenterology dental medicine">
+      <div class="htop">
+        <div class="hico">🏛️</div>
+        <div class="hinfo">
+          <div class="hname">RML Hospital</div>
+          <div class="hloc">📍 Baba Kharak Singh Marg, New Delhi — 110001</div>
+          <span class="hbadge hb-gov">🏛️ Government</span>
+          <div class="hstatus" id="st-rml"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · OPD Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">❤️</span>Cardiology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · Cardio OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👂</span>ENT</span><div class="dept-time"><strong>8:30 AM – 1:00 PM</strong><span>Mon–Sat · ENT OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Psychiatry</span><div class="dept-time"><strong>9:00 AM – 12:00 PM</strong><span>Mon–Fri · Psych OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦷</span>Dental</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Dental OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫃</span>Gastroenterology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · GE OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Ortho OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔴</span>Dermatology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · Skin OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('RML Hospital New Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-23404000')">📞 23404000</button>
+      </div>
+    </div>
+
+    <!-- GTB HOSPITAL -->
+    <div class="hcard" data-cat="govt" data-s="gtb guru teg bahadur hospital dilshad garden east delhi medicine surgery ortho gynaecology eye">
+      <div class="htop">
+        <div class="hico">🏛️</div>
+        <div class="hinfo">
+          <div class="hname">GTB Hospital</div>
+          <div class="hloc">📍 Dilshad Garden, East Delhi — 110095</div>
+          <span class="hbadge hb-gov">🏛️ Government</span>
+          <div class="hstatus" id="st-gtb"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Main OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔪</span>General Surgery</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Surgery Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Ortho Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👩</span>Gynaecology</span><div class="dept-time"><strong>8:00 AM – 12:00 PM</strong><span>Mon–Sat · Gynae Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👁️</span>Ophthalmology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · Eye OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👶</span>Paediatrics</span><div class="dept-time"><strong>8:00 AM – 12:30 PM</strong><span>Mon–Sat · Paed OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔴</span>Dermatology</span><div class="dept-time"><strong>9:00 AM – 12:30 PM</strong><span>Mon–Fri · Skin OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👂</span>ENT</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Sat · ENT OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('GTB Hospital Dilshad Garden Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-22582626')">📞 22582626</button>
+      </div>
+    </div>
+
+    <!-- LNJP -->
+    <div class="hcard" data-cat="govt" data-s="lnjp lok nayak jai prakash narayan hospital new delhi medicine surgery skin ent ortho">
+      <div class="htop">
+        <div class="hico">🏛️</div>
+        <div class="hinfo">
+          <div class="hname">LNJP Hospital</div>
+          <div class="hloc">📍 Jawahar Lal Nehru Marg, New Delhi — 110002</div>
+          <span class="hbadge hb-gov">🏛️ Government</span>
+          <div class="hstatus" id="st-lnjp"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · OPD Block</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔴</span>Dermatology</span><div class="dept-time"><strong>9:00 AM – 12:30 PM</strong><span>Mon–Fri · Skin OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Ortho OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👂</span>ENT</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Sat · ENT OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔪</span>General Surgery</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Surgery OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👶</span>Paediatrics</span><div class="dept-time"><strong>8:00 AM – 12:00 PM</strong><span>Mon–Sat · Paed OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👩</span>Gynaecology</span><div class="dept-time"><strong>8:00 AM – 12:00 PM</strong><span>Mon–Sat · Gynae OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Psychiatry</span><div class="dept-time"><strong>9:00 AM – 12:00 PM</strong><span>Mon–Fri · Psych OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('LNJP Hospital New Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-23232400')">📞 23232400</button>
+      </div>
+    </div>
+
+    <!-- AIIMS JHAJJAR -->
+    <div class="hcard" data-cat="govt aiims" data-s="aiims jhajjar haryana ncr badsa cancer oncology haematology medicine surgery government">
+      <div class="htop">
+        <div class="hico">🏥</div>
+        <div class="hinfo">
+          <div class="hname">AIIMS Jhajjar</div>
+          <div class="hloc">📍 Badsa, Jhajjar, Haryana — 124105</div>
+          <span class="hbadge hb-aiims">⭐ AIIMS Campus</span>
+          <div class="hstatus" id="st-jhajjar"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🎗️</span>Oncology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · Cancer OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩸</span>Haematology</span><div class="dept-time"><strong>9:00 AM – 12:00 PM</strong><span>Mon–Fri · Haem OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Main OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔪</span>Surgery</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Fri · Surgery OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Neurology</span><div class="dept-time"><strong>9:00 AM – 1:00 PM</strong><span>Mon–Fri · Neuro OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>8:00 AM – 1:00 PM</strong><span>Mon–Sat · Ortho OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('AIIMS Jhajjar Haryana')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('01251-971300')">📞 971300</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PRIVATE HOSPITALS -->
+  <div class="sew"><span class="set">Private Hospitals</span><div class="ser"></div></div>
+  <div class="sttl">Premium Care Available</div>
+  <div class="hgrid">
+
+    <!-- MAX SAKET -->
+    <div class="hcard" data-cat="private" data-s="max hospital saket new delhi cardiology neurology ortho gastroenterology gynaecology dermatology private">
+      <div class="htop">
+        <div class="hico">🏨</div>
+        <div class="hinfo">
+          <div class="hname">Max Hospital Saket</div>
+          <div class="hloc">📍 Press Enclave Road, Saket, New Delhi — 110017</div>
+          <span class="hbadge hb-priv">🏨 Private</span>
+          <div class="hstatus" id="st-max"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">❤️</span>Cardiology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Cardio OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Neurology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Neuro OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Ortho OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫃</span>Gastroenterology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Sat · Gastro OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👩</span>Gynaecology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Gynae OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔴</span>Dermatology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Sat · Skin OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫘</span>Nephrology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Fri · Kidney OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧬</span>Endocrinology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Fri · Endocrine OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('Max Hospital Saket New Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-26515050')">📞 26515050</button>
+      </div>
+    </div>
+
+    <!-- APOLLO -->
+    <div class="hcard" data-cat="private" data-s="apollo hospital sarita vihar new delhi cardiology oncology neurology ortho nephrology private">
+      <div class="htop">
+        <div class="hico">🏨</div>
+        <div class="hinfo">
+          <div class="hname">Apollo Hospital Delhi</div>
+          <div class="hloc">📍 Sarita Vihar, Mathura Road, New Delhi — 110076</div>
+          <span class="hbadge hb-priv">🏨 Private</span>
+          <div class="hstatus" id="st-apollo"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">❤️</span>Cardiology</span><div class="dept-time"><strong>9:00 AM – 6:00 PM</strong><span>Mon–Sat · Heart Centre</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🎗️</span>Oncology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Cancer Centre</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Neurology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Neuro OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Ortho OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫘</span>Nephrology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Fri · Kidney OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫃</span>Gastroenterology</span><div class="dept-time"><strong>10:00 AM – 5:00 PM</strong><span>Mon–Sat · Gastro OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>9:00 AM – 6:00 PM</strong><span>Mon–Sat · Main OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧬</span>Rheumatology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Fri · Rheum OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('Apollo Hospital Sarita Vihar New Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-71791090')">📞 71791090</button>
+      </div>
+    </div>
+
+    <!-- FORTIS -->
+    <div class="hcard" data-cat="private" data-s="fortis hospital vasant kunj delhi cardiology ortho neurology dermatology private">
+      <div class="htop">
+        <div class="hico">🏨</div>
+        <div class="hinfo">
+          <div class="hname">Fortis Hospital Vasant Kunj</div>
+          <div class="hloc">📍 Sector B, Pocket 1, Vasant Kunj, New Delhi — 110070</div>
+          <span class="hbadge hb-priv">🏨 Private</span>
+          <div class="hstatus" id="st-fortis"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">❤️</span>Cardiology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Heart Centre</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Neurology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Sat · Neuro OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Bone Centre</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👁️</span>Ophthalmology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Sat · Eye OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Main OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🔴</span>Dermatology</span><div class="dept-time"><strong>10:00 AM – 3:00 PM</strong><span>Mon–Fri · Skin OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫃</span>Gastroenterology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Sat · GI OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">👩</span>Gynaecology</span><div class="dept-time"><strong>9:00 AM – 4:00 PM</strong><span>Mon–Sat · Gynae OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('Fortis Hospital Vasant Kunj Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-42776222')">📞 42776222</button>
+      </div>
+    </div>
+
+    <!-- BLK MAX -->
+    <div class="hcard" data-cat="private" data-s="blk max super speciality hospital pusa road new delhi cardiology neurology transplant private">
+      <div class="htop">
+        <div class="hico">🏨</div>
+        <div class="hinfo">
+          <div class="hname">BLK-Max Super Speciality</div>
+          <div class="hloc">📍 Pusa Road, Rajinder Nagar, New Delhi — 110005</div>
+          <span class="hbadge hb-priv">🏨 Private</span>
+          <div class="hstatus" id="st-blk"></div>
+        </div>
+      </div>
+      <div class="dept-wrap">
+        <div class="dept-ttl">OPD Department Timings</div>
+        <div class="dept-list">
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">❤️</span>Cardiology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Cardio OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🧠</span>Neurology</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Neuro OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🎗️</span>Oncology</span><div class="dept-time"><strong>9:00 AM – 4:00 PM</strong><span>Mon–Fri · Cancer OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🫘</span>Nephrology</span><div class="dept-time"><strong>10:00 AM – 4:00 PM</strong><span>Mon–Fri · Kidney OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🦴</span>Orthopaedics</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Ortho OPD</span></div></div>
+          <div class="dept-row"><span class="dept-name"><span class="dept-ico">🩺</span>General Medicine</span><div class="dept-time"><strong>9:00 AM – 5:00 PM</strong><span>Mon–Sat · Main OPD</span></div></div>
+        </div>
+      </div>
+      <div class="hfooter">
+        <button class="hbtn" onclick="dir('BLK Max Hospital Pusa Road New Delhi')">🗺️ Directions</button>
+        <button class="hbtn hbtn-s" onclick="callH('011-30403040')">📞 30403040</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TIPS SECTION -->
+  <div class="sew"><span class="set">Before You Visit</span><div class="ser"></div></div>
+  <div class="sttl">Helpful Tips</div>
+  <div class="tip-grid">
+    <div class="tip-card">
+      <span class="tip-ico">🆔</span>
+      <div class="tip-ttl">Carry Aadhaar Card</div>
+      <div class="tip-txt">Aadhaar is mandatory for free OPD registration at all government hospitals. Carry the original and a photocopy both.</div>
+    </div>
+    <div class="tip-card">
+      <span class="tip-ico">⏰</span>
+      <div class="tip-ttl">Arrive Early</div>
+      <div class="tip-txt">Government OPDs give tokens from 7:30 AM. Arrive 30 minutes before opening for a lower token number and shorter wait time.</div>
+    </div>
+    <div class="tip-card">
+      <span class="tip-ico">📄</span>
+      <div class="tip-ttl">Carry Previous Reports</div>
+      <div class="tip-txt">Bring all previous prescriptions, blood test reports, X-rays and scan reports. Doctors make faster and better decisions with your history.</div>
+    </div>
+    <div class="tip-card">
+      <span class="tip-ico">💊</span>
+      <div class="tip-ttl">Bring Current Medicines</div>
+      <div class="tip-txt">Carry all medicines you are currently taking in original packaging so the doctor can check for interactions and dose adjustments.</div>
+    </div>
+    <div class="tip-card">
+      <span class="tip-ico">🏥</span>
+      <div class="tip-ttl">OPD vs Emergency</div>
+      <div class="tip-txt">OPD is for non-urgent conditions only. For chest pain, breathlessness, unconsciousness or severe bleeding go directly to Emergency ward.</div>
+    </div>
+    <div class="tip-card">
+      <span class="tip-ico">💰</span>
+      <div class="tip-ttl">Government = Free</div>
+      <div class="tip-txt">OPD consultation, most diagnostic tests and medicines are free at government hospitals. Jan Aushadhi counters inside sell medicines very cheaply.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let activeCat='all';
+
+function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
+function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
+window.addEventListener('scroll',()=>{document.getElementById('nav').style.background=window.scrollY>50?'rgba(0,0,0,.98)':'rgba(0,0,0,.92)';closeMenu()})
+
+function toast(msg,type='g'){
+  const ex=document.querySelector('.tm');if(ex)ex.remove();
+  const t=document.createElement('div');t.className='tm';t.textContent=msg;
+  const colors={e:['rgba(248,113,113,.12)','rgba(248,113,113,.35)','#f87171'],s:['rgba(52,211,153,.12)','rgba(52,211,153,.35)','#34d399'],g:['rgba(201,168,76,.12)','rgba(201,168,76,.35)','#c9a84c']};
+  const c=colors[type]||colors.g;
+  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${c[0]};border:1px solid ${c[1]};color:${c[2]};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s ease both;max-width:calc(100vw - 40px)`;
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}';document.head.appendChild(s);
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+
+// LIVE CLOCK
+function updateClock(){
+  const now=new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  const s=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clockTime').textContent=h+':'+m+':'+s;
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('clockDate').textContent=now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+  document.getElementById('clockDay').textContent=days[now.getDay()];
+  updateStatuses(now);
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// OPEN/CLOSED STATUS
+function updateStatuses(now){
+  const day=now.getDay(); // 0=Sun
+  const time=now.getHours()*60+now.getMinutes();
+  // Govt OPD: Mon-Sat (1-6), 8AM-1PM (480-780)
+  const govtOpen=day>=1&&day<=6&&time>=480&&time<780;
+  // Private OPD: Mon-Sat (1-6), 9AM-5PM (540-1020)
+  const privOpen=day>=1&&day<=6&&time>=540&&time<1020;
+
+  function setStatus(id,isOpen,closedLabel){
+    const el=document.getElementById(id);if(!el)return;
+    if(isOpen){
+      el.className='hstatus open-now';
+      el.innerHTML='<div class="sdot"></div><span>Open Now</span>';
+    }else{
+      el.className='hstatus closed-now';
+      el.innerHTML='<div class="sdot"></div><span>'+closedLabel+'</span>';
+    }
+  }
+
+  const govtClosed=day===0?'Closed Sunday':'OPD Closed';
+  const privClosed=day===0?'Closed Sunday':'Closed';
+
+  setStatus('st-aiims',govtOpen,govtClosed);
+  setStatus('st-sfj',govtOpen,govtClosed);
+  setStatus('st-rml',govtOpen,govtClosed);
+  setStatus('st-gtb',govtOpen,govtClosed);
+  setStatus('st-lnjp',govtOpen,govtClosed);
+  setStatus('st-jhajjar',govtOpen,govtClosed);
+  setStatus('st-max',privOpen,privClosed);
+  setStatus('st-apollo',privOpen,privClosed);
+  setStatus('st-fortis',privOpen,privClosed);
+  setStatus('st-blk',privOpen,privClosed);
+
+  if(activeCat==='open'){applyFilters()}
+}
+
+// SEARCH
+document.getElementById('srch').addEventListener('input',applyFilters);
+
+// FILTER
+function setCat(cat,btn){
+  activeCat=cat;
+  document.querySelectorAll('.cat').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  applyFilters();
+}
+
+function applyFilters(){
+  const q=document.getElementById('srch').value.toLowerCase().trim();
+  const cards=document.querySelectorAll('.hcard');
+  let visible=0;
+
+  cards.forEach(card=>{
+    const cats=(card.dataset.cat||'').toLowerCase();
+    const sd=(card.dataset.s||'')+' '+(card.querySelector('.hname')?card.querySelector('.hname').textContent.toLowerCase():'');
+    let catOk=false;
+
+    if(activeCat==='all'){catOk=true}
+    else if(activeCat==='govt'){catOk=cats.includes('govt')}
+    else if(activeCat==='private'){catOk=cats.includes('private')}
+    else if(activeCat==='aiims'){catOk=cats.includes('aiims')}
+    else if(activeCat==='open'){
+      const statusEl=card.querySelector('.hstatus');
+      catOk=statusEl&&statusEl.classList.contains('open-now');
+    }
+
+    const searchOk=!q||sd.includes(q)||
+      [...card.querySelectorAll('.dept-name')].some(el=>el.textContent.toLowerCase().includes(q));
+
+    if(catOk&&searchOk){card.classList.remove('hidden');visible++}
+    else{card.classList.add('hidden')}
+  });
+
+  document.getElementById('nores').classList.toggle('on',visible===0);
+}
+
+function dir(place){
+  toast('🗺️ Opening directions...');
+  setTimeout(()=>window.open('https://www.google.com/maps/search/'+encodeURIComponent(place),'_blank'),400);
+}
+function callH(num){
+  toast('📞 Calling '+num+'...');
+  setTimeout(()=>window.open('tel:'+num),400);
+}
+
+// Scroll animations
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}
+}),{threshold:.06})
+document.querySelectorAll('.hcard,.tip-card').forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';
+  el.style.transition=`opacity .5s ease ${i*.05}s,transform .5s ease ${i*.05}s`;
+  obs.observe(el);
+});
+
+setTimeout(()=>toast('🏥 OPD Timings loaded!'),1200);
+</script>
+</body>
+</html>
