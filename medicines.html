@@ -74,7 +74,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .med-hero{background:#0a0a0a;border:1px solid rgba(201,168,76,.12);border-radius:22px;padding:32px;margin-bottom:14px}
 .med-top{display:flex;align-items:flex-start;gap:18px;margin-bottom:24px;padding-bottom:22px;border-bottom:1px solid #111;flex-wrap:wrap}
 .med-ico{width:60px;height:60px;border-radius:16px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.14);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
-.med-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:5px}
+.med-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:5px}
 .med-gen{font-size:13px;color:#444;margin-bottom:10px}
 .med-tags{display:flex;gap:7px;flex-wrap:wrap}
 .med-tag{font-size:11px;padding:3px 11px;border-radius:100px;font-weight:600}
@@ -106,7 +106,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .ccard{background:#0a0a0a;border:1px solid #111;border-radius:16px;padding:20px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
 .ccard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);opacity:0;transition:opacity .3s}
-.ccard:hover{border-color:#1a1a1a;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.ccard:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5)}
 .ccard:hover::before{opacity:1}
 .ccico{font-size:22px;margin-bottom:10px;display:block}
 .ccname{font-size:14px;font-weight:700;color:#ddd;margin-bottom:4px}
@@ -114,22 +114,27 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ccbtn{font-size:11px;color:var(--gold);font-weight:600;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;padding:0}
 .disc{margin-top:24px;padding:14px 18px;border:1px solid #0d0d0d;border-radius:11px;font-size:12px;color:#1a1a1a;line-height:1.7;text-align:center}
 @media(max-width:900px){
-  .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
-  .wrap{padding:100px 16px 60px}.ptitle{font-size:28px!important}
-  .sbar{flex-direction:column}.mgrid{grid-template-columns:1fr 1fr}
-  .racts{flex-direction:column}.rbtn{min-width:unset;width:100%}
-  .cgrid{grid-template-columns:1fr 1fr}
+.nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
+.wrap{padding:100px 16px 60px}.ptitle{font-size:28px!important}
+.sbar{flex-direction:column}.mgrid{grid-template-columns:1fr 1fr}
+.racts{flex-direction:column}.rbtn{min-width:unset;width:100%}
+.cgrid{grid-template-columns:1fr 1fr}
+.scard,.med-hero,.msec{padding:20px}
 }
-@media(max-width:480px){.mgrid,.cgrid{grid-template-columns:1fr}}
+@media(max-width:480px){.mgrid,.cgrid{grid-template-columns:1fr}.med-name{font-size:20px}}
 </style>
 </head>
 <body>
 <nav class="nav" id="nav">
   <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
   <div class="nav-mid">
-    <a href="index.html">Home</a><a href="symptoms.html">Symptoms</a>
-    <a href="hospitals.html">Hospitals</a><a href="emergency.html">Emergency</a>
-    <a href="medicines.html" class="act">Medicines</a><a href="helplines.html">Helplines</a>
+    <a href="index.html">Home</a>
+    <a href="symptoms.html">Symptoms</a>
+    <a href="hospitals.html">Hospitals</a>
+    <a href="opd.html">OPD</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="medicines.html" class="act">Medicines</a>
+    <a href="helplines.html">Helplines</a>
   </div>
   <div class="nav-r">
     <a href="login.html" class="nav-si">Sign in</a>
@@ -141,6 +146,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <a href="index.html" onclick="closeMenu()">🏠 Home</a>
   <a href="symptoms.html" onclick="closeMenu()">🤖 Symptoms</a>
   <a href="hospitals.html" onclick="closeMenu()">🗺️ Hospitals</a>
+  <a href="opd.html" onclick="closeMenu()">🏥 OPD Timings</a>
   <a href="emergency.html" onclick="closeMenu()">🚨 Emergency</a>
   <a href="medicines.html" onclick="closeMenu()">💊 Medicines</a>
   <a href="helplines.html" onclick="closeMenu()">📞 Helplines</a>
@@ -151,7 +157,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="ai-badge"><div class="ai-dot"></div>Powered by Groq AI — Live</div>
   <div class="eye">💊 AI Medicine Lookup</div>
   <h1 class="ptitle"><span>Medicine</span> Information</h1>
-  <p class="psub">Search any medicine to instantly get dosage, uses, side effects and cheaper generic alternatives available in India.</p>
+  <p class="psub">Search any medicine in the world to instantly get dosage, uses, side effects and cheaper generic alternatives available in India.</p>
 
   <div class="hist-wrap" id="hw">
     <div class="hist-top">
@@ -162,9 +168,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 
   <div class="scard">
-    <label class="flbl">Search Medicine Name</label>
+    <label class="flbl">Search Any Medicine Name</label>
     <div class="sbar">
-      <input class="sinp" id="mi" placeholder="e.g. Paracetamol, Crocin, Dolo 650, Azithromycin..."/>
+      <input class="sinp" id="mi" placeholder="Search any medicine — Paracetamol, Aspirin, Metformin, Lisinopril, Amoxicillin..."/>
       <button class="bgold" id="sbtn" onclick="searchMed()">💊 Search</button>
     </div>
     <span class="pop-lbl">Popular searches</span>
@@ -177,6 +183,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="pchip" onclick="quick('Ibuprofen')">Ibuprofen</div>
       <div class="pchip" onclick="quick('Amoxicillin')">Amoxicillin</div>
       <div class="pchip" onclick="quick('Atorvastatin')">Atorvastatin</div>
+      <div class="pchip" onclick="quick('Aspirin')">Aspirin</div>
+      <div class="pchip" onclick="quick('Lisinopril')">Lisinopril</div>
     </div>
   </div>
 
@@ -186,7 +194,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="med-hero">
       <div class="med-top">
         <div class="med-ico">💊</div>
-        <div style="flex:1">
+        <div style="flex:1;min-width:0">
           <div class="med-name" id="mn">—</div>
           <div class="med-gen" id="mg">—</div>
           <div class="med-tags">
@@ -225,16 +233,16 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
   <div class="sew"><span class="set">Common Medicines</span><div class="ser"></div></div>
   <h2 class="stitle">Frequently Used</h2>
-  <p class="sdesc">Most commonly used medicines in Indian households — click any to look up instantly.</p>
+  <p class="sdesc">Most commonly used medicines in India — click any to look up instantly.</p>
   <div class="cgrid">
-    <div class="ccard" onclick="quick('Paracetamol')"><span class="ccico">🌡️</span><div class="ccname">Paracetamol</div><div class="ccuse">Fever, headache, mild to moderate pain relief</div><button class="ccbtn">Look up instantly →</button></div>
-    <div class="ccard" onclick="quick('Ibuprofen')"><span class="ccico">💊</span><div class="ccname">Ibuprofen</div><div class="ccuse">Pain, inflammation, fever, menstrual cramps</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Paracetamol')"><span class="ccico">🌡️</span><div class="ccname">Paracetamol</div><div class="ccuse">Fever, headache, mild to moderate pain</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Ibuprofen')"><span class="ccico">💊</span><div class="ccname">Ibuprofen</div><div class="ccuse">Pain, inflammation, fever, menstrual pain</div><button class="ccbtn">Look up instantly →</button></div>
     <div class="ccard" onclick="quick('Omeprazole')"><span class="ccico">🫃</span><div class="ccname">Omeprazole</div><div class="ccuse">Acidity, GERD, stomach ulcers</div><button class="ccbtn">Look up instantly →</button></div>
-    <div class="ccard" onclick="quick('Cetirizine')"><span class="ccico">🤧</span><div class="ccname">Cetirizine</div><div class="ccuse">Allergies, runny nose, skin rashes, itching</div><button class="ccbtn">Look up instantly →</button></div>
-    <div class="ccard" onclick="quick('Azithromycin')"><span class="ccico">🦠</span><div class="ccname">Azithromycin</div><div class="ccuse">Bacterial infections — throat, chest, skin</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Cetirizine')"><span class="ccico">🤧</span><div class="ccname">Cetirizine</div><div class="ccuse">Allergies, runny nose, skin rashes</div><button class="ccbtn">Look up instantly →</button></div>
+    <div class="ccard" onclick="quick('Azithromycin')"><span class="ccico">🦠</span><div class="ccname">Azithromycin</div><div class="ccuse">Bacterial infections — throat, chest</div><button class="ccbtn">Look up instantly →</button></div>
     <div class="ccard" onclick="quick('Metformin')"><span class="ccico">🩸</span><div class="ccname">Metformin</div><div class="ccuse">Type 2 diabetes blood sugar control</div><button class="ccbtn">Look up instantly →</button></div>
   </div>
-  <div class="disc">⚠️ MediGuide provides general medicine information only. Always consult a registered doctor or pharmacist before taking any medication.</div>
+  <div class="disc">⚠️ MediGuide provides general medicine information only. Always consult a registered doctor or pharmacist before taking any medication. Do not self-medicate.</div>
 </div>
 
 <script>
@@ -247,13 +255,15 @@ window.addEventListener('scroll',()=>{document.getElementById('nav').style.backg
 function toast(msg,type='g'){
   const ex=document.querySelector('.tm');if(ex)ex.remove();
   const t=document.createElement('div');t.className='tm';t.textContent=msg;
-  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${type==='e'?'rgba(248,113,113,.1)':type==='s'?'rgba(52,211,153,.1)':'rgba(201,168,76,.1)'};border:1px solid ${type==='e'?'rgba(248,113,113,.3)':type==='s'?'rgba(52,211,153,.3)':'rgba(201,168,76,.3)'};color:${type==='e'?'#f87171':type==='s'?'#34d399':'#c9a84c'};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s cubic-bezier(.34,1.56,.64,1) both`;
-  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}} @keyframes gsh{to{background-position:200% center}} @keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);
-  document.body.appendChild(t);setTimeout(()=>t.remove(),3500)
+  const colors={e:['rgba(248,113,113,.12)','rgba(248,113,113,.35)','#f87171'],s:['rgba(52,211,153,.12)','rgba(52,211,153,.35)','#34d399'],g:['rgba(201,168,76,.12)','rgba(201,168,76,.35)','#c9a84c']};
+  const c=colors[type]||colors.g;
+  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${c[0]};border:1px solid ${c[1]};color:${c[2]};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s ease both;max-width:calc(100vw - 40px)`;
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}} @keyframes gsh{to{background-position:200% center}} @keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 
 function renderHist(){
-  if(hist.length===0){document.getElementById('hw').classList.remove('on');return}
+  if(!hist.length){document.getElementById('hw').classList.remove('on');return}
   document.getElementById('hw').classList.add('on');
   document.getElementById('hchips').innerHTML=hist.slice(0,6).map(h=>`<div class="hchip" onclick="quick('${h}')">🕐 ${h}</div>`).join('');
 }
@@ -261,9 +271,9 @@ function addHist(name){hist=[name,...hist.filter(h=>h!==name)].slice(0,8);localS
 function clearHist(){hist=[];localStorage.removeItem('med_hist');renderHist();toast('🗑️ History cleared')}
 renderHist();
 
-const lms=['Looking up medicine...','Checking dosage database...','Finding generic alternatives...','Almost ready...'];
+const lms=['Looking up medicine...','Checking pharmacopoeia database...','Finding Indian generic alternatives...','Almost ready...'];
 let li=0,lt;
-function startL(){li=0;document.getElementById('lmsg').textContent=lms[0];lt=setInterval(()=>{li=(li+1)%lms.length;document.getElementById('lmsg').textContent=lms[li]},1200)}
+function startL(){li=0;document.getElementById('lmsg').textContent=lms[0];lt=setInterval(()=>{li=(li+1)%lms.length;document.getElementById('lmsg').textContent=lms[li]},1000)}
 function stopL(){clearInterval(lt)}
 
 function quick(name){document.getElementById('mi').value=name;searchMed()}
@@ -273,18 +283,56 @@ document.getElementById('mi').addEventListener('keydown',e=>{if(e.key==='Enter')
 const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}}),{threshold:.1})
 document.querySelectorAll('.ccard').forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition=`opacity .5s ease ${i*.07}s,transform .5s ease ${i*.07}s`;obs.observe(el)})
 
+function fillResult(p,med){
+  document.getElementById('mn').textContent=p.name||med;
+  document.getElementById('mg').textContent=p.generic||'Generic info unavailable';
+  document.getElementById('mt').textContent=p.type||'Medicine';
+  document.getElementById('mr').textContent=p.rx||'Consult Pharmacist';
+  document.getElementById('ms').textContent=p.safe||'Use with Caution';
+  document.getElementById('mu').textContent=p.use||'—';
+  document.getElementById('md').textContent=p.dose||'As prescribed by doctor';
+  document.getElementById('mf').textContent=p.form||'Tablet';
+  document.getElementById('mp').textContent=p.price||'Check at pharmacy';
+  document.getElementById('mgn').textContent='💚 '+(p.genericName||'Ask your pharmacist');
+  document.getElementById('mgd').textContent=p.genericDesc||'Ask pharmacist for generic alternative.';
+  document.getElementById('mgs').textContent='💰 '+(p.savings||'Generics save 50-80%');
+  document.getElementById('mw').textContent='⚠️ '+(p.warning||'Always consult a doctor before taking any medicine.');
+  const se=document.getElementById('mse');
+  se.innerHTML='';
+  const effects=Array.isArray(p.sideEffects)&&p.sideEffects.length?p.sideEffects:['Consult doctor for side effect information'];
+  effects.forEach(e=>{const tag=document.createElement('div');tag.className='se-tag';tag.textContent=e;se.appendChild(tag)});
+}
+
 async function searchMed(){
   const med=document.getElementById('mi').value.trim();
-  if(!med){toast('⚠️ Please enter a medicine name','e');return}
+  if(!med){toast('⚠️ Please enter a medicine name','e');document.getElementById('mi').style.borderColor='rgba(248,113,113,.4)';setTimeout(()=>document.getElementById('mi').style.borderColor='',2000);return}
   if(med.length<2){toast('⚠️ Please enter at least 2 characters','e');return}
+
   const btn=document.getElementById('sbtn');
-  btn.disabled=true;
+  btn.disabled=true;btn.textContent='⏳ Loading...';
   document.getElementById('ld').classList.add('on');
   document.getElementById('rc').classList.remove('on');
   startL();
   toast('💊 Looking up '+med+'...');
 
-  const prompt=`You are MediGuide, an AI medical assistant for India. Give information about the medicine: "${med}". Respond ONLY as valid JSON with no extra text: {"name":"brand/generic name","generic":"Salt: generic name","type":"medicine category","rx":"OTC or Prescription Required","safe":"Generally Safe or Use with Caution","use":"primary use in simple words","dose":"typical adult dosage","form":"tablet/syrup/injection/cream","price":"approximate Indian MRP price","sideEffects":["effect1","effect2","effect3","effect4","effect5"],"genericName":"cheaper generic alternative available in India","genericDesc":"why this generic works the same and where to find it in India","savings":"save X% vs branded","warning":"one important warning for Indian patients"}`;
+  const systemPrompt=`You are an expert pharmacist and clinical doctor with 25 years of experience. You have complete knowledge of ALL medicines worldwide — branded, generic, OTC, prescription, traditional, herbal, Indian, international, rare and common.
+
+CRITICAL RULES:
+1. Provide information for ANY medicine searched — Indian brands, international brands, generic salts, traditional medicines, herbal supplements, vitamins, vaccines, anything
+2. Give REAL Indian brand names where available (Crocin, Dolo, Omez, Brufen, Azithral, etc)
+3. For international medicines give the global brand name and Indian equivalent if available
+4. Give REAL Indian MRP prices in rupees where available, or international price if India price unknown
+5. Give EXACT dosage that doctors actually prescribe — not vague estimates
+6. Give REAL specific medical side effects — never use placeholder text like "effect1"
+7. Give a REAL cheaper Indian generic or Jan Aushadhi alternative with actual price comparison
+8. Warning must be specific, practical and accurate for the exact medicine
+9. For unknown or very rare medicines still give best available information
+10. Respond ONLY with valid JSON. No markdown. No code blocks. No extra text outside JSON.`;
+
+  const userPrompt=`Give complete accurate medical information for the medicine: "${med}"
+
+Respond ONLY as this exact JSON structure with no text outside it:
+{"name":"exact medicine name with common Indian/global brand in brackets","generic":"Salt/INN: exact generic name and strength","type":"exact pharmacological class","rx":"OTC or Prescription Required","safe":"Generally Safe or Use with Caution or Avoid without Prescription","use":"exact primary medical use in simple clear language","dose":"exact adult dosage with frequency and meal instructions","form":"available forms e.g. Tablet Syrup Injection Cream","price":"Indian MRP in rupees or international price if India price unknown","sideEffects":["real side effect 1","real side effect 2","real side effect 3","real side effect 4","real side effect 5"],"genericName":"exact cheaper Indian generic or Jan Aushadhi alternative","genericDesc":"specific price comparison and where to buy in India including Jan Aushadhi stores","savings":"exact savings percentage or cost comparison","warning":"specific important warning for this exact medicine"}`;
 
   try{
     const res=await fetch('/api/groq',{
@@ -292,60 +340,66 @@ async function searchMed(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         messages:[
-          {role:'system',content:'You are a medical AI assistant. Always respond with valid JSON only. No markdown, no extra text, no code blocks.'},
-          {role:'user',content:prompt}
+          {role:'system',content:systemPrompt},
+          {role:'user',content:userPrompt}
         ],
-        temperature:0.2,
-        max_tokens:600
+        temperature:0.15,
+        max_tokens:1000
       })
     });
+
+    if(!res.ok){throw new Error('HTTP '+res.status)}
     const data=await res.json();
-    if(!res.ok){throw new Error(data.error||'API error')}
-    const text=data.choices[0].message.content.trim();
-    const clean=text.replace(/```json|```/g,'').trim();
-    const p=JSON.parse(clean);
-    document.getElementById('mn').textContent=p.name||med;
-    document.getElementById('mg').textContent=p.generic||'Generic info unavailable';
-    document.getElementById('mt').textContent=p.type||'Medicine';
-    document.getElementById('mr').textContent=p.rx||'Consult Pharmacist';
-    document.getElementById('ms').textContent=p.safe||'Use with Caution';
-    document.getElementById('mu').textContent=p.use||'—';
-    document.getElementById('md').textContent=p.dose||'As prescribed';
-    document.getElementById('mf').textContent=p.form||'Varies';
-    document.getElementById('mp').textContent=p.price||'Check at pharmacy';
-    document.getElementById('mgn').textContent='💚 '+(p.genericName||'Ask your pharmacist');
-    document.getElementById('mgd').textContent=p.genericDesc||'A pharmacist can recommend a generic alternative.';
-    document.getElementById('mgs').textContent='💰 '+(p.savings||'Generics save 40-80% vs branded');
-    document.getElementById('mw').textContent='⚠️ '+(p.warning||'Always consult a doctor before taking any medicine.');
-    const seWrap=document.getElementById('mse');seWrap.innerHTML='';
-    (p.sideEffects||['Consult doctor for details']).forEach(se=>{const tag=document.createElement('div');tag.className='se-tag';tag.textContent=se;seWrap.appendChild(tag)});
+    if(!data.choices||!data.choices[0]||!data.choices[0].message){throw new Error('No response')}
+
+    let raw=data.choices[0].message.content.trim();
+    raw=raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+
+    let p;
+    try{
+      p=JSON.parse(raw);
+    }catch{
+      const match=raw.match(/\{[\s\S]*\}/);
+      if(match){p=JSON.parse(match[0])}
+      else{throw new Error('JSON parse failed')}
+    }
+
+    if(!p||!p.name){throw new Error('Incomplete response')}
+
+    fillResult(p,med);
     addHist(p.name||med);
-    toast('✅ Medicine info loaded!','s');
-  }catch(e){
-    console.log('Error:',e);
-    document.getElementById('mn').textContent=med;
-    document.getElementById('mg').textContent='Salt information unavailable';
-    document.getElementById('mt').textContent='Medicine';
-    document.getElementById('mr').textContent='Consult Pharmacist';
-    document.getElementById('ms').textContent='Use with Caution';
-    document.getElementById('mu').textContent='Please consult a pharmacist for complete information.';
-    document.getElementById('md').textContent='As prescribed by doctor';
-    document.getElementById('mf').textContent='Varies';
-    document.getElementById('mp').textContent='Check at pharmacy';
-    document.getElementById('mgn').textContent='💚 Ask your pharmacist';
-    document.getElementById('mgd').textContent='A pharmacist can recommend a generic alternative that costs less than the branded version.';
-    document.getElementById('mgs').textContent='💰 Generics can save 40-80% vs branded';
-    document.getElementById('mw').textContent='⚠️ Always consult a registered doctor before taking any medicine.';
-    document.getElementById('mse').innerHTML='<div class="se-tag">Consult doctor for details</div>';
-    toast('⚠️ Using offline info','e');
+    toast('✅ Medicine info loaded from Groq AI!','s');
+
+  }catch(err){
+    console.warn('Groq AI unavailable, using fallback:',err.message);
+    fillResult({
+      name:med,
+      generic:'Salt information — consult pharmacist',
+      type:'Medicine',
+      rx:'Consult a registered pharmacist or doctor',
+      safe:'Use with Caution',
+      use:'Please consult a pharmacist or doctor for complete information about this medicine.',
+      dose:'As prescribed by your doctor. Do not self-medicate.',
+      form:'Varies — check with pharmacist',
+      price:'Check at your local pharmacy',
+      sideEffects:['Consult your doctor for side effects','Individual reactions may vary','Read the package insert carefully','Report any unusual symptoms to your doctor','Do not take with alcohol without checking'],
+      genericName:'Ask your pharmacist for generic alternative',
+      genericDesc:'Visit any Jan Aushadhi Kendra to get the same medicine at 50-80% lower cost. Show the brand name to the pharmacist and they will provide the generic equivalent at much lower price.',
+      savings:'Generics typically save 50-80% vs branded medicines',
+      warning:'Always consult a registered doctor or pharmacist before taking any medicine. Do not self-medicate. Inform your doctor of all medicines you are currently taking to avoid interactions.'
+    },med);
+    addHist(med);
+    toast('⚠️ Using offline medicine info','e');
   }
-  btn.disabled=false;
+
+  btn.disabled=false;btn.textContent='💊 Search';
   stopL();
   document.getElementById('ld').classList.remove('on');
   document.getElementById('rc').classList.add('on');
   setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
 }
-setTimeout(()=>toast('💊 Groq AI Medicine Lookup ready!'),1500);
+
+setTimeout(()=>toast('💊 AI Medicine Lookup ready — search any medicine!'),1500);
 </script>
 </body>
 </html>
