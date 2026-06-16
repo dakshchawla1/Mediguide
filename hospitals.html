@@ -3,17 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Hospital — MediGuide</title>
+<title>Find Hospitals — MediGuide</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff;--mt:#555}
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff}
 body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(var(--gd),var(--gold));border-radius:10px}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
-
-/* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111;transition:all .3s}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
 .logo-i{width:34px;height:34px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
@@ -23,7 +21,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .nav-mid a:hover,.nav-mid a.act{color:#fff;background:#111}
 .nav-mid a.act{color:var(--gl)!important}
 .nav-r{display:flex;align-items:center;gap:10px}
-.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap;transition:color .2s}
+.nav-si:hover{color:var(--gl)}
 .nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap}
 .hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
 .hbg span{display:block;width:22px;height:2px;background:var(--gl);border-radius:2px;transition:all .3s}
@@ -35,134 +34,102 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
 .mmenu a:hover{color:var(--gl)}
 .mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
-
-/* PAGE */
-.wrap{max-width:980px;margin:0 auto;padding:120px 22px 90px;position:relative;z-index:2}
-.eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
-.ptitle{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,56px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.05}
-.ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.psub{font-size:15px;color:#444;line-height:1.8;margin-bottom:40px}
-
-@keyframes gsh{to{background-position:200% center}}
+.wrap{max-width:1100px;margin:0 auto;padding:88px 22px 40px;position:relative;z-index:2}
+@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes sp{to{transform:rotate(360deg)}}
-@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* SEARCH */
-.scard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:22px;padding:28px;margin-bottom:22px}
-.flbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;display:block}
-.srow{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-.sinp{flex:1;min-width:200px;background:#000;border:1px solid #1a1a1a;border-radius:11px;padding:13px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
-.sinp:focus{border-color:rgba(201,168,76,.28)}
+/* HEADER */
+.page-head{padding:24px 0 20px}
+.eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+.ptitle{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,44px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:8px;line-height:1.05}
+.ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.psub{font-size:14px;color:#444;line-height:1.7;margin-bottom:20px}
+
+/* CONTROLS */
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.sinp{flex:1;min-width:200px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:11px;padding:12px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.sinp:focus{border-color:rgba(201,168,76,.3)}
 .sinp::placeholder{color:#1a1a1a}
-.frow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
-.fbtn{background:#000;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:600;padding:7px 15px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
-.fbtn:hover,.fbtn.on{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.22);color:var(--gl)}
-.sbtns{display:flex;gap:10px;flex-wrap:wrap}
-.bgold{flex:1;display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#8a6f2e,var(--gold),#8a6f2e);background-size:200% auto;color:#000;font-size:14px;font-weight:700;padding:14px 28px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 0 36px rgba(201,168,76,.2);transition:all .3s;animation:gsh 4s linear infinite;min-width:180px}
-.bgold:hover{transform:translateY(-2px)}
-.bloc-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:9px;background:transparent;color:#666;font-size:14px;font-weight:600;padding:14px 28px;border-radius:11px;border:1px solid #1a1a1a;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;min-width:160px}
-.bloc-btn:hover{border-color:rgba(201,168,76,.2);color:var(--gl)}
+.gbtn{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;border:none;border-radius:11px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s}
+.gbtn:hover{transform:translateY(-1px)}
+.cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.cat{background:#0a0a0a;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:600;padding:7px 15px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.cat:hover,.cat.on{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.25);color:var(--gl)}
+.status-bar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.status-txt{font-size:12px;color:#333}
+.loc-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--gold);background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);padding:5px 12px;border-radius:100px}
+.loc-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
 
 /* MAP */
-.mwrap{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:22px;overflow:hidden;margin-bottom:24px}
-.mhdr{padding:16px 22px;border-bottom:1px solid #0d0d0d;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.mttl{font-size:14px;font-weight:700;color:#fff}
-.mbdg{font-size:11px;color:#34d399;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.12);padding:4px 11px;border-radius:100px;font-weight:600;display:flex;align-items:center;gap:5px}
-.mbdg-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
-.mcontrols{display:flex;gap:8px;flex-wrap:wrap}
-.mctrl-btn{background:#000;border:1px solid #1a1a1a;color:#555;font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
-.mctrl-btn:hover{border-color:rgba(201,168,76,.2);color:var(--gl)}
+#map{width:100%;height:480px;border-radius:18px;border:1px solid #1a1a1a;margin-bottom:20px;position:relative;z-index:1}
+.leaflet-container{background:#0a0a0a!important;font-family:'Inter',sans-serif}
+.leaflet-popup-content-wrapper{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.8)}
+.leaflet-popup-tip{background:#0a0a0a}
+.leaflet-popup-content{margin:14px 16px;font-family:'Inter',sans-serif}
+.popup-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:800;color:#fff;margin-bottom:5px}
+.popup-type{font-size:11px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.popup-addr{font-size:12px;color:#444;margin-bottom:10px;line-height:1.5}
+.popup-btn{display:inline-block;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:12px;font-weight:700;padding:7px 16px;border-radius:8px;text-decoration:none;font-family:'Inter',sans-serif}
 
-/* LEAFLET MAP */
-#map{height:420px;width:100%;background:#000;position:relative;z-index:1}
-
-/* Custom map styles */
-.leaflet-container{background:#0a0a0a!important}
-.leaflet-tile{filter:brightness(.85) contrast(1.1) saturate(.8)!important}
-.custom-popup .leaflet-popup-content-wrapper{background:#0a0a0a;border:1px solid rgba(201,168,76,.2);border-radius:14px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.6)}
-.custom-popup .leaflet-popup-tip{background:#0a0a0a}
-.custom-popup .leaflet-popup-content{margin:14px 18px;font-family:'Inter',sans-serif}
-.popup-name{font-size:14px;font-weight:700;color:#f0d080;margin-bottom:6px}
-.popup-type{font-size:11px;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
-.popup-addr{font-size:12px;color:#444;margin-bottom:12px;line-height:1.5}
-.popup-btn{display:block;background:linear-gradient(135deg,#8a6f2e,#c9a84c);color:#000;font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;text-align:center;text-decoration:none;font-family:'Inter',sans-serif}
-
-/* LOADING */
-.mloading{height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#000}
-.mloading.hide{display:none}
-.mlsp{width:32px;height:32px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite}
-.mltxt{font-size:13px;color:#333}
-
-/* CARDS */
-.rhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.rlbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase}
-.rcnt{font-size:12px;color:#333}
-.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:13px}
-.hcard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;padding:22px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
-.hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.35),transparent);opacity:0;transition:opacity .3s}
-.hcard:hover{border-color:#222;transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,0,0,.6)}
+/* HOSPITAL CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.hcard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;padding:22px;transition:all .3s;position:relative;overflow:hidden}
+.hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);opacity:0;transition:opacity .3s}
+.hcard:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.6);border-color:#1a1a1a}
 .hcard:hover::before{opacity:1}
 .hcard.hidden{display:none!important}
-.htop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
-.hico{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
-.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.11)}
-.ip{background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.11)}
-.ic{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.11)}
-.il{background:rgba(244,114,182,.07);border:1px solid rgba(244,114,182,.11)}
-.hbdg{font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;letter-spacing:.05em;text-transform:uppercase}
-.bg{background:rgba(52,211,153,.05);color:#34d399;border:1px solid rgba(52,211,153,.1)}
-.bp{background:rgba(96,165,250,.05);color:#60a5fa;border:1px solid rgba(96,165,250,.1)}
-.bc{background:rgba(201,168,76,.05);color:var(--gold);border:1px solid rgba(201,168,76,.1)}
-.bl{background:rgba(244,114,182,.05);color:#f472b6;border:1px solid rgba(244,114,182,.1)}
-.hn{font-size:14px;font-weight:700;color:#ddd;margin-bottom:5px;line-height:1.3}
-.ha{font-size:12px;color:#333;margin-bottom:12px;line-height:1.5}
-.hm{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.hmi{font-size:11px;color:#2a2a2a}
-.hop{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;margin-bottom:14px}
+.htop{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.hico{width:44px;height:44px;border-radius:12px;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hinfo{flex:1;min-width:0}
+.hname{font-size:15px;font-weight:700;color:#ddd;margin-bottom:3px;line-height:1.2}
+.htype{font-size:11px;font-weight:700;padding:2px 9px;border-radius:100px;display:inline-block;margin-bottom:6px}
+.ht-govt{background:rgba(52,211,153,.06);color:#34d399;border:1px solid rgba(52,211,153,.1)}
+.ht-priv{background:rgba(96,165,250,.06);color:#60a5fa;border:1px solid rgba(96,165,250,.1)}
+.ht-clinic{background:rgba(201,168,76,.06);color:var(--gold);border:1px solid rgba(201,168,76,.1)}
+.ht-lab{background:rgba(167,139,250,.06);color:#a78bfa;border:1px solid rgba(167,139,250,.1)}
+.haddr{font-size:12px;color:#333;line-height:1.5;margin-bottom:12px}
+.hopen{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;margin-bottom:12px}
 .odot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.oo{color:#34d399}.oo .odot{background:#34d399;animation:blk 2s infinite}
-.oc{color:#f87171}.oc .odot{background:#f87171}
-.hdbtn{width:100%;padding:10px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid #1a1a1a;background:#000;color:#444}
-.hdbtn:hover{border-color:rgba(201,168,76,.2);color:var(--gl)}
-
-.nores{display:none;text-align:center;padding:52px 22px}
-.nores.on{display:block}
-.nores p{font-size:15px;color:#333}
+.op{color:#34d399}.op .odot{background:#34d399;animation:blk 2s infinite}
+.cl{color:#f87171}.cl .odot{background:#f87171}
+.hbtns{display:flex;gap:7px}
+.hbtn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.05);color:var(--gl);text-decoration:none;text-align:center}
+.hbtn:hover{background:rgba(201,168,76,.1)}
+.hbtn-s{background:transparent;border:1px solid #1a1a1a;color:#444}
+.hbtn-s:hover{border-color:#333;color:#888}
 
 @media(max-width:900px){
-  .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
-  .wrap{padding:100px 16px 60px}.ptitle{font-size:28px!important}
-  .srow{flex-direction:column}
-  .frow{gap:5px}.fbtn{font-size:11px;padding:6px 11px}
-  .rgrid{grid-template-columns:1fr}
-  #map{height:300px}
-  .mloading{height:300px}
-  .sbtns{flex-direction:column}
-  .bgold,.bloc-btn{min-width:unset;width:100%}
+.nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
+.wrap{padding:80px 16px 40px}
+#map{height:360px}
+.ctrl{flex-direction:column}.sinp{min-width:unset;width:100%}
+.cards-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-
 <nav class="nav" id="nav">
   <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
   <div class="nav-mid">
-    <a href="index.html">Home</a><a href="symptoms.html">Symptoms</a>
-    <a href="hospitals.html" class="act">Hospitals</a><a href="emergency.html">Emergency</a>
-    <a href="medicines.html">Medicines</a><a href="helplines.html">Helplines</a>
+    <a href="index.html">Home</a>
+    <a href="symptoms.html">Symptoms</a>
+    <a href="hospitals.html" class="act">Hospitals</a>
+    <a href="opd.html">OPD</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="medicines.html">Medicines</a>
+    <a href="helplines.html">Helplines</a>
   </div>
-  <div class="nav-r" id="navRight">
+  <div class="nav-r">
     <a href="login.html" class="nav-si">Sign in</a>
     <a href="login.html" class="nav-ct">Get Started →</a>
   </div>
   <button class="hbg" id="hbg" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
-
 <div class="mmenu" id="mmenu">
   <a href="index.html" onclick="closeMenu()">🏠 Home</a>
   <a href="symptoms.html" onclick="closeMenu()">🤖 Symptoms</a>
   <a href="hospitals.html" onclick="closeMenu()">🗺️ Hospitals</a>
+  <a href="opd.html" onclick="closeMenu()">🏥 OPD Timings</a>
   <a href="emergency.html" onclick="closeMenu()">🚨 Emergency</a>
   <a href="medicines.html" onclick="closeMenu()">💊 Medicines</a>
   <a href="helplines.html" onclick="closeMenu()">📞 Helplines</a>
@@ -170,114 +137,39 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <div class="wrap">
-  <div class="eye">🗺️ Live Facility Finder</div>
-  <h1 class="ptitle">Find <span>Hospitals</span> Near You</h1>
-  <p class="psub">Real-time map powered by OpenStreetMap — find government hospitals, private hospitals, clinics and labs near you instantly. 100% free.</p>
-
-  <div class="scard">
-    <label class="flbl">Search by City or Area</label>
-    <div class="srow">
-      <input class="sinp" id="ci" placeholder="Enter city or area — e.g. Noida, Delhi, Mumbai, Bangalore..."/>
-      <input class="sinp" id="sp2" placeholder="Specialty — e.g. Cardiology" style="max-width:200px"/>
-    </div>
-    <label class="flbl">Filter by Type</label>
-    <div class="frow">
-      <button class="fbtn on" onclick="setF('all',this)">🏥 All</button>
-      <button class="fbtn" onclick="setF('govt',this)">🏛️ Govt</button>
-      <button class="fbtn" onclick="setF('pvt',this)">🏨 Private</button>
-      <button class="fbtn" onclick="setF('clinic',this)">🏪 Clinic</button>
-      <button class="fbtn" onclick="setF('lab',this)">🔬 Lab</button>
-      <button class="fbtn" onclick="setF('open',this)">🟢 Open Now</button>
-    </div>
-    <div class="sbtns">
-      <button class="bgold" onclick="searchCity()">🔍 Search on Map</button>
-      <button class="bloc-btn" onclick="findMyLocation()">📍 Use My Location</button>
-    </div>
+  <div class="page-head">
+    <div class="eye">🗺️ Live Hospital Finder</div>
+    <h1 class="ptitle">Find <span>Hospitals</span> Near You</h1>
+    <p class="psub">Live map of hospitals, clinics and diagnostic labs. Use GPS or search your city to find the nearest care.</p>
   </div>
 
-  <!-- MAP -->
-  <div class="mwrap">
-    <div class="mhdr">
-      <span class="mttl">🗺️ Live Map — OpenStreetMap</span>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="mbdg"><div class="mbdg-dot"></div>Live · Free · No API Key</div>
-        <div class="mcontrols">
-          <button class="mctrl-btn" onclick="findMyLocation()">📍 My Location</button>
-          <button class="mctrl-btn" onclick="showAllHospitals()">🏥 Show All</button>
-        </div>
-      </div>
-    </div>
-    <div class="mloading" id="mloading">
-      <div class="mlsp"></div>
-      <div class="mltxt" id="mltxt">Loading map...</div>
-    </div>
-    <div id="map"></div>
+  <div class="ctrl">
+    <input class="sinp" id="cityInp" placeholder="🔍 Search city or area — e.g. Connaught Place, Gurgaon, Noida..."/>
+    <button class="gbtn" onclick="searchCity()">🔍 Search</button>
+    <button class="gbtn" onclick="getGPS()" style="background:linear-gradient(135deg,#1a3a1a,#166534);color:#34d399">📍 My Location</button>
+    <a href="opd.html" class="gbtn" style="background:rgba(201,168,76,.08);color:var(--gl);border:1px solid rgba(201,168,76,.15);text-decoration:none">🏥 OPD Times</a>
   </div>
 
-  <!-- RESULTS -->
-  <div class="rhdr">
-    <span class="rlbl">Nearby Facilities</span>
-    <span class="rcnt" id="rcnt">Showing 6 facilities</span>
+  <div class="cats">
+    <button class="cat on" onclick="filterMap('all',this)">🏥 All</button>
+    <button class="cat" onclick="filterMap('govt',this)">🏛️ Government</button>
+    <button class="cat" onclick="filterMap('private',this)">🏨 Private</button>
+    <button class="cat" onclick="filterMap('clinic',this)">🩺 Clinics</button>
+    <button class="cat" onclick="filterMap('lab',this)">🔬 Labs</button>
   </div>
-  <div class="nores" id="nores"><p>😕 No facilities found for that search</p></div>
-  <div class="rgrid" id="rg">
-    <div class="hcard" data-type="govt" data-open="true" data-name="safdarjung hospital new delhi" data-lat="28.5683" data-lng="77.2014">
-      <div class="htop"><div class="hico ig">🏛️</div><span class="hbdg bg">Government</span></div>
-      <div class="hn">Safdarjung Hospital</div>
-      <div class="ha">Ring Road, Safdarjung, New Delhi — 110029</div>
-      <div class="hop oo"><div class="odot"></div>Open Now · 24/7</div>
-      <div class="hm"><span class="hmi">🛏️ 1531 Beds</span><span class="hmi">📍 New Delhi</span><span class="hmi">⏰ OPD: 8AM–1PM</span></div>
-      <button class="hdbtn" onclick="flyToHospital(28.5683,77.2014,'Safdarjung Hospital')">🗺️ Show on Map</button>
-    </div>
-    <div class="hcard" data-type="govt" data-open="true" data-name="aiims new delhi" data-lat="28.5672" data-lng="77.2100">
-      <div class="htop"><div class="hico ig">🏛️</div><span class="hbdg bg">Government</span></div>
-      <div class="hn">AIIMS New Delhi</div>
-      <div class="ha">Sri Aurobindo Marg, Ansari Nagar, New Delhi — 110029</div>
-      <div class="hop oo"><div class="odot"></div>Open Now · 24/7</div>
-      <div class="hm"><span class="hmi">🛏️ 2478 Beds</span><span class="hmi">📍 New Delhi</span><span class="hmi">⏰ OPD: 8AM–1PM</span></div>
-      <button class="hdbtn" onclick="flyToHospital(28.5672,77.2100,'AIIMS New Delhi')">🗺️ Show on Map</button>
-    </div>
-    <div class="hcard" data-type="pvt" data-open="true" data-name="max super speciality hospital saket delhi" data-lat="28.5244" data-lng="77.2066">
-      <div class="htop"><div class="hico ip">🏨</div><span class="hbdg bp">Private</span></div>
-      <div class="hn">Max Super Speciality Hospital</div>
-      <div class="ha">Press Enclave Road, Saket, New Delhi — 110017</div>
-      <div class="hop oo"><div class="odot"></div>Open Now · 24/7</div>
-      <div class="hm"><span class="hmi">🛏️ 500 Beds</span><span class="hmi">📍 Saket, Delhi</span><span class="hmi">⏰ 24/7 ER</span></div>
-      <button class="hdbtn" onclick="flyToHospital(28.5244,77.2066,'Max Hospital Saket')">🗺️ Show on Map</button>
-    </div>
-    <div class="hcard" data-type="pvt" data-open="true" data-name="fortis hospital noida" data-lat="28.6139" data-lng="77.3650">
-      <div class="htop"><div class="hico ip">🏨</div><span class="hbdg bp">Private</span></div>
-      <div class="hn">Fortis Hospital Noida</div>
-      <div class="ha">Sector 62, Noida, Uttar Pradesh — 201301</div>
-      <div class="hop oo"><div class="odot"></div>Open Now · 24/7</div>
-      <div class="hm"><span class="hmi">🛏️ 200 Beds</span><span class="hmi">📍 Noida</span><span class="hmi">⏰ 24/7 ER</span></div>
-      <button class="hdbtn" onclick="flyToHospital(28.6139,77.3650,'Fortis Hospital Noida')">🗺️ Show on Map</button>
-    </div>
-    <div class="hcard" data-type="clinic" data-open="true" data-name="apollo clinic noida sector 18" data-lat="28.5706" data-lng="77.3219">
-      <div class="htop"><div class="hico ic">🏪</div><span class="hbdg bc">Clinic</span></div>
-      <div class="hn">Apollo Clinic Noida</div>
-      <div class="ha">Sector 18, Noida, Uttar Pradesh — 201301</div>
-      <div class="hop oo"><div class="odot"></div>Open Now</div>
-      <div class="hm"><span class="hmi">📍 Noida</span><span class="hmi">⏰ 8AM–9PM</span></div>
-      <button class="hdbtn" onclick="flyToHospital(28.5706,77.3219,'Apollo Clinic Noida')">🗺️ Show on Map</button>
-    </div>
-    <div class="hcard" data-type="lab" data-open="true" data-name="dr lal pathlabs noida sector 27" data-lat="28.5830" data-lng="77.3260">
-      <div class="htop"><div class="hico il">🔬</div><span class="hbdg bl">Diagnostic Lab</span></div>
-      <div class="hn">Dr. Lal PathLabs</div>
-      <div class="ha">Sector 27, Noida, Uttar Pradesh — 201301</div>
-      <div class="hop oo"><div class="odot"></div>Open Now</div>
-      <div class="hm"><span class="hmi">📍 Noida</span><span class="hmi">⏰ 7AM–8PM</span></div>
-      <button class="hdbtn" onclick="flyToHospital(28.5830,77.3260,'Dr Lal PathLabs Noida')">🗺️ Show on Map</button>
-    </div>
+
+  <div class="status-bar">
+    <div class="status-txt" id="statusTxt">Click "My Location" to find hospitals near you</div>
+    <div class="loc-badge" id="locBadge" style="display:none"><div class="loc-dot"></div><span id="locTxt">Located</span></div>
   </div>
+
+  <div id="map"></div>
+
+  <div class="cards-grid" id="cardsGrid"></div>
 </div>
 
-<!-- LEAFLET JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-let map, userMarker, hospitalMarkers = [];
-let af = 'all';
-
 function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
 function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
 window.addEventListener('scroll',()=>{document.getElementById('nav').style.background=window.scrollY>50?'rgba(0,0,0,.98)':'rgba(0,0,0,.92)';closeMenu()})
@@ -285,220 +177,156 @@ window.addEventListener('scroll',()=>{document.getElementById('nav').style.backg
 function toast(msg,type='g'){
   const ex=document.querySelector('.tm');if(ex)ex.remove();
   const t=document.createElement('div');t.className='tm';t.textContent=msg;
-  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${type==='e'?'rgba(248,113,113,.1)':type==='s'?'rgba(52,211,153,.1)':'rgba(201,168,76,.1)'};border:1px solid ${type==='e'?'rgba(248,113,113,.3)':type==='s'?'rgba(52,211,153,.3)':'rgba(201,168,76,.3)'};color:${type==='e'?'#f87171':type==='s'?'#34d399':'#c9a84c'};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s cubic-bezier(.34,1.56,.64,1) both`;
-  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}} @keyframes gsh{to{background-position:200% center}} @keyframes sp{to{transform:rotate(360deg)}} @keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}';document.head.appendChild(s);
-  document.body.appendChild(t);setTimeout(()=>t.remove(),3500)
+  const colors={e:['rgba(248,113,113,.12)','rgba(248,113,113,.35)','#f87171'],s:['rgba(52,211,153,.12)','rgba(52,211,153,.35)','#34d399'],g:['rgba(201,168,76,.12)','rgba(201,168,76,.35)','#c9a84c']};
+  const c=colors[type]||colors.g;
+  t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${c[0]};border:1px solid ${c[1]};color:${c[2]};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s ease both`;
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}';document.head.appendChild(s);
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 
-// ===== HOSPITAL DATA =====
-const hospitals = [
-  {name:'Safdarjung Hospital',type:'govt',lat:28.5683,lng:77.2014,addr:'Ring Road, Safdarjung, New Delhi',beds:'1531 Beds',open:true},
-  {name:'AIIMS New Delhi',type:'govt',lat:28.5672,lng:77.2100,addr:'Sri Aurobindo Marg, New Delhi',beds:'2478 Beds',open:true},
-  {name:'Max Super Speciality Hospital',type:'pvt',lat:28.5244,lng:77.2066,addr:'Press Enclave Road, Saket, Delhi',beds:'500 Beds',open:true},
-  {name:'Fortis Hospital Noida',type:'pvt',lat:28.6139,lng:77.3650,addr:'Sector 62, Noida, UP',beds:'200 Beds',open:true},
-  {name:'Apollo Clinic Noida',type:'clinic',lat:28.5706,lng:77.3219,addr:'Sector 18, Noida, UP',beds:'Clinic',open:true},
-  {name:'Dr. Lal PathLabs Noida',type:'lab',lat:28.5830,lng:77.3260,addr:'Sector 27, Noida, UP',beds:'Lab',open:true},
-  {name:'GTB Hospital Delhi',type:'govt',lat:28.6800,lng:77.3100,addr:'Dilshad Garden, Delhi',beds:'1500 Beds',open:true},
-  {name:'RML Hospital Delhi',type:'govt',lat:28.6263,lng:77.2112,addr:'Baba Kharak Singh Marg, Delhi',beds:'1531 Beds',open:true},
-  {name:'Kailash Hospital Noida',type:'pvt',lat:28.5700,lng:77.3300,addr:'Sector 27, Noida, UP',beds:'350 Beds',open:true},
-  {name:'Metro Hospital Noida',type:'pvt',lat:28.5950,lng:77.3400,addr:'Sector 12, Noida, UP',beds:'200 Beds',open:true},
+// Init map — Delhi default
+const map=L.map('map',{zoomControl:true}).setView([28.6139,77.2090],12);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'© OpenStreetMap © CartoDB',maxZoom:19
+}).addTo(map);
+
+// Custom gold marker icon
+function makeIcon(emoji){
+  return L.divIcon({
+    html:`<div style="background:linear-gradient(135deg,#8a6f2e,#c9a84c);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #f0d080;box-shadow:0 0 12px rgba(201,168,76,.4)">${emoji}</div>`,
+    iconSize:[36,36],iconAnchor:[18,18],popupAnchor:[0,-20],className:''
+  });
+}
+
+let allMarkers=[];let activeFilter='all';
+
+// Hospital data — Delhi NCR
+const hospitals=[
+  {name:'AIIMS New Delhi',type:'govt',emoji:'🏥',lat:28.5672,lng:77.2100,addr:'Sri Aurobindo Marg, New Delhi',open:true,ph:'011-26588500'},
+  {name:'Safdarjung Hospital',type:'govt',emoji:'🏛️',lat:28.5672,lng:77.2031,addr:'Ring Road, Safdarjung, New Delhi',open:true,ph:'011-26707444'},
+  {name:'RML Hospital',type:'govt',emoji:'🏛️',lat:28.6276,lng:77.2197,addr:'Baba Kharak Singh Marg, New Delhi',open:true,ph:'011-23404000'},
+  {name:'LNJP Hospital',type:'govt',emoji:'🏛️',lat:28.6400,lng:77.2464,addr:'Jawahar Lal Nehru Marg, New Delhi',open:true,ph:'011-23232400'},
+  {name:'GTB Hospital',type:'govt',emoji:'🏛️',lat:28.6826,lng:77.3036,addr:'Dilshad Garden, East Delhi',open:true,ph:'011-22582626'},
+  {name:'Max Hospital Saket',type:'private',emoji:'🏨',lat:28.5244,lng:77.2066,addr:'Press Enclave Road, Saket, New Delhi',open:true,ph:'011-26515050'},
+  {name:'Apollo Hospital Delhi',type:'private',emoji:'🏨',lat:28.5486,lng:77.2825,addr:'Sarita Vihar, Mathura Road, New Delhi',open:true,ph:'011-71791090'},
+  {name:'Fortis Hospital Vasant Kunj',type:'private',emoji:'🏨',lat:28.5195,lng:77.1586,addr:'Vasant Kunj, New Delhi',open:true,ph:'011-42776222'},
+  {name:'BLK-Max Super Speciality',type:'private',emoji:'🏨',lat:28.6457,lng:77.1826,addr:'Pusa Road, New Delhi',open:true,ph:'011-30403040'},
+  {name:'Sir Ganga Ram Hospital',type:'private',emoji:'🏨',lat:28.6377,lng:77.1880,addr:'Old Rajinder Nagar, New Delhi',open:true,ph:'011-25750000'},
+  {name:'Medanta Hospital Gurgaon',type:'private',emoji:'🏨',lat:28.4541,lng:77.0268,addr:'Sector 38, Gurugram, Haryana',open:true,ph:'0124-4141414'},
+  {name:'Artemis Hospital Gurgaon',type:'private',emoji:'🏨',lat:28.4814,lng:77.0831,addr:'Sector 51, Gurugram, Haryana',open:true,ph:'0124-4511111'},
+  {name:'Yashoda Hospital Noida',type:'private',emoji:'🏨',lat:28.5708,lng:77.3261,addr:'Sector 110, Noida, UP',open:true,ph:'0120-4131313'},
+  {name:'Kailash Hospital Noida',type:'private',emoji:'🏨',lat:28.5945,lng:77.3172,addr:'Sector 27, Noida, UP',open:true,ph:'0120-4045555'},
+  {name:'Dr Lal PathLabs — Rohini',type:'lab',emoji:'🔬',lat:28.7183,lng:77.1322,addr:'Rohini, New Delhi',open:true,ph:'011-39885050'},
+  {name:'SRL Diagnostics — CP',type:'lab',emoji:'🔬',lat:28.6328,lng:77.2197,addr:'Connaught Place, New Delhi',open:true,ph:'1800-11-3030'},
+  {name:'Thyrocare — Dwarka',type:'lab',emoji:'🔬',lat:28.5921,lng:77.0460,addr:'Dwarka Sector 10, New Delhi',open:true,ph:'1800-103-6588'},
+  {name:'Practo Health Clinic — CP',type:'clinic',emoji:'🩺',lat:28.6350,lng:77.2200,addr:'Connaught Place, New Delhi',open:true,ph:''},
+  {name:'Family Doctor Clinic — Lajpat',type:'clinic',emoji:'🩺',lat:28.5664,lng:77.2434,addr:'Lajpat Nagar, New Delhi',open:true,ph:''},
+  {name:'Apollo Clinic — Noida',type:'clinic',emoji:'🩺',lat:28.5706,lng:77.3214,addr:'Sector 18, Noida, UP',open:true,ph:'0120-4045555'},
 ];
 
-// ===== CUSTOM MARKER ICONS =====
-function getIcon(type) {
-  const colors = {govt:'#34d399',pvt:'#60a5fa',clinic:'#c9a84c',lab:'#f472b6'};
-  const emojis = {govt:'🏛️',pvt:'🏨',clinic:'🏪',lab:'🔬'};
-  const color = colors[type] || '#c9a84c';
-  const emoji = emojis[type] || '🏥';
-  return L.divIcon({
-    className: '',
-    html: `<div style="background:#0a0a0a;border:2px solid ${color};width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.6);cursor:pointer;">${emoji}</div>`,
-    iconSize: [36,36],
-    iconAnchor: [18,18],
-    popupAnchor: [0,-20]
+let markers=[];
+
+function addMarkers(filter){
+  markers.forEach(m=>map.removeLayer(m));markers=[];
+  const now=new Date();const day=now.getDay();const h=now.getHours();
+  const isOpen=day>=1&&day<=6&&h>=8&&h<18;
+
+  hospitals.forEach(hosp=>{
+    if(filter!=='all'&&hosp.type!==filter)return;
+    const m=L.marker([hosp.lat,hosp.lng],{icon:makeIcon(hosp.emoji)});
+    const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${hosp.lat},${hosp.lng}`;
+    m.bindPopup(`
+      <div class="popup-name">${hosp.emoji} ${hosp.name}</div>
+      <div class="popup-type">${hosp.type==='govt'?'Government Hospital':hosp.type==='private'?'Private Hospital':hosp.type==='lab'?'Diagnostic Lab':'Clinic'}</div>
+      <div class="popup-addr">📍 ${hosp.addr}</div>
+      ${hosp.ph?`<div style="font-size:12px;color:#555;margin-bottom:10px">📞 ${hosp.ph}</div>`:''}
+      <a href="${dirUrl}" target="_blank" class="popup-btn">🗺️ Get Directions</a>
+    `);
+    m.addTo(map);markers.push(m);
   });
+  renderCards(filter);
 }
 
-function getUserIcon() {
-  return L.divIcon({
-    className: '',
-    html: `<div style="background:linear-gradient(135deg,#8a6f2e,#c9a84c);border:2px solid #f0d080;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 20px rgba(201,168,76,.4);animation:pulse 2s infinite;">📍</div>`,
-    iconSize: [40,40],
-    iconAnchor: [20,20]
-  });
-}
+function renderCards(filter){
+  const grid=document.getElementById('cardsGrid');
+  grid.innerHTML='';
+  const now=new Date();const day=now.getDay();const h=now.getHours();
 
-// ===== INIT MAP =====
-function initMap(lat, lng) {
-  document.getElementById('mloading').classList.add('hide');
-  document.getElementById('map').style.display = 'block';
-
-  if(map) { map.remove(); hospitalMarkers=[]; }
-
-  map = L.map('map', {
-    center: [lat, lng],
-    zoom: 13,
-    zoomControl: true,
-  });
-
-  // Dark tile layer
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© OpenStreetMap © CARTO',
-    maxZoom: 19,
-    subdomains: 'abcd'
-  }).addTo(map);
-
-  // Add hospital markers
-  hospitals.forEach(h => {
-    const marker = L.marker([h.lat, h.lng], {icon: getIcon(h.type)})
-      .addTo(map)
-      .bindPopup(`
-        <div class="popup-name">${h.name}</div>
-        <div class="popup-type">${h.type.toUpperCase()}</div>
-        <div class="popup-addr">${h.addr}<br>${h.beds}</div>
-        <a href="https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lng}" target="_blank" class="popup-btn">🗺️ Get Directions</a>
-      `, {className: 'custom-popup'});
-    hospitalMarkers.push(marker);
+  hospitals.forEach((hosp,i)=>{
+    if(filter!=='all'&&hosp.type!==filter)return;
+    const isOpen=day>=1&&day<=6&&h>=(hosp.type==='private'?9:8)&&h<(hosp.type==='private'?18:14);
+    const typeLabel=hosp.type==='govt'?'Government':hosp.type==='private'?'Private':hosp.type==='lab'?'Diagnostic Lab':'Clinic';
+    const typeClass=hosp.type==='govt'?'ht-govt':hosp.type==='private'?'ht-priv':hosp.type==='lab'?'ht-lab':'ht-clinic';
+    const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${hosp.lat},${hosp.lng}`;
+    const card=document.createElement('div');
+    card.className='hcard';
+    card.style.cssText=`opacity:0;transform:translateY(16px);transition:opacity .5s ease ${i*.04}s,transform .5s ease ${i*.04}s`;
+    card.innerHTML=`
+      <div class="htop">
+        <div class="hico">${hosp.emoji}</div>
+        <div class="hinfo">
+          <div class="hname">${hosp.name}</div>
+          <span class="htype ${typeClass}">${typeLabel}</span>
+        </div>
+      </div>
+      <div class="haddr">📍 ${hosp.addr}</div>
+      <div class="hopen ${isOpen?'op':'cl'}"><div class="odot"></div>${isOpen?'Open Now':'Closed / After Hours'}</div>
+      <div class="hbtns">
+        <a href="${dirUrl}" target="_blank" class="hbtn">🗺️ Directions</a>
+        ${hosp.ph?`<button class="hbtn hbtn-s" onclick="window.open('tel:${hosp.ph}')">📞 Call</button>`:''}
+        <button class="hbtn hbtn-s" onclick="map.setView([${hosp.lat},${hosp.lng}],16);document.getElementById('map').scrollIntoView({behavior:'smooth'})">📍 Show Map</button>
+      </div>`;
+    grid.appendChild(card);
+    setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)'},50+i*40);
   });
 
-  // Center marker
-  if(lat !== 28.5830 || lng !== 77.3260) {
-    userMarker = L.marker([lat, lng], {icon: getUserIcon()})
-      .addTo(map)
-      .bindPopup('<div style="color:#f0d080;font-weight:700;font-family:Inter,sans-serif;font-size:13px;">📍 Your Location</div>', {className: 'custom-popup'})
-      .openPopup();
-  }
-
-  // Fit bounds to show all markers
-  const allLatLngs = hospitals.map(h => [h.lat, h.lng]);
-  if(allLatLngs.length > 0) {
-    map.fitBounds(allLatLngs, {padding: [40,40]});
-  }
+  document.getElementById('statusTxt').textContent=`Showing ${grid.children.length} locations`;
 }
 
-// ===== FLY TO HOSPITAL =====
-window.flyToHospital = function(lat, lng, name) {
-  if(!map) { initMap(lat, lng); return; }
-  map.flyTo([lat, lng], 16, {duration: 1.5});
-  hospitalMarkers.forEach(m => {
-    const pos = m.getLatLng();
-    if(Math.abs(pos.lat - lat) < 0.001 && Math.abs(pos.lng - lng) < 0.001) {
-      setTimeout(() => m.openPopup(), 1600);
-    }
-  });
-  document.querySelector('.mwrap').scrollIntoView({behavior:'smooth',block:'start'});
-  toast('📍 Showing ' + name + ' on map');
-}
-
-// ===== FIND MY LOCATION =====
-window.findMyLocation = function() {
-  document.getElementById('mloading').classList.remove('hide');
-  document.getElementById('mltxt').textContent = 'Detecting your location...';
-  document.getElementById('map').style.display = 'none';
-  toast('📍 Detecting your location...');
-
-  if(!navigator.geolocation) {
-    toast('⚠️ Location not supported — showing Delhi NCR', 'e');
-    initMap(28.5830, 77.3260);
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      const {latitude, longitude} = pos.coords;
-      initMap(latitude, longitude);
-      toast('✅ Location found! Showing hospitals near you', 's');
-      if(map) {
-        map.flyTo([latitude, longitude], 14, {duration: 1.5});
-      }
-    },
-    err => {
-      toast('⚠️ Location denied — showing Delhi NCR map', 'e');
-      initMap(28.5830, 77.3260);
-    },
-    {timeout: 10000}
-  );
-}
-
-// ===== SEARCH CITY =====
-window.searchCity = async function() {
-  const city = document.getElementById('ci').value.trim();
-  if(!city) { toast('⚠️ Please enter a city name', 'e'); return; }
-
-  document.getElementById('mloading').classList.remove('hide');
-  document.getElementById('mltxt').textContent = 'Searching ' + city + '...';
-  document.getElementById('map').style.display = 'none';
-  toast('🔍 Searching for ' + city + '...');
-
-  try {
-    // Use Nominatim (free geocoding from OpenStreetMap)
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city+' India')}&format=json&limit=1`);
-    const data = await res.json();
-    if(data && data.length > 0) {
-      const lat = parseFloat(data[0].lat);
-      const lng = parseFloat(data[0].lon);
-      initMap(lat, lng);
-      toast('✅ Showing hospitals near ' + city, 's');
-      applyF();
-    } else {
-      toast('⚠️ City not found — showing Delhi NCR', 'e');
-      initMap(28.5830, 77.3260);
-    }
-  } catch(e) {
-    toast('⚠️ Search failed — showing Delhi NCR', 'e');
-    initMap(28.5830, 77.3260);
-  }
-}
-
-// ===== SHOW ALL =====
-window.showAllHospitals = function() {
-  if(!map) return;
-  const allLatLngs = hospitals.map(h => [h.lat, h.lng]);
-  map.fitBounds(allLatLngs, {padding:[40,40]});
-  toast('🏥 Showing all hospitals');
-}
-
-// ===== FILTER =====
-function setF(type,btn){
-  af=type;
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+function filterMap(type,btn){
+  activeFilter=type;
+  document.querySelectorAll('.cat').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  applyF();
-  toast('🔍 '+btn.textContent.trim());
+  addMarkers(type);
+  toast('🔍 Filter: '+btn.textContent.trim());
 }
 
-function applyF(){
-  const s=document.getElementById('ci').value.toLowerCase().trim();
-  const cards=document.querySelectorAll('.hcard');
-  let v=0;
-  cards.forEach(c=>{
-    const type=c.dataset.type;
-    const isOpen=c.dataset.open==='true';
-    const name=c.dataset.name||'';
-    const tm=af==='all'||af===type||(af==='open'&&isOpen);
-    const sm=!s||name.includes(s)||c.querySelector('.hn').textContent.toLowerCase().includes(s)||c.querySelector('.ha').textContent.toLowerCase().includes(s);
-    if(tm&&sm){c.classList.remove('hidden');v++}else{c.classList.add('hidden')}
-  });
-  document.getElementById('rcnt').textContent=`Showing ${v} facilit${v===1?'y':'ies'}`;
-  document.getElementById('nores').classList.toggle('on',v===0);
+function getGPS(){
+  if(!navigator.geolocation){toast('⚠️ GPS not available','e');return}
+  toast('📍 Detecting location...');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const{latitude:lat,longitude:lng}=pos.coords;
+    map.setView([lat,lng],14);
+    L.marker([lat,lng],{icon:L.divIcon({
+      html:`<div style="background:#34d399;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px rgba(52,211,153,.6)"></div>`,
+      iconSize:[14,14],iconAnchor:[7,7],className:''
+    })}).addTo(map).bindPopup('<b style="color:#34d399">📍 You are here</b>').openPopup();
+    document.getElementById('locBadge').style.display='flex';
+    document.getElementById('locTxt').textContent='Location detected';
+    toast('📍 Location found!','s');
+    addMarkers(activeFilter);
+  },()=>{toast('⚠️ Location access denied','e')},{timeout:10000});
 }
 
-document.getElementById('ci').addEventListener('input', applyF);
-document.getElementById('ci').addEventListener('keydown', e => { if(e.key==='Enter') searchCity(); });
+async function searchCity(){
+  const q=document.getElementById('cityInp').value.trim();
+  if(!q){toast('⚠️ Please enter a city or area','e');return}
+  toast('🔍 Searching '+q+'...');
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+' India')}&format=json&limit=1`);
+    const data=await res.json();
+    if(!data.length){toast('⚠️ Location not found. Try a different search.','e');return}
+    map.setView([parseFloat(data[0].lat),parseFloat(data[0].lon)],13);
+    toast('✅ Showing hospitals near '+q,'s');
+    addMarkers(activeFilter);
+  }catch{toast('⚠️ Search failed. Check your connection.','e')}
+}
 
-// Scroll animations
-const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}}),{threshold:.1})
-document.querySelectorAll('.hcard').forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition=`opacity .5s ease ${i*.07}s,transform .5s ease ${i*.07}s`;obs.observe(el)})
+document.getElementById('cityInp').addEventListener('keydown',e=>{if(e.key==='Enter')searchCity()});
 
-// Auto load map on page load with Delhi NCR
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('mltxt').textContent = 'Loading Delhi NCR map...';
-    initMap(28.5830, 77.3260);
-    toast('🗺️ Live map loaded! Click 📍 My Location for hospitals near you');
-  }, 800);
-});
-
+// Initial load
+addMarkers('all');
+setTimeout(()=>toast('🗺️ Hospital map loaded!'),1200);
 </script>
 </body>
 </html>
