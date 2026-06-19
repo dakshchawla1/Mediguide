@@ -45,7 +45,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .psub{font-size:14px;color:#444;line-height:1.7;margin-bottom:18px}
 
-/* SEARCH BAR */
 .ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .sinp{flex:1;min-width:200px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:11px;padding:12px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
 .sinp:focus{border-color:rgba(201,168,76,.3)}
@@ -56,25 +55,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .gbtn-gps{background:linear-gradient(135deg,#1a3a1a,#166534);color:#34d399}
 .gbtn-opd{background:rgba(201,168,76,.08);color:var(--gl);border:1px solid rgba(201,168,76,.15);text-decoration:none;display:inline-flex;align-items:center}
 
-/* FILTERS */
 .cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .cat{background:#0a0a0a;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:600;padding:7px 15px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;white-space:nowrap}
 .cat:hover,.cat.on{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.25);color:var(--gl)}
 
-/* STATUS BAR */
 .status-bar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .status-txt{font-size:12px;color:#333}
 .loc-badge{display:none;align-items:center;gap:6px;font-size:12px;color:var(--gold);background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);padding:5px 12px;border-radius:100px}
 .loc-badge.on{display:inline-flex}
 .loc-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
 
-/* LOADING OVERLAY */
-.map-loading{position:absolute;inset:0;background:rgba(0,0,0,.8);border-radius:18px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:500}
+.map-loading{position:absolute;inset:0;background:rgba(0,0,0,.85);border-radius:18px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:500}
 .map-loading.on{display:flex}
 .map-sp{width:32px;height:32px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite}
-.map-loading p{font-size:13px;color:#555}
+.map-loading p{font-size:13px;color:#555;text-align:center;padding:0 20px}
 
-/* MAP */
 .map-wrap{position:relative;margin-bottom:16px}
 #map{width:100%;height:500px;border-radius:18px;border:1px solid #1a1a1a;position:relative;z-index:1}
 .leaflet-container{background:#0a0a0a!important;font-family:'Inter',sans-serif}
@@ -88,7 +83,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .popup-btn{flex:1;display:inline-block;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;text-decoration:none;font-family:'Inter',sans-serif;text-align:center}
 .popup-btn2{flex:1;display:inline-block;background:rgba(201,168,76,.07);color:var(--gl);font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;text-decoration:none;font-family:'Inter',sans-serif;border:1px solid rgba(201,168,76,.15);text-align:center;cursor:pointer}
 
-/* RESULTS CARDS */
 .results-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
 .results-ttl{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#fff}
 .results-count{font-size:12px;color:#333;background:#0a0a0a;border:1px solid #1a1a1a;padding:5px 12px;border-radius:100px}
@@ -107,6 +101,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ht-lab{background:rgba(167,139,250,.06);color:#a78bfa;border:1px solid rgba(167,139,250,.1)}
 .ht-pharmacy{background:rgba(96,165,250,.06);color:#60a5fa;border:1px solid rgba(96,165,250,.1)}
 .ht-dental{background:rgba(248,113,113,.06);color:#f87171;border:1px solid rgba(248,113,113,.1)}
+.ht-doctors{background:rgba(251,191,36,.06);color:#fbbf24;border:1px solid rgba(251,191,36,.1)}
 .haddr{font-size:11px;color:#333;line-height:1.5;margin-bottom:10px}
 .hdist{font-size:11px;color:var(--gold);font-weight:600;margin-bottom:10px}
 .hbtns{display:flex;gap:7px}
@@ -115,13 +110,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .hbtn-s{background:transparent;border:1px solid #1a1a1a;color:#444}
 .hbtn-s:hover{border-color:#333;color:#888}
 
-/* NO RESULTS */
 .no-results{display:none;text-align:center;padding:44px 22px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;margin-bottom:20px}
 .no-results.on{display:block}
 .no-results p{font-size:15px;color:#333;margin-bottom:6px}
 .no-results span{font-size:13px;color:#111}
 
-/* HOW TO USE */
 .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
 .how-card{background:#0a0a0a;border:1px solid #111;border-radius:16px;padding:20px;text-align:center}
 .how-ico{font-size:24px;margin-bottom:10px;display:block}
@@ -179,15 +172,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <p class="psub">Live map powered by OpenStreetMap — shows every hospital, clinic, diagnostic lab, pharmacy and dental clinic across all of India. Use GPS or search any city.</p>
   </div>
 
-  <!-- SEARCH -->
   <div class="ctrl">
-    <input class="sinp" id="cityInp" placeholder="🔍 Search any city, area or pincode — e.g. Mumbai, Connaught Place, Sector 18 Noida..."/>
+    <input class="sinp" id="cityInp" placeholder="🔍 Search any city, area or pincode — e.g. Mumbai, Jaipur, Sector 18 Noida..."/>
     <button class="gbtn" id="searchBtn" onclick="searchCity()">🔍 Search</button>
     <button class="gbtn gbtn-gps" id="gpsBtn" onclick="getGPS()">📍 My Location</button>
     <a href="opd.html" class="gbtn gbtn-opd">🏥 OPD Times</a>
   </div>
 
-  <!-- FILTERS -->
   <div class="cats">
     <button class="cat on" onclick="filterType('hospital',this)">🏥 Hospitals</button>
     <button class="cat" onclick="filterType('clinic',this)">🩺 Clinics</button>
@@ -197,13 +188,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <button class="cat" onclick="filterType('doctors',this)">👨‍⚕️ Doctors</button>
   </div>
 
-  <!-- STATUS -->
   <div class="status-bar">
     <div class="status-txt" id="statusTxt">📍 Search a city or use GPS to find hospitals near you</div>
     <div class="loc-badge" id="locBadge"><div class="loc-dot"></div><span id="locTxt">Located</span></div>
   </div>
 
-  <!-- MAP -->
   <div class="map-wrap">
     <div id="map"></div>
     <div class="map-loading" id="mapLoading">
@@ -212,7 +201,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="results-head">
     <div class="results-ttl" id="resultsttl">Results</div>
     <div class="results-count" id="resultsCount">0 found</div>
@@ -220,15 +208,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="cards-grid" id="cardsGrid"></div>
   <div class="no-results" id="noResults">
     <p>😕 No results found in this area</p>
-    <span>Try searching a different city or use GPS location</span>
+    <span>Try expanding search, a nearby bigger city, or a different category</span>
   </div>
 
-  <!-- HOW TO USE -->
   <div class="how-grid">
     <div class="how-card"><span class="how-ico">📍</span><div class="how-ttl">Use GPS</div><div class="how-txt">Tap "My Location" to instantly find hospitals nearest to where you are right now.</div></div>
     <div class="how-card"><span class="how-ico">🔍</span><div class="how-ttl">Search Any City</div><div class="how-txt">Type any city, area, locality or pincode in India to find all hospitals there.</div></div>
     <div class="how-card"><span class="how-ico">🏥</span><div class="how-ttl">Filter by Type</div><div class="how-txt">Use filters to show only hospitals, clinics, labs, pharmacies or dental clinics.</div></div>
-    <div class="how-card"><span class="how-ico">🗺️</span><div class="how-ttl">Get Directions</div><div class="how-txt">Tap any result to get Google Maps directions from your current location.</div></div>
+    <div class="how-card"><span class="how-ico">🗺️</span><div class="how-ttl">Get Directions</div><div class="how-txt">Tap any result's Directions button to open Google Maps with the route from your location.</div></div>
   </div>
 </div>
 
@@ -248,7 +235,6 @@ function toast(msg,type='g'){
   document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 
-// Init Leaflet map — India centre
 const map=L.map('map',{zoomControl:true}).setView([20.5937,78.9629],5);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CartoDB',maxZoom:19
@@ -259,8 +245,8 @@ let userMarker=null;
 let currentLat=20.5937;
 let currentLng=78.9629;
 let currentType='hospital';
+let hasLocation=false;
 
-// Make icon for different types
 function makeIcon(type){
   const configs={
     hospital:{emoji:'🏥',color:'#34d399'},
@@ -268,16 +254,14 @@ function makeIcon(type){
     laboratory:{emoji:'🔬',color:'#a78bfa'},
     pharmacy:{emoji:'💊',color:'#60a5fa'},
     dentist:{emoji:'🦷',color:'#f87171'},
-    doctors:{emoji:'👨‍⚕️',color:'#fbbf24'},
-    default:{emoji:'🏥',color:'#34d399'}
+    doctors:{emoji:'👨‍⚕️',color:'#fbbf24'}
   };
-  const cfg=configs[type]||configs.default;
+  const cfg=configs[type]||configs.hospital;
   return L.divIcon({
-    html:`<div style="background:#0a0a0a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid ${cfg.color};box-shadow:0 0 10px ${cfg.color}44">${cfg.emoji}</div>`,
+    html:`<div style="background:#0a0a0a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid ${cfg.color};box-shadow:0 0 10px ${cfg.color}66">${cfg.emoji}</div>`,
     iconSize:[36,36],iconAnchor:[18,18],popupAnchor:[0,-20],className:''
   });
 }
-
 function makeUserIcon(){
   return L.divIcon({
     html:`<div style="background:#34d399;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 14px rgba(52,211,153,.7)"></div>`,
@@ -285,96 +269,122 @@ function makeUserIcon(){
   });
 }
 
-function showLoading(txt='Searching hospitals...'){
-  document.getElementById('mapLoading').classList.add('on');
-  document.getElementById('loadingTxt').textContent=txt;
-}
+function showLoading(txt){document.getElementById('mapLoading').classList.add('on');document.getElementById('loadingTxt').textContent=txt}
 function hideLoading(){document.getElementById('mapLoading').classList.remove('on')}
+function clearMarkers(){currentMarkers.forEach(m=>{try{map.removeLayer(m)}catch(e){}});currentMarkers=[]}
+function capitalise(str){return str.charAt(0).toUpperCase()+str.slice(1)}
 
-function clearMarkers(){currentMarkers.forEach(m=>map.removeLayer(m));currentMarkers=[]}
-
-// Distance calculator
 function getDist(lat1,lng1,lat2,lng2){
   const R=6371;
   const dLat=(lat2-lat1)*Math.PI/180;
   const dLng=(lng2-lng1)*Math.PI/180;
-  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-// *** CORE FUNCTION — Fetch from Overpass API (OpenStreetMap real data ALL INDIA) ***
-async function fetchPlaces(lat,lng,type){
-  showLoading('Fetching '+type+'s near you...');
+// Multiple Overpass mirror servers — tries each until one works
+const OVERPASS_SERVERS=[
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.openstreetmap.ru/api/interpreter'
+];
+
+async function tryOverpass(query){
+  let lastErr=null;
+  for(const server of OVERPASS_SERVERS){
+    try{
+      const controller=new AbortController();
+      const timeoutId=setTimeout(()=>controller.abort(),15000);
+      const res=await fetch(server+'?data='+encodeURIComponent(query),{signal:controller.signal});
+      clearTimeout(timeoutId);
+      if(res.ok){
+        const data=await res.json();
+        return data;
+      }
+    }catch(err){lastErr=err;continue}
+  }
+  throw lastErr||new Error('All Overpass servers failed');
+}
+
+async function fetchPlaces(lat,lng,type,radiusKm=5){
+  showLoading('Searching for '+type+'s within '+radiusKm+'km...');
   clearMarkers();
   document.getElementById('cardsGrid').innerHTML='';
   document.getElementById('noResults').classList.remove('on');
 
-  // Overpass API query — gets real OSM data
-  const radius=5000; // 5km radius
-  let osmKey='amenity';
-  let osmValue=type;
-  if(type==='laboratory'){osmValue='laboratory'}
-  if(type==='doctors'){osmValue='doctors'}
+  const radius=radiusKm*1000;
+  const osmValue=type;
 
-  const query=`[out:json][timeout:25];
+  const query=`[out:json][timeout:20];
 (
-  node["${osmKey}"="${osmValue}"](around:${radius},${lat},${lng});
-  way["${osmKey}"="${osmValue}"](around:${radius},${lat},${lng});
-  relation["${osmKey}"="${osmValue}"](around:${radius},${lat},${lng});
+  node["amenity"="${osmValue}"](around:${radius},${lat},${lng});
+  way["amenity"="${osmValue}"](around:${radius},${lat},${lng});
 );
-out body center 50;`;
-
-  const url='https://overpass-api.de/api/interpreter?data='+encodeURIComponent(query);
+out body center 60;`;
 
   try{
-    const res=await fetch(url);
-    if(!res.ok)throw new Error('Overpass API error');
-    const data=await res.json();
-    const elements=data.elements||[];
+    const data=await tryOverpass(query);
+    let elements=data.elements||[];
+
+    // If no results within 5km, auto-expand to 15km
+    if(elements.length===0&&radiusKm===5){
+      hideLoading();
+      showLoading('No results within 5km — expanding to 15km...');
+      const query2=`[out:json][timeout:20];
+(
+  node["amenity"="${osmValue}"](around:15000,${lat},${lng});
+  way["amenity"="${osmValue}"](around:15000,${lat},${lng});
+);
+out body center 60;`;
+      const data2=await tryOverpass(query2);
+      elements=data2.elements||[];
+      radiusKm=15;
+    }
 
     hideLoading();
 
     if(elements.length===0){
       document.getElementById('noResults').classList.add('on');
-      document.getElementById('statusTxt').textContent='No '+type+'s found within 5km. Try a different area.';
+      document.getElementById('statusTxt').textContent='No '+type+'s found nearby. Try a bigger city or different category.';
       document.getElementById('resultsCount').textContent='0 found';
       document.getElementById('resultsttl').textContent=capitalise(type)+'s Near You';
+      toast('⚠️ No '+type+'s found in this area','e');
       return;
     }
 
     const results=[];
     elements.forEach(el=>{
-      const elLat=el.lat||el.center?.lat;
-      const elLng=el.lon||el.center?.lon;
+      const elLat=el.lat||(el.center&&el.center.lat);
+      const elLng=el.lon||(el.center&&el.center.lon);
       if(!elLat||!elLng)return;
-      const name=el.tags?.name||el.tags?.['name:en']||capitalise(type);
-      const addr=[
-        el.tags?.['addr:housenumber'],
-        el.tags?.['addr:street'],
-        el.tags?.['addr:suburb']||el.tags?.['addr:city'],
-        el.tags?.['addr:postcode']
-      ].filter(Boolean).join(', ')||'Address not available';
-      const phone=el.tags?.phone||el.tags?.['contact:phone']||'';
+      const tags=el.tags||{};
+      const name=tags.name||tags['name:en']||(capitalise(type)+' (Unnamed)');
+      const addrParts=[
+        tags['addr:housenumber'],
+        tags['addr:street'],
+        tags['addr:suburb']||tags['addr:city']||tags['addr:district'],
+        tags['addr:postcode']
+      ].filter(Boolean);
+      const addr=addrParts.length?addrParts.join(', '):'Exact address not tagged — use map pin location';
+      const phone=tags.phone||tags['contact:phone']||'';
       const dist=getDist(lat,lng,elLat,elLng);
       results.push({name,addr,phone,lat:elLat,lng:elLng,dist,type});
     });
 
-    // Sort by distance
     results.sort((a,b)=>a.dist-b.dist);
+    const top=results.slice(0,40);
 
-    document.getElementById('resultsCount').textContent=results.length+' found';
+    document.getElementById('resultsCount').textContent=top.length+' found';
     document.getElementById('resultsttl').textContent=capitalise(type)+'s Near You';
-    document.getElementById('statusTxt').textContent='Showing '+results.length+' '+type+'s within 5km';
+    document.getElementById('statusTxt').textContent='Showing '+top.length+' '+type+'s within '+radiusKm+'km';
 
-    // Render markers and cards
-    results.forEach((r,i)=>{
-      // Map marker
+    top.forEach((r,i)=>{
       const marker=L.marker([r.lat,r.lng],{icon:makeIcon(r.type)});
       const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}`;
       marker.bindPopup(`
-        <div class="popup-name">${r.name}</div>
+        <div class="popup-name">${escapeHtml(r.name)}</div>
         <div class="popup-type">${capitalise(r.type)}</div>
-        <div class="popup-addr">📍 ${r.addr}</div>
+        <div class="popup-addr">📍 ${escapeHtml(r.addr)}</div>
         <div class="popup-btns">
           <a href="${dirUrl}" target="_blank" class="popup-btn">🗺️ Directions</a>
           ${r.phone?`<button class="popup-btn2" onclick="window.open('tel:${r.phone}')">📞 Call</button>`:''}
@@ -383,46 +393,53 @@ out body center 50;`;
       marker.addTo(map);
       currentMarkers.push(marker);
 
-      // Card
-      const typeClass=r.type==='hospital'?'ht-hosp':r.type==='clinic'?'ht-clinic':r.type==='laboratory'?'ht-lab':r.type==='pharmacy'?'ht-pharmacy':r.type==='dentist'?'ht-dental':'ht-clinic';
-      const typeLabel=capitalise(r.type);
+      const typeClass='ht-'+(r.type==='hospital'?'hosp':r.type==='clinic'?'clinic':r.type==='laboratory'?'lab':r.type==='pharmacy'?'pharmacy':r.type==='dentist'?'dental':'doctors');
       const dirUrl2=`https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}`;
+      const icoMap={hospital:'🏥',clinic:'🩺',laboratory:'🔬',pharmacy:'💊',dentist:'🦷',doctors:'👨‍⚕️'};
       const card=document.createElement('div');
       card.className='hcard';
-      card.style.cssText=`opacity:0;transform:translateY(14px);transition:opacity .4s ease ${i*.04}s,transform .4s ease ${i*.04}s`;
+      card.style.cssText=`opacity:0;transform:translateY(14px);transition:opacity .4s ease ${i*.03}s,transform .4s ease ${i*.03}s`;
       card.innerHTML=`
         <div class="htop">
-          <div class="hico">${r.type==='hospital'?'🏥':r.type==='clinic'?'🩺':r.type==='laboratory'?'🔬':r.type==='pharmacy'?'💊':r.type==='dentist'?'🦷':'👨‍⚕️'}</div>
+          <div class="hico">${icoMap[r.type]||'🏥'}</div>
           <div class="hinfo">
-            <div class="hname">${r.name}</div>
-            <span class="htype ${typeClass}">${typeLabel}</span>
+            <div class="hname">${escapeHtml(r.name)}</div>
+            <span class="htype ${typeClass}">${capitalise(r.type)}</span>
           </div>
         </div>
-        <div class="haddr">📍 ${r.addr}</div>
+        <div class="haddr">📍 ${escapeHtml(r.addr)}</div>
         <div class="hdist">📏 ${r.dist<1?(r.dist*1000).toFixed(0)+' m away':r.dist.toFixed(1)+' km away'}</div>
         <div class="hbtns">
           <a href="${dirUrl2}" target="_blank" class="hbtn">🗺️ Directions</a>
-          ${r.phone?`<button class="hbtn hbtn-s" onclick="window.open('tel:${r.phone}')">📞 Call</button>`:''}
-          <button class="hbtn hbtn-s" onclick="map.setView([${r.lat},${r.lng}],17);map.eachLayer(l=>{if(l.getLatLng&&l.getLatLng().lat===${r.lat})l.openPopup()});document.getElementById('map').scrollIntoView({behavior:'smooth'})">📍 Map</button>
+          ${r.phone?`<button class="hbtn hbtn-s" onclick="window.open('tel:${r.phone}')">📞 Call</button>`:`<button class="hbtn hbtn-s" onclick="focusMarker(${r.lat},${r.lng})">📍 Show</button>`}
         </div>`;
       document.getElementById('cardsGrid').appendChild(card);
-      setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)'},50+i*40);
+      setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)'},40+i*30);
     });
 
-    toast('✅ Found '+results.length+' '+type+'s nearby!','s');
+    toast('✅ Found '+top.length+' '+type+'s nearby!','s');
 
   }catch(err){
     hideLoading();
     console.warn('Overpass error:',err);
     document.getElementById('noResults').classList.add('on');
-    document.getElementById('statusTxt').textContent='Could not load data. Check your connection.';
-    toast('⚠️ Could not load hospital data. Try again.','e');
+    document.getElementById('statusTxt').textContent='Could not load data right now. Check your connection and try again.';
+    document.getElementById('resultsCount').textContent='0 found';
+    toast('⚠️ Server busy — please try again in a moment','e');
   }
 }
 
-function capitalise(str){return str.charAt(0).toUpperCase()+str.slice(1)}
+function escapeHtml(str){
+  const d=document.createElement('div');
+  d.textContent=str;
+  return d.innerHTML;
+}
 
-// GPS
+function focusMarker(lat,lng){
+  map.setView([lat,lng],17);
+  document.getElementById('map').scrollIntoView({behavior:'smooth'});
+}
+
 function getGPS(){
   if(!navigator.geolocation){toast('⚠️ GPS not available on this device','e');return}
   const btn=document.getElementById('gpsBtn');
@@ -431,12 +448,12 @@ function getGPS(){
 
   navigator.geolocation.getCurrentPosition(pos=>{
     const{latitude:lat,longitude:lng}=pos.coords;
-    currentLat=lat;currentLng=lng;
+    currentLat=lat;currentLng=lng;hasLocation=true;
     map.setView([lat,lng],14);
 
-    if(userMarker)map.removeLayer(userMarker);
+    if(userMarker){try{map.removeLayer(userMarker)}catch(e){}}
     userMarker=L.marker([lat,lng],{icon:makeUserIcon()}).addTo(map);
-    userMarker.bindPopup('<b style="color:#34d399;font-family:Playfair Display,serif">📍 You are here</b>').openPopup();
+    userMarker.bindPopup('<b style="color:#34d399">📍 You are here</b>').openPopup();
 
     document.getElementById('locBadge').classList.add('on');
     document.getElementById('locTxt').textContent='Location detected';
@@ -444,13 +461,12 @@ function getGPS(){
     btn.disabled=false;btn.textContent='📍 My Location';
 
     fetchPlaces(lat,lng,currentType);
-  },err=>{
-    toast('⚠️ Location access denied. Please allow location.','e');
+  },()=>{
+    toast('⚠️ Location access denied. Please allow location access.','e');
     btn.disabled=false;btn.textContent='📍 My Location';
   },{timeout:10000,enableHighAccuracy:true});
 }
 
-// City search
 async function searchCity(){
   const q=document.getElementById('cityInp').value.trim();
   if(!q){toast('⚠️ Please enter a city or area name','e');return}
@@ -459,23 +475,24 @@ async function searchCity(){
   toast('🔍 Searching for '+q+'...');
 
   try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+', India')}&format=json&limit=1`,{
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+', India')}&format=json&limit=1&countrycodes=in`,{
       headers:{'Accept-Language':'en'}
     });
+    if(!res.ok)throw new Error('Geocoding failed');
     const data=await res.json();
     if(!data||!data.length){
-      toast('⚠️ Location not found. Try a different name.','e');
+      toast('⚠️ Location not found. Try a more specific or different name.','e');
       btn.disabled=false;btn.textContent='🔍 Search';
       return;
     }
     const lat=parseFloat(data[0].lat);
     const lng=parseFloat(data[0].lon);
-    currentLat=lat;currentLng=lng;
+    currentLat=lat;currentLng=lng;hasLocation=true;
     map.setView([lat,lng],14);
 
-    if(userMarker)map.removeLayer(userMarker);
+    if(userMarker){try{map.removeLayer(userMarker)}catch(e){}}
     userMarker=L.marker([lat,lng],{icon:makeUserIcon()}).addTo(map);
-    userMarker.bindPopup(`<b style="color:#34d399;font-family:Playfair Display,serif">📍 ${data[0].display_name.split(',')[0]}</b>`).openPopup();
+    userMarker.bindPopup(`<b style="color:#34d399">📍 ${escapeHtml(data[0].display_name.split(',')[0])}</b>`).openPopup();
 
     document.getElementById('locBadge').classList.add('on');
     document.getElementById('locTxt').textContent=data[0].display_name.split(',')[0];
@@ -484,20 +501,18 @@ async function searchCity(){
 
     fetchPlaces(lat,lng,currentType);
   }catch(err){
-    toast('⚠️ Search failed. Check your connection.','e');
+    toast('⚠️ Search failed. Check your internet connection.','e');
     btn.disabled=false;btn.textContent='🔍 Search';
   }
 }
 
-// Type filter
 function filterType(type,btn){
   currentType=type;
   document.querySelectorAll('.cat').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   toast('🔍 Showing '+type+'s');
 
-  // If we already have a location, re-search with new type
-  if(document.getElementById('locBadge').classList.contains('on')){
+  if(hasLocation){
     fetchPlaces(currentLat,currentLng,type);
   }else{
     document.getElementById('statusTxt').textContent='Now search a city or use GPS to find '+type+'s near you';
