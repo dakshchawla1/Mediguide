@@ -38,13 +38,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 @keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes sp{to{transform:rotate(360deg)}}
-
 .page-head{padding:22px 0 18px}
 .eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
 .ptitle{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,42px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:8px;line-height:1.05}
 .ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .psub{font-size:14px;color:#444;line-height:1.7;margin-bottom:18px}
-
 .ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .sinp{flex:1;min-width:200px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:11px;padding:12px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
 .sinp:focus{border-color:rgba(201,168,76,.3)}
@@ -54,22 +52,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .gbtn:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .gbtn-gps{background:linear-gradient(135deg,#1a3a1a,#166534);color:#34d399}
 .gbtn-opd{background:rgba(201,168,76,.08);color:var(--gl);border:1px solid rgba(201,168,76,.15);text-decoration:none;display:inline-flex;align-items:center}
-
 .cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .cat{background:#0a0a0a;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:600;padding:7px 15px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;white-space:nowrap}
 .cat:hover,.cat.on{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.25);color:var(--gl)}
-
 .status-bar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .status-txt{font-size:12px;color:#333}
 .loc-badge{display:none;align-items:center;gap:6px;font-size:12px;color:var(--gold);background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);padding:5px 12px;border-radius:100px}
 .loc-badge.on{display:inline-flex}
 .loc-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
-
-.map-loading{position:absolute;inset:0;background:rgba(0,0,0,.85);border-radius:18px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:500}
-.map-loading.on{display:flex}
-.map-sp{width:32px;height:32px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite}
-.map-loading p{font-size:13px;color:#555;text-align:center;padding:0 20px}
-
 .map-wrap{position:relative;margin-bottom:16px}
 #map{width:100%;height:500px;border-radius:18px;border:1px solid #1a1a1a;position:relative;z-index:1}
 .leaflet-container{background:#0a0a0a!important;font-family:'Inter',sans-serif}
@@ -81,8 +71,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .popup-addr{font-size:12px;color:#444;margin-bottom:10px;line-height:1.4}
 .popup-btns{display:flex;gap:7px}
 .popup-btn{flex:1;display:inline-block;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;text-decoration:none;font-family:'Inter',sans-serif;text-align:center}
-.popup-btn2{flex:1;display:inline-block;background:rgba(201,168,76,.07);color:var(--gl);font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;text-decoration:none;font-family:'Inter',sans-serif;border:1px solid rgba(201,168,76,.15);text-align:center;cursor:pointer}
-
+.popup-btn2{flex:1;display:inline-block;background:rgba(201,168,76,.07);color:var(--gl);font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;border:1px solid rgba(201,168,76,.15);text-align:center;cursor:pointer;font-family:'Inter',sans-serif}
+.map-loading{position:absolute;inset:0;background:rgba(0,0,0,.85);border-radius:18px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:500}
+.map-loading.on{display:flex}
+.map-sp{width:32px;height:32px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite}
+.map-loading p{font-size:13px;color:#555;text-align:center;padding:0 20px}
 .results-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
 .results-ttl{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#fff}
 .results-count{font-size:12px;color:#333;background:#0a0a0a;border:1px solid #1a1a1a;padding:5px 12px;border-radius:100px}
@@ -109,31 +102,25 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .hbtn:hover{background:rgba(201,168,76,.12)}
 .hbtn-s{background:transparent;border:1px solid #1a1a1a;color:#444}
 .hbtn-s:hover{border-color:#333;color:#888}
-
 .no-results{display:none;text-align:center;padding:44px 22px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;margin-bottom:20px}
 .no-results.on{display:block}
 .no-results p{font-size:15px;color:#333;margin-bottom:6px}
 .no-results span{font-size:13px;color:#111}
-
 .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
 .how-card{background:#0a0a0a;border:1px solid #111;border-radius:16px;padding:20px;text-align:center}
 .how-ico{font-size:24px;margin-bottom:10px;display:block}
 .how-ttl{font-size:13px;font-weight:700;color:#ddd;margin-bottom:6px}
 .how-txt{font-size:12px;color:#333;line-height:1.6}
-
 @media(max-width:900px){
 .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
 .wrap{padding:80px 16px 40px}
-#map{height:380px}
+#map{height:360px}
 .ctrl{flex-direction:column}.sinp{min-width:unset;width:100%}
 .cards-grid{grid-template-columns:1fr}
 .how-grid{grid-template-columns:1fr 1fr}
 .ptitle{font-size:24px!important}
 }
-@media(max-width:480px){
-.how-grid{grid-template-columns:1fr}
-.cats{gap:5px}.cat{font-size:11px;padding:6px 11px}
-}
+@media(max-width:480px){.how-grid{grid-template-columns:1fr}.cats{gap:5px}.cat{font-size:11px;padding:6px 11px}}
 </style>
 </head>
 <body>
@@ -169,11 +156,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="page-head">
     <div class="eye">🗺️ Live Hospital Finder</div>
     <h1 class="ptitle">Find <span>Hospitals</span> Anywhere in India</h1>
-    <p class="psub">Live map powered by OpenStreetMap — shows every hospital, clinic, diagnostic lab, pharmacy and dental clinic across all of India. Use GPS or search any city.</p>
+    <p class="psub">Live map — shows every hospital, clinic, lab, pharmacy and dental clinic across all of India. Use GPS or search any city.</p>
   </div>
 
   <div class="ctrl">
-    <input class="sinp" id="cityInp" placeholder="🔍 Search any city, area or pincode — e.g. Mumbai, Jaipur, Sector 18 Noida..."/>
+    <input class="sinp" id="cityInp" placeholder="🔍 Search any city or area — e.g. Mumbai, Jaipur, Sector 18 Noida, Bandra..."/>
     <button class="gbtn" id="searchBtn" onclick="searchCity()">🔍 Search</button>
     <button class="gbtn gbtn-gps" id="gpsBtn" onclick="getGPS()">📍 My Location</button>
     <a href="opd.html" class="gbtn gbtn-opd">🏥 OPD Times</a>
@@ -208,14 +195,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="cards-grid" id="cardsGrid"></div>
   <div class="no-results" id="noResults">
     <p>😕 No results found in this area</p>
-    <span>Try expanding search, a nearby bigger city, or a different category</span>
+    <span>Try a different city name or a different category</span>
   </div>
 
   <div class="how-grid">
     <div class="how-card"><span class="how-ico">📍</span><div class="how-ttl">Use GPS</div><div class="how-txt">Tap "My Location" to instantly find hospitals nearest to where you are right now.</div></div>
     <div class="how-card"><span class="how-ico">🔍</span><div class="how-ttl">Search Any City</div><div class="how-txt">Type any city, area, locality or pincode in India to find all hospitals there.</div></div>
-    <div class="how-card"><span class="how-ico">🏥</span><div class="how-ttl">Filter by Type</div><div class="how-txt">Use filters to show only hospitals, clinics, labs, pharmacies or dental clinics.</div></div>
-    <div class="how-card"><span class="how-ico">🗺️</span><div class="how-ttl">Get Directions</div><div class="how-txt">Tap any result's Directions button to open Google Maps with the route from your location.</div></div>
+    <div class="how-card"><span class="how-ico">🏥</span><div class="how-ttl">Filter by Type</div><div class="how-txt">Use filter buttons to show only hospitals, clinics, labs, pharmacies or dental clinics.</div></div>
+    <div class="how-card"><span class="how-ico">🗺️</span><div class="how-ttl">Get Directions</div><div class="how-txt">Tap Directions on any result to open Google Maps with the route to that location.</div></div>
   </div>
 </div>
 
@@ -248,17 +235,10 @@ let currentType='hospital';
 let hasLocation=false;
 
 function makeIcon(type){
-  const configs={
-    hospital:{emoji:'🏥',color:'#34d399'},
-    clinic:{emoji:'🩺',color:'#c9a84c'},
-    laboratory:{emoji:'🔬',color:'#a78bfa'},
-    pharmacy:{emoji:'💊',color:'#60a5fa'},
-    dentist:{emoji:'🦷',color:'#f87171'},
-    doctors:{emoji:'👨‍⚕️',color:'#fbbf24'}
-  };
-  const cfg=configs[type]||configs.hospital;
+  const cfg={hospital:{e:'🏥',c:'#34d399'},clinic:{e:'🩺',c:'#c9a84c'},laboratory:{e:'🔬',c:'#a78bfa'},pharmacy:{e:'💊',c:'#60a5fa'},dentist:{e:'🦷',c:'#f87171'},doctors:{e:'👨‍⚕️',c:'#fbbf24'}};
+  const k=cfg[type]||cfg.hospital;
   return L.divIcon({
-    html:`<div style="background:#0a0a0a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid ${cfg.color};box-shadow:0 0 10px ${cfg.color}66">${cfg.emoji}</div>`,
+    html:`<div style="background:#0a0a0a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid ${k.c};box-shadow:0 0 10px ${k.c}66">${k.e}</div>`,
     iconSize:[36,36],iconAnchor:[18,18],popupAnchor:[0,-20],className:''
   });
 }
@@ -272,130 +252,102 @@ function makeUserIcon(){
 function showLoading(txt){document.getElementById('mapLoading').classList.add('on');document.getElementById('loadingTxt').textContent=txt}
 function hideLoading(){document.getElementById('mapLoading').classList.remove('on')}
 function clearMarkers(){currentMarkers.forEach(m=>{try{map.removeLayer(m)}catch(e){}});currentMarkers=[]}
-function capitalise(str){return str.charAt(0).toUpperCase()+str.slice(1)}
-
-function getDist(lat1,lng1,lat2,lng2){
-  const R=6371;
-  const dLat=(lat2-lat1)*Math.PI/180;
-  const dLng=(lng2-lng1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function getDist(la1,lo1,la2,lo2){
+  const R=6371,dLa=(la2-la1)*Math.PI/180,dLo=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-// Multiple Overpass mirror servers — tries each until one works
-const OVERPASS_SERVERS=[
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://overpass.openstreetmap.ru/api/interpreter'
-];
-
-async function tryOverpass(query){
-  let lastErr=null;
-  for(const server of OVERPASS_SERVERS){
-    try{
-      const controller=new AbortController();
-      const timeoutId=setTimeout(()=>controller.abort(),15000);
-      const res=await fetch(server+'?data='+encodeURIComponent(query),{signal:controller.signal});
-      clearTimeout(timeoutId);
-      if(res.ok){
-        const data=await res.json();
-        return data;
-      }
-    }catch(err){lastErr=err;continue}
+// ✅ KEY FIX: calls /api/overpass (our Vercel proxy) NOT Overpass directly
+// This fixes the CORS block on Vercel live deployment
+async function fetchFromOverpass(query){
+  const res=await fetch('/api/overpass',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({query})
+  });
+  if(!res.ok){
+    const err=await res.text();
+    throw new Error('Proxy error '+res.status+': '+err);
   }
-  throw lastErr||new Error('All Overpass servers failed');
+  return await res.json();
 }
 
-async function fetchPlaces(lat,lng,type,radiusKm=5){
-  showLoading('Searching for '+type+'s within '+radiusKm+'km...');
+async function fetchPlaces(lat,lng,type){
+  showLoading('Searching '+type+'s near you...');
   clearMarkers();
   document.getElementById('cardsGrid').innerHTML='';
   document.getElementById('noResults').classList.remove('on');
 
-  const radius=radiusKm*1000;
-  const osmValue=type;
-
-  const query=`[out:json][timeout:20];
-(
-  node["amenity"="${osmValue}"](around:${radius},${lat},${lng});
-  way["amenity"="${osmValue}"](around:${radius},${lat},${lng});
-);
-out body center 60;`;
+  const query5=`[out:json][timeout:20];
+(node["amenity"="${type}"](around:5000,${lat},${lng});
+way["amenity"="${type}"](around:5000,${lat},${lng}););
+out body center 50;`;
 
   try{
-    const data=await tryOverpass(query);
+    let data=await fetchFromOverpass(query5);
     let elements=data.elements||[];
 
-    // If no results within 5km, auto-expand to 15km
-    if(elements.length===0&&radiusKm===5){
-      hideLoading();
-      showLoading('No results within 5km — expanding to 15km...');
-      const query2=`[out:json][timeout:20];
-(
-  node["amenity"="${osmValue}"](around:15000,${lat},${lng});
-  way["amenity"="${osmValue}"](around:15000,${lat},${lng});
-);
-out body center 60;`;
-      const data2=await tryOverpass(query2);
-      elements=data2.elements||[];
-      radiusKm=15;
+    // Auto expand to 15km if empty
+    if(elements.length===0){
+      showLoading('Expanding search to 15km...');
+      const query15=`[out:json][timeout:20];
+(node["amenity"="${type}"](around:15000,${lat},${lng});
+way["amenity"="${type}"](around:15000,${lat},${lng}););
+out body center 50;`;
+      data=await fetchFromOverpass(query15);
+      elements=data.elements||[];
     }
 
     hideLoading();
 
     if(elements.length===0){
       document.getElementById('noResults').classList.add('on');
-      document.getElementById('statusTxt').textContent='No '+type+'s found nearby. Try a bigger city or different category.';
+      document.getElementById('statusTxt').textContent='No '+type+'s found. Try a bigger city or different category.';
       document.getElementById('resultsCount').textContent='0 found';
-      document.getElementById('resultsttl').textContent=capitalise(type)+'s Near You';
+      document.getElementById('resultsttl').textContent=cap(type)+'s Near You';
       toast('⚠️ No '+type+'s found in this area','e');
       return;
     }
 
     const results=[];
     elements.forEach(el=>{
-      const elLat=el.lat||(el.center&&el.center.lat);
-      const elLng=el.lon||(el.center&&el.center.lon);
-      if(!elLat||!elLng)return;
+      const la=el.lat||(el.center&&el.center.lat);
+      const lo=el.lon||(el.center&&el.center.lon);
+      if(!la||!lo)return;
       const tags=el.tags||{};
-      const name=tags.name||tags['name:en']||(capitalise(type)+' (Unnamed)');
-      const addrParts=[
-        tags['addr:housenumber'],
-        tags['addr:street'],
-        tags['addr:suburb']||tags['addr:city']||tags['addr:district'],
-        tags['addr:postcode']
-      ].filter(Boolean);
-      const addr=addrParts.length?addrParts.join(', '):'Exact address not tagged — use map pin location';
+      const name=tags.name||tags['name:en']||(cap(type)+' (Unnamed)');
+      const parts=[tags['addr:housenumber'],tags['addr:street'],tags['addr:suburb']||tags['addr:city'],tags['addr:postcode']].filter(Boolean);
+      const addr=parts.length?parts.join(', '):'See map for location';
       const phone=tags.phone||tags['contact:phone']||'';
-      const dist=getDist(lat,lng,elLat,elLng);
-      results.push({name,addr,phone,lat:elLat,lng:elLng,dist,type});
+      results.push({name,addr,phone,lat:la,lng:lo,dist:getDist(lat,lng,la,lo),type});
     });
-
     results.sort((a,b)=>a.dist-b.dist);
     const top=results.slice(0,40);
 
     document.getElementById('resultsCount').textContent=top.length+' found';
-    document.getElementById('resultsttl').textContent=capitalise(type)+'s Near You';
-    document.getElementById('statusTxt').textContent='Showing '+top.length+' '+type+'s within '+radiusKm+'km';
+    document.getElementById('resultsttl').textContent=cap(type)+'s Near You';
+    document.getElementById('statusTxt').textContent='Showing '+top.length+' '+type+'s nearby';
+
+    const icoMap={hospital:'🏥',clinic:'🩺',laboratory:'🔬',pharmacy:'💊',dentist:'🦷',doctors:'👨‍⚕️'};
+    const typeClass={hospital:'ht-hosp',clinic:'ht-clinic',laboratory:'ht-lab',pharmacy:'ht-pharmacy',dentist:'ht-dental',doctors:'ht-doctors'};
 
     top.forEach((r,i)=>{
-      const marker=L.marker([r.lat,r.lng],{icon:makeIcon(r.type)});
       const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}`;
+      const marker=L.marker([r.lat,r.lng],{icon:makeIcon(r.type)});
       marker.bindPopup(`
-        <div class="popup-name">${escapeHtml(r.name)}</div>
-        <div class="popup-type">${capitalise(r.type)}</div>
-        <div class="popup-addr">📍 ${escapeHtml(r.addr)}</div>
+        <div class="popup-name">${esc(r.name)}</div>
+        <div class="popup-type">${cap(r.type)}</div>
+        <div class="popup-addr">📍 ${esc(r.addr)}</div>
         <div class="popup-btns">
           <a href="${dirUrl}" target="_blank" class="popup-btn">🗺️ Directions</a>
           ${r.phone?`<button class="popup-btn2" onclick="window.open('tel:${r.phone}')">📞 Call</button>`:''}
-        </div>
-      `);
+        </div>`);
       marker.addTo(map);
       currentMarkers.push(marker);
 
-      const typeClass='ht-'+(r.type==='hospital'?'hosp':r.type==='clinic'?'clinic':r.type==='laboratory'?'lab':r.type==='pharmacy'?'pharmacy':r.type==='dentist'?'dental':'doctors');
-      const dirUrl2=`https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}`;
-      const icoMap={hospital:'🏥',clinic:'🩺',laboratory:'🔬',pharmacy:'💊',dentist:'🦷',doctors:'👨‍⚕️'};
       const card=document.createElement('div');
       card.className='hcard';
       card.style.cssText=`opacity:0;transform:translateY(14px);transition:opacity .4s ease ${i*.03}s,transform .4s ease ${i*.03}s`;
@@ -403,41 +355,33 @@ out body center 60;`;
         <div class="htop">
           <div class="hico">${icoMap[r.type]||'🏥'}</div>
           <div class="hinfo">
-            <div class="hname">${escapeHtml(r.name)}</div>
-            <span class="htype ${typeClass}">${capitalise(r.type)}</span>
+            <div class="hname">${esc(r.name)}</div>
+            <span class="htype ${typeClass[r.type]||'ht-hosp'}">${cap(r.type)}</span>
           </div>
         </div>
-        <div class="haddr">📍 ${escapeHtml(r.addr)}</div>
+        <div class="haddr">📍 ${esc(r.addr)}</div>
         <div class="hdist">📏 ${r.dist<1?(r.dist*1000).toFixed(0)+' m away':r.dist.toFixed(1)+' km away'}</div>
         <div class="hbtns">
-          <a href="${dirUrl2}" target="_blank" class="hbtn">🗺️ Directions</a>
-          ${r.phone?`<button class="hbtn hbtn-s" onclick="window.open('tel:${r.phone}')">📞 Call</button>`:`<button class="hbtn hbtn-s" onclick="focusMarker(${r.lat},${r.lng})">📍 Show</button>`}
+          <a href="${dirUrl}" target="_blank" class="hbtn">🗺️ Directions</a>
+          ${r.phone
+            ?`<button class="hbtn hbtn-s" onclick="window.open('tel:${r.phone}')">📞 Call</button>`
+            :`<button class="hbtn hbtn-s" onclick="map.setView([${r.lat},${r.lng}],17);document.getElementById('map').scrollIntoView({behavior:'smooth'})">📍 Show</button>`
+          }
         </div>`;
       document.getElementById('cardsGrid').appendChild(card);
       setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)'},40+i*30);
     });
 
-    toast('✅ Found '+top.length+' '+type+'s nearby!','s');
+    toast('✅ Found '+top.length+' '+type+'s!','s');
 
   }catch(err){
     hideLoading();
-    console.warn('Overpass error:',err);
+    console.error('fetchPlaces error:',err);
     document.getElementById('noResults').classList.add('on');
-    document.getElementById('statusTxt').textContent='Could not load data right now. Check your connection and try again.';
+    document.getElementById('statusTxt').textContent='Error loading data: '+err.message;
     document.getElementById('resultsCount').textContent='0 found';
-    toast('⚠️ Server busy — please try again in a moment','e');
+    toast('⚠️ Could not load results. Try again.','e');
   }
-}
-
-function escapeHtml(str){
-  const d=document.createElement('div');
-  d.textContent=str;
-  return d.innerHTML;
-}
-
-function focusMarker(lat,lng){
-  map.setView([lat,lng],17);
-  document.getElementById('map').scrollIntoView({behavior:'smooth'});
 }
 
 function getGPS(){
@@ -445,24 +389,20 @@ function getGPS(){
   const btn=document.getElementById('gpsBtn');
   btn.disabled=true;btn.textContent='📍 Locating...';
   toast('📍 Detecting your location...');
-
   navigator.geolocation.getCurrentPosition(pos=>{
     const{latitude:lat,longitude:lng}=pos.coords;
     currentLat=lat;currentLng=lng;hasLocation=true;
     map.setView([lat,lng],14);
-
     if(userMarker){try{map.removeLayer(userMarker)}catch(e){}}
     userMarker=L.marker([lat,lng],{icon:makeUserIcon()}).addTo(map);
     userMarker.bindPopup('<b style="color:#34d399">📍 You are here</b>').openPopup();
-
     document.getElementById('locBadge').classList.add('on');
     document.getElementById('locTxt').textContent='Location detected';
-    toast('📍 Location found!','s');
     btn.disabled=false;btn.textContent='📍 My Location';
-
+    toast('📍 Location found!','s');
     fetchPlaces(lat,lng,currentType);
   },()=>{
-    toast('⚠️ Location access denied. Please allow location access.','e');
+    toast('⚠️ Location access denied. Please allow location.','e');
     btn.disabled=false;btn.textContent='📍 My Location';
   },{timeout:10000,enableHighAccuracy:true});
 }
@@ -472,36 +412,26 @@ async function searchCity(){
   if(!q){toast('⚠️ Please enter a city or area name','e');return}
   const btn=document.getElementById('searchBtn');
   btn.disabled=true;btn.textContent='🔍 Searching...';
-  toast('🔍 Searching for '+q+'...');
-
+  toast('🔍 Finding '+q+'...');
   try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+', India')}&format=json&limit=1&countrycodes=in`,{
-      headers:{'Accept-Language':'en'}
-    });
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+', India')}&format=json&limit=1&countrycodes=in`,{headers:{'Accept-Language':'en'}});
     if(!res.ok)throw new Error('Geocoding failed');
     const data=await res.json();
-    if(!data||!data.length){
-      toast('⚠️ Location not found. Try a more specific or different name.','e');
-      btn.disabled=false;btn.textContent='🔍 Search';
-      return;
-    }
+    if(!data||!data.length){toast('⚠️ Location not found. Try a different name.','e');btn.disabled=false;btn.textContent='🔍 Search';return}
     const lat=parseFloat(data[0].lat);
     const lng=parseFloat(data[0].lon);
     currentLat=lat;currentLng=lng;hasLocation=true;
     map.setView([lat,lng],14);
-
     if(userMarker){try{map.removeLayer(userMarker)}catch(e){}}
     userMarker=L.marker([lat,lng],{icon:makeUserIcon()}).addTo(map);
-    userMarker.bindPopup(`<b style="color:#34d399">📍 ${escapeHtml(data[0].display_name.split(',')[0])}</b>`).openPopup();
-
+    const cityName=data[0].display_name.split(',')[0];
+    userMarker.bindPopup(`<b style="color:#34d399">📍 ${esc(cityName)}</b>`).openPopup();
     document.getElementById('locBadge').classList.add('on');
-    document.getElementById('locTxt').textContent=data[0].display_name.split(',')[0];
-    toast('✅ Showing '+currentType+'s near '+q,'s');
+    document.getElementById('locTxt').textContent=cityName;
     btn.disabled=false;btn.textContent='🔍 Search';
-
     fetchPlaces(lat,lng,currentType);
   }catch(err){
-    toast('⚠️ Search failed. Check your internet connection.','e');
+    toast('⚠️ Search failed. Check your connection.','e');
     btn.disabled=false;btn.textContent='🔍 Search';
   }
 }
@@ -511,17 +441,12 @@ function filterType(type,btn){
   document.querySelectorAll('.cat').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   toast('🔍 Showing '+type+'s');
-
-  if(hasLocation){
-    fetchPlaces(currentLat,currentLng,type);
-  }else{
-    document.getElementById('statusTxt').textContent='Now search a city or use GPS to find '+type+'s near you';
-  }
+  if(hasLocation){fetchPlaces(currentLat,currentLng,type)}
+  else{document.getElementById('statusTxt').textContent='Now search a city or use GPS to find '+type+'s near you'}
 }
 
 document.getElementById('cityInp').addEventListener('keydown',e=>{if(e.key==='Enter')searchCity()});
-
-setTimeout(()=>toast('🗺️ Search any city or use GPS to find hospitals!'),1200);
+setTimeout(()=>toast('🗺️ Search any city or use GPS!'),1200);
 </script>
 </body>
 </html>
