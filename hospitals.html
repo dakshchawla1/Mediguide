@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Find Hospitals — MediGuide</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff}
@@ -34,93 +33,106 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
 .mmenu a:hover{color:var(--gl)}
 .mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
-.wrap{max-width:1100px;margin:0 auto;padding:88px 22px 40px;position:relative;z-index:2}
+.wrap{max-width:1100px;margin:0 auto;padding:88px 22px 60px;position:relative;z-index:2}
 @keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes sp{to{transform:rotate(360deg)}}
-.page-head{padding:22px 0 18px}
+@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.page-head{padding:22px 0 20px;animation:fup .5s ease both}
 .eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
-.ptitle{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,42px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:8px;line-height:1.05}
+.ptitle{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,44px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:8px;line-height:1.05}
 .ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.psub{font-size:14px;color:#444;line-height:1.7;margin-bottom:18px}
-.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.sinp{flex:1;min-width:200px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:11px;padding:12px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
-.sinp:focus{border-color:rgba(201,168,76,.3)}
-.sinp::placeholder{color:#1a1a1a}
-.gbtn{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;border:none;border-radius:11px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s}
-.gbtn:hover{transform:translateY(-1px)}
+.psub{font-size:14px;color:#444;line-height:1.7;margin-bottom:22px}
+
+/* SEARCH */
+.search-card{background:#0a0a0a;border:1px solid rgba(201,168,76,.15);border-radius:20px;padding:24px;margin-bottom:20px}
+.search-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.sinp{flex:1;min-width:200px;background:#000;border:1px solid #1a1a1a;border-radius:11px;padding:13px 16px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.sinp:focus{border-color:rgba(201,168,76,.35)}
+.sinp::placeholder{color:#222}
+.gbtn{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;border:none;border-radius:11px;padding:13px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s}
+.gbtn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(201,168,76,.3)}
 .gbtn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.gbtn-gps{background:linear-gradient(135deg,#1a3a1a,#166534);color:#34d399}
-.gbtn-opd{background:rgba(201,168,76,.08);color:var(--gl);border:1px solid rgba(201,168,76,.15);text-decoration:none;display:inline-flex;align-items:center}
-.cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
-.cat{background:#0a0a0a;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:600;padding:7px 15px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;white-space:nowrap}
-.cat:hover,.cat.on{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.25);color:var(--gl)}
-.status-bar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.gbtn-gps{background:linear-gradient(135deg,#1a3a1a,#15803d);color:#4ade80}
+.gbtn-gps:hover{box-shadow:0 4px 20px rgba(74,222,128,.2)}
+
+/* CATEGORY FILTERS */
+.cats{display:flex;gap:8px;flex-wrap:wrap}
+.cat{background:#000;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:600;padding:8px 16px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;white-space:nowrap}
+.cat:hover{border-color:#333;color:#888}
+.cat.on{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.3);color:var(--gl)}
+
+/* STATUS */
+.status-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .status-txt{font-size:12px;color:#333}
-.loc-badge{display:none;align-items:center;gap:6px;font-size:12px;color:var(--gold);background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);padding:5px 12px;border-radius:100px}
-.loc-badge.on{display:inline-flex}
-.loc-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
-.map-wrap{position:relative;margin-bottom:16px}
-#map{width:100%;height:500px;border-radius:18px;border:1px solid #1a1a1a;position:relative;z-index:1}
-.leaflet-container{background:#0a0a0a!important;font-family:'Inter',sans-serif}
-.leaflet-popup-content-wrapper{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.8)}
-.leaflet-popup-tip{background:#0a0a0a}
-.leaflet-popup-content{margin:14px 16px;font-family:'Inter',sans-serif;min-width:200px}
-.popup-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;line-height:1.2}
-.popup-type{font-size:11px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.popup-addr{font-size:12px;color:#444;margin-bottom:10px;line-height:1.4}
-.popup-btns{display:flex;gap:7px}
-.popup-btn{flex:1;display:inline-block;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;text-decoration:none;font-family:'Inter',sans-serif;text-align:center}
-.popup-btn2{flex:1;display:inline-block;background:rgba(201,168,76,.07);color:var(--gl);font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;border:1px solid rgba(201,168,76,.15);text-align:center;cursor:pointer;font-family:'Inter',sans-serif}
-.map-loading{position:absolute;inset:0;background:rgba(0,0,0,.85);border-radius:18px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:500}
-.map-loading.on{display:flex}
-.map-sp{width:32px;height:32px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite}
-.map-loading p{font-size:13px;color:#555;text-align:center;padding:0 20px}
-.results-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.results-ttl{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#fff}
-.results-count{font-size:12px;color:#333;background:#0a0a0a;border:1px solid #1a1a1a;padding:5px 12px;border-radius:100px}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:40px}
-.hcard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;padding:20px;transition:all .3s;position:relative;overflow:hidden}
-.hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);opacity:0;transition:opacity .3s}
-.hcard:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.6);border-color:#1a1a1a}
-.hcard:hover::before{opacity:1}
-.htop{display:flex;align-items:flex-start;gap:11px;margin-bottom:10px}
-.hico{width:42px;height:42px;border-radius:12px;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
-.hinfo{flex:1;min-width:0}
-.hname{font-size:14px;font-weight:700;color:#ddd;margin-bottom:3px;line-height:1.3}
-.htype{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;display:inline-block;margin-bottom:5px}
-.ht-hosp{background:rgba(52,211,153,.06);color:#34d399;border:1px solid rgba(52,211,153,.1)}
-.ht-clinic{background:rgba(201,168,76,.06);color:var(--gold);border:1px solid rgba(201,168,76,.1)}
-.ht-lab{background:rgba(167,139,250,.06);color:#a78bfa;border:1px solid rgba(167,139,250,.1)}
-.ht-pharmacy{background:rgba(96,165,250,.06);color:#60a5fa;border:1px solid rgba(96,165,250,.1)}
-.ht-dental{background:rgba(248,113,113,.06);color:#f87171;border:1px solid rgba(248,113,113,.1)}
-.ht-doctors{background:rgba(251,191,36,.06);color:#fbbf24;border:1px solid rgba(251,191,36,.1)}
-.haddr{font-size:11px;color:#333;line-height:1.5;margin-bottom:10px}
-.hdist{font-size:11px;color:var(--gold);font-weight:600;margin-bottom:10px}
-.hbtns{display:flex;gap:7px}
-.hbtn{flex:1;padding:9px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.05);color:var(--gl);text-decoration:none;text-align:center}
-.hbtn:hover{background:rgba(201,168,76,.12)}
-.hbtn-s{background:transparent;border:1px solid #1a1a1a;color:#444}
-.hbtn-s:hover{border-color:#333;color:#888}
-.no-results{display:none;text-align:center;padding:44px 22px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;margin-bottom:20px}
-.no-results.on{display:block}
-.no-results p{font-size:15px;color:#333;margin-bottom:6px}
-.no-results span{font-size:13px;color:#111}
-.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.status-badge{display:none;align-items:center;gap:6px;font-size:12px;color:#34d399;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.12);padding:5px 12px;border-radius:100px}
+.status-badge.on{display:inline-flex}
+.bdot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
+
+/* GOOGLE MAPS EMBED */
+.map-container{position:relative;margin-bottom:20px;border-radius:20px;overflow:hidden;border:1px solid #1a1a1a}
+.map-container iframe{width:100%;height:500px;border:none;display:block}
+.map-placeholder{width:100%;height:500px;background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#333}
+.map-placeholder .mp-ico{font-size:48px;opacity:.3}
+.map-placeholder p{font-size:14px}
+
+/* LOADING */
+.loading-wrap{display:none;text-align:center;padding:40px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:18px;margin-bottom:16px}
+.loading-wrap.on{display:block}
+.lsp{width:32px;height:32px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 12px}
+.loading-wrap p{font-size:13px;color:#444}
+
+/* QUICK LINKS */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:32px}
+.qcard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:16px;padding:18px;transition:all .3s;position:relative;overflow:hidden}
+.qcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.25),transparent);opacity:0;transition:.3s}
+.qcard:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5);border-color:#1a1a1a}
+.qcard:hover::before{opacity:1}
+.qtop{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.qico{width:40px;height:40px;border-radius:11px;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.qname{font-size:14px;font-weight:700;color:#ddd;line-height:1.3}
+.qtype{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;display:inline-block;margin-bottom:8px}
+.qt-govt{background:rgba(52,211,153,.06);color:#34d399;border:1px solid rgba(52,211,153,.1)}
+.qt-priv{background:rgba(96,165,250,.06);color:#60a5fa;border:1px solid rgba(96,165,250,.1)}
+.qt-lab{background:rgba(167,139,250,.06);color:#a78bfa;border:1px solid rgba(167,139,250,.1)}
+.qcity{font-size:11px;color:#333;margin-bottom:12px}
+.qbtns{display:flex;gap:7px}
+.qbtn{flex:1;padding:9px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.05);color:var(--gl);text-decoration:none;text-align:center;display:block}
+.qbtn:hover{background:rgba(201,168,76,.12)}
+.qbtn-s{background:transparent;border:1px solid #1a1a1a;color:#444}
+.qbtn-s:hover{border-color:#333;color:#888}
+
+/* SECTION */
+.sew{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.set{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.ser{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.2),transparent)}
+.sttl{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:6px}
+.ssub{font-size:13px;color:#333;margin-bottom:18px;line-height:1.6}
+
+/* HOW TO USE */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .how-card{background:#0a0a0a;border:1px solid #111;border-radius:16px;padding:20px;text-align:center}
 .how-ico{font-size:24px;margin-bottom:10px;display:block}
 .how-ttl{font-size:13px;font-weight:700;color:#ddd;margin-bottom:6px}
 .how-txt{font-size:12px;color:#333;line-height:1.6}
+
 @media(max-width:900px){
 .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
-.wrap{padding:80px 16px 40px}
-#map{height:360px}
-.ctrl{flex-direction:column}.sinp{min-width:unset;width:100%}
-.cards-grid{grid-template-columns:1fr}
-.how-grid{grid-template-columns:1fr 1fr}
+.wrap{padding:80px 16px 50px}
 .ptitle{font-size:24px!important}
+.search-row{flex-direction:column}
+.sinp{min-width:unset;width:100%}
+.map-container iframe{height:360px}
+.map-placeholder{height:360px}
+.quick-grid{grid-template-columns:1fr}
+.cats{gap:5px}.cat{font-size:11px;padding:6px 12px}
+.how-grid{grid-template-columns:1fr 1fr}
 }
-@media(max-width:480px){.how-grid{grid-template-columns:1fr}.cats{gap:5px}.cat{font-size:11px;padding:6px 11px}}
+@media(max-width:480px){
+.how-grid{grid-template-columns:1fr}
+.ptitle{font-size:22px!important}
+}
 </style>
 </head>
 <body>
@@ -154,59 +166,331 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 <div class="wrap">
   <div class="page-head">
-    <div class="eye">🗺️ Live Hospital Finder</div>
+    <div class="eye">🗺️ Hospital Finder</div>
     <h1 class="ptitle">Find <span>Hospitals</span> Anywhere in India</h1>
-    <p class="psub">Live map — shows every hospital, clinic, lab, pharmacy and dental clinic across all of India. Use GPS or search any city.</p>
+    <p class="psub">Search any city, area or locality across India to instantly find nearby hospitals, clinics, labs and pharmacies. Works everywhere in India — every time.</p>
   </div>
 
-  <div class="ctrl">
-    <input class="sinp" id="cityInp" placeholder="🔍 Search any city or area — e.g. Mumbai, Jaipur, Sector 18 Noida, Bandra..."/>
-    <button class="gbtn" id="searchBtn" onclick="searchCity()">🔍 Search</button>
-    <button class="gbtn gbtn-gps" id="gpsBtn" onclick="getGPS()">📍 My Location</button>
-    <a href="opd.html" class="gbtn gbtn-opd">🏥 OPD Times</a>
-  </div>
-
-  <div class="cats">
-    <button class="cat on" onclick="filterType('hospital',this)">🏥 Hospitals</button>
-    <button class="cat" onclick="filterType('clinic',this)">🩺 Clinics</button>
-    <button class="cat" onclick="filterType('laboratory',this)">🔬 Labs</button>
-    <button class="cat" onclick="filterType('pharmacy',this)">💊 Pharmacies</button>
-    <button class="cat" onclick="filterType('dentist',this)">🦷 Dental</button>
-    <button class="cat" onclick="filterType('doctors',this)">👨‍⚕️ Doctors</button>
-  </div>
-
-  <div class="status-bar">
-    <div class="status-txt" id="statusTxt">📍 Search a city or use GPS to find hospitals near you</div>
-    <div class="loc-badge" id="locBadge"><div class="loc-dot"></div><span id="locTxt">Located</span></div>
-  </div>
-
-  <div class="map-wrap">
-    <div id="map"></div>
-    <div class="map-loading" id="mapLoading">
-      <div class="map-sp"></div>
-      <p id="loadingTxt">Searching hospitals...</p>
+  <!-- MAIN SEARCH -->
+  <div class="search-card">
+    <div class="search-row">
+      <input class="sinp" id="cityInp" placeholder="Type any city or area — e.g. Mumbai, Jaipur, Bandra, Sector 18 Noida, Connaught Place..."/>
+      <button class="gbtn" id="searchBtn" onclick="doSearch()">🔍 Search</button>
+      <button class="gbtn gbtn-gps" id="gpsBtn" onclick="getGPS()">📍 My Location</button>
+    </div>
+    <div class="cats">
+      <button class="cat on" id="cat-hospital" onclick="setCat('hospital',this)">🏥 Hospitals</button>
+      <button class="cat" id="cat-clinic" onclick="setCat('clinic',this)">🩺 Clinics</button>
+      <button class="cat" id="cat-laboratory" onclick="setCat('laboratory',this)">🔬 Labs</button>
+      <button class="cat" id="cat-pharmacy" onclick="setCat('pharmacy',this)">💊 Pharmacies</button>
+      <button class="cat" id="cat-dentist" onclick="setCat('dentist',this)">🦷 Dental</button>
     </div>
   </div>
 
-  <div class="results-head">
-    <div class="results-ttl" id="resultsttl">Results</div>
-    <div class="results-count" id="resultsCount">0 found</div>
-  </div>
-  <div class="cards-grid" id="cardsGrid"></div>
-  <div class="no-results" id="noResults">
-    <p>😕 No results found in this area</p>
-    <span>Try a different city name or a different category</span>
+  <!-- STATUS -->
+  <div class="status-row">
+    <div class="status-txt" id="statusTxt">🔍 Search a city above or use GPS to find hospitals near you</div>
+    <div class="status-badge" id="statusBadge"><div class="bdot"></div><span id="badgeTxt">Located</span></div>
   </div>
 
-  <div class="how-grid">
-    <div class="how-card"><span class="how-ico">📍</span><div class="how-ttl">Use GPS</div><div class="how-txt">Tap "My Location" to instantly find hospitals nearest to where you are right now.</div></div>
-    <div class="how-card"><span class="how-ico">🔍</span><div class="how-ttl">Search Any City</div><div class="how-txt">Type any city, area, locality or pincode in India to find all hospitals there.</div></div>
-    <div class="how-card"><span class="how-ico">🏥</span><div class="how-ttl">Filter by Type</div><div class="how-txt">Use filter buttons to show only hospitals, clinics, labs, pharmacies or dental clinics.</div></div>
-    <div class="how-card"><span class="how-ico">🗺️</span><div class="how-ttl">Get Directions</div><div class="how-txt">Tap Directions on any result to open Google Maps with the route to that location.</div></div>
+  <!-- LOADING -->
+  <div class="loading-wrap" id="loadingWrap">
+    <div class="lsp"></div>
+    <p id="loadingTxt">Searching hospitals...</p>
   </div>
+
+  <!-- GOOGLE MAPS EMBED — shows live hospitals on real Google Maps -->
+  <div class="map-container" id="mapContainer">
+    <div class="map-placeholder" id="mapPlaceholder">
+      <span class="mp-ico">🗺️</span>
+      <p>Search a city above to see the hospital map</p>
+    </div>
+  </div>
+
+  <!-- GOOGLE MAPS SEARCH BUTTONS — always work, no API needed -->
+  <div id="gmapBtns" style="display:none;margin-bottom:28px">
+    <div style="background:#0a0a0a;border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:18px">
+      <div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">🔗 Open in Google Maps</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="gmapLinkRow"></div>
+    </div>
+  </div>
+
+  <!-- QUICK HOSPITAL CARDS — major hospitals across India -->
+  <div class="sew" style="margin-top:8px"><span class="set">Major Hospitals Across India</span><div class="ser"></div></div>
+  <div class="sttl">Search Above for Your City</div>
+  <div class="ssub">These are some major hospitals. Search your city above to see ALL hospitals near you on Google Maps.</div>
+
+  <div class="quick-grid" id="quickGrid">
+    <!-- Delhi -->
+    <div class="qcard" data-city="delhi">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">AIIMS New Delhi</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Ansari Nagar, New Delhi — 110029</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=All+India+Institute+of+Medical+Sciences+New+Delhi" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('011-26588500')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="delhi">
+      <div class="qtop"><div class="qico">🏛️</div><div class="qname">Safdarjung Hospital</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Ring Road, Safdarjung, New Delhi</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Safdarjung+Hospital+New+Delhi" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('011-26707444')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="delhi">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Max Hospital Saket</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Press Enclave Road, Saket, New Delhi</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Max+Hospital+Saket+New+Delhi" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('011-26515050')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="delhi">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Apollo Hospital Delhi</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Sarita Vihar, New Delhi</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Apollo+Hospital+Sarita+Vihar+Delhi" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('011-71791090')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Mumbai -->
+    <div class="qcard" data-city="mumbai">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">KEM Hospital Mumbai</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Acharya Donde Marg, Parel, Mumbai</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=KEM+Hospital+Parel+Mumbai" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('022-24136051')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="mumbai">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Lilavati Hospital Mumbai</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Bandra West, Mumbai — 400050</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Lilavati+Hospital+Bandra+Mumbai" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('022-26751000')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="mumbai">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Kokilaben Hospital Mumbai</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Four Bungalows, Andheri West, Mumbai</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Kokilaben+Dhirubhai+Ambani+Hospital+Mumbai" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('022-42696969')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="mumbai">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">Tata Memorial Hospital</div></div>
+      <span class="qtype qt-govt">Government · Cancer</span>
+      <div class="qcity">📍 Dr E Borges Road, Parel, Mumbai</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Tata+Memorial+Hospital+Mumbai" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('022-24177000')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Bangalore -->
+    <div class="qcard" data-city="bangalore">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">Victoria Hospital Bangalore</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Fort Road, Bengaluru — 560002</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Victoria+Hospital+Bangalore" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('080-26706101')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="bangalore">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Manipal Hospital Bangalore</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 HAL Airport Road, Bengaluru — 560017</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Manipal+Hospital+Old+Airport+Road+Bangalore" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('080-25023000')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Chennai -->
+    <div class="qcard" data-city="chennai">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">Rajiv Gandhi Govt Hospital</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Park Town, Chennai — 600003</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Rajiv+Gandhi+Government+General+Hospital+Chennai" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('044-25305000')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="chennai">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Apollo Hospital Chennai</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Greams Road, Chennai — 600006</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Apollo+Hospital+Greams+Road+Chennai" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('044-28290200')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Kolkata -->
+    <div class="qcard" data-city="kolkata">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">SSKM Hospital Kolkata</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 A J C Bose Road, Kolkata — 700020</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=SSKM+Hospital+Kolkata" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('033-22041600')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="kolkata">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Apollo Gleneagles Kolkata</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Canal Circular Road, Kolkata — 700054</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Apollo+Gleneagles+Hospital+Kolkata" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('033-23203040')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Hyderabad -->
+    <div class="qcard" data-city="hyderabad">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">Osmania General Hospital</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Afzalgunj, Hyderabad — 500012</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Osmania+General+Hospital+Hyderabad" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('040-24600124')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="hyderabad">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">KIMS Hospital Hyderabad</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Minister Road, Secunderabad — 500003</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=KIMS+Hospital+Secunderabad+Hyderabad" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('040-44885000')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Pune -->
+    <div class="qcard" data-city="pune">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">Sassoon General Hospital</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Jai Prakash Narayan Road, Pune — 411001</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Sassoon+General+Hospital+Pune" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('020-26128000')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="pune">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Ruby Hall Clinic Pune</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Sassoon Road, Pune — 411001</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Ruby+Hall+Clinic+Pune" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('020-66455555')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Jaipur -->
+    <div class="qcard" data-city="jaipur">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">SMS Hospital Jaipur</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 JLN Marg, Jaipur — 302004</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=SMS+Hospital+Jaipur" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('0141-2518888')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="jaipur">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Fortis Hospital Jaipur</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Jawaharlal Nehru Marg, Jaipur</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Fortis+Hospital+Jaipur" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('0141-2547000')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Lucknow -->
+    <div class="qcard" data-city="lucknow">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">KGMU Lucknow</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Shah Mina Road, Lucknow — 226003</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=King+George+Medical+University+Lucknow" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('0522-2258880')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="lucknow">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Medanta Hospital Lucknow</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Sector B, Amar Shaheed Path, Lucknow</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Medanta+Hospital+Lucknow" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('0522-4505050')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Ahmedabad -->
+    <div class="qcard" data-city="ahmedabad">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">Civil Hospital Ahmedabad</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Asarwa, Ahmedabad — 380016</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Civil+Hospital+Asarwa+Ahmedabad" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('079-22681000')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="ahmedabad">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Apollo Hospital Ahmedabad</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Gandhinagar Highway, Ahmedabad</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Apollo+Hospital+Ahmedabad" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('079-66701800')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Chandigarh -->
+    <div class="qcard" data-city="chandigarh">
+      <div class="qtop"><div class="qico">🏥</div><div class="qname">PGI Chandigarh</div></div>
+      <span class="qtype qt-govt">Government</span>
+      <div class="qcity">📍 Sector 12, Chandigarh — 160012</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=PGIMER+Chandigarh" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('0172-2747585')">📞 Call</button>
+      </div>
+    </div>
+    <!-- Noida / Gurgaon -->
+    <div class="qcard" data-city="noida gurgaon">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Medanta Hospital Gurgaon</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Sector 38, Gurugram — 122001</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Medanta+The+Medicity+Gurgaon" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('0124-4141414')">📞 Call</button>
+      </div>
+    </div>
+    <div class="qcard" data-city="noida">
+      <div class="qtop"><div class="qico">🏨</div><div class="qname">Kailash Hospital Noida</div></div>
+      <span class="qtype qt-priv">Private</span>
+      <div class="qcity">📍 Sector 27, Noida — 201301</div>
+      <div class="qbtns">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Kailash+Hospital+Noida+Sector+27" target="_blank" class="qbtn">🗺️ Directions</a>
+        <button class="qbtn qbtn-s" onclick="callH('0120-4045555')">📞 Call</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div style="margin-top:36px">
+    <div class="sew"><span class="set">How to Use</span><div class="ser"></div></div>
+    <div class="how-grid">
+      <div class="how-card"><span class="how-ico">🔍</span><div class="how-ttl">Search Any City</div><div class="how-txt">Type any city, area or locality in India. It opens Google Maps showing all hospitals near that location.</div></div>
+      <div class="how-card"><span class="how-ico">📍</span><div class="how-ttl">Use GPS</div><div class="how-txt">Tap "My Location" to instantly open Google Maps with all hospitals near your current GPS location.</div></div>
+      <div class="how-card"><span class="how-ico">🏥</span><div class="how-ttl">Filter Type</div><div class="how-txt">Choose between Hospitals, Clinics, Labs, Pharmacies or Dental to narrow your search.</div></div>
+      <div class="how-card"><span class="how-ico">🗺️</span><div class="how-ttl">Get Directions</div><div class="how-txt">Every result has a Directions button that opens Google Maps with turn-by-turn navigation to the hospital.</div></div>
+    </div>
+  </div>
+
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
 function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
@@ -218,235 +502,200 @@ function toast(msg,type='g'){
   const colors={e:['rgba(248,113,113,.12)','rgba(248,113,113,.35)','#f87171'],s:['rgba(52,211,153,.12)','rgba(52,211,153,.35)','#34d399'],g:['rgba(201,168,76,.12)','rgba(201,168,76,.35)','#c9a84c']};
   const c=colors[type]||colors.g;
   t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${c[0]};border:1px solid ${c[1]};color:${c[2]};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s ease both;max-width:calc(100vw - 40px)`;
-  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}} @keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}';document.head.appendChild(s);
   document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 
-const map=L.map('map',{zoomControl:true}).setView([20.5937,78.9629],5);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-  attribution:'© OpenStreetMap © CartoDB',maxZoom:19
-}).addTo(map);
-
-let currentMarkers=[];
-let userMarker=null;
-let currentLat=20.5937;
-let currentLng=78.9629;
 let currentType='hospital';
-let hasLocation=false;
+let currentQuery='';
 
-function makeIcon(type){
-  const cfg={hospital:{e:'🏥',c:'#34d399'},clinic:{e:'🩺',c:'#c9a84c'},laboratory:{e:'🔬',c:'#a78bfa'},pharmacy:{e:'💊',c:'#60a5fa'},dentist:{e:'🦷',c:'#f87171'},doctors:{e:'👨‍⚕️',c:'#fbbf24'}};
-  const k=cfg[type]||cfg.hospital;
-  return L.divIcon({
-    html:`<div style="background:#0a0a0a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid ${k.c};box-shadow:0 0 10px ${k.c}66">${k.e}</div>`,
-    iconSize:[36,36],iconAnchor:[18,18],popupAnchor:[0,-20],className:''
-  });
-}
-function makeUserIcon(){
-  return L.divIcon({
-    html:`<div style="background:#34d399;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 14px rgba(52,211,153,.7)"></div>`,
-    iconSize:[14,14],iconAnchor:[7,7],className:''
-  });
-}
+const typeLabels={
+  hospital:'Hospitals',
+  clinic:'Clinics',
+  laboratory:'Diagnostic Labs',
+  pharmacy:'Pharmacies',
+  dentist:'Dental Clinics'
+};
 
-function showLoading(txt){document.getElementById('mapLoading').classList.add('on');document.getElementById('loadingTxt').textContent=txt}
-function hideLoading(){document.getElementById('mapLoading').classList.remove('on')}
-function clearMarkers(){currentMarkers.forEach(m=>{try{map.removeLayer(m)}catch(e){}});currentMarkers=[]}
-function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
-function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function getDist(la1,lo1,la2,lo2){
-  const R=6371,dLa=(la2-la1)*Math.PI/180,dLo=(lo2-lo1)*Math.PI/180;
-  const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
+const typeSearch={
+  hospital:'hospitals near',
+  clinic:'clinics near',
+  laboratory:'diagnostic labs pathology near',
+  pharmacy:'pharmacies medical stores near',
+  dentist:'dental clinics dentists near'
+};
 
-// ✅ KEY FIX: calls /api/overpass (our Vercel proxy) NOT Overpass directly
-// This fixes the CORS block on Vercel live deployment
-async function fetchFromOverpass(query){
-  const res=await fetch('/api/overpass',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({query})
-  });
-  if(!res.ok){
-    const err=await res.text();
-    throw new Error('Proxy error '+res.status+': '+err);
-  }
-  return await res.json();
-}
-
-async function fetchPlaces(lat,lng,type){
-  showLoading('Searching '+type+'s near you...');
-  clearMarkers();
-  document.getElementById('cardsGrid').innerHTML='';
-  document.getElementById('noResults').classList.remove('on');
-
-  const query5=`[out:json][timeout:20];
-(node["amenity"="${type}"](around:5000,${lat},${lng});
-way["amenity"="${type}"](around:5000,${lat},${lng}););
-out body center 50;`;
-
-  try{
-    let data=await fetchFromOverpass(query5);
-    let elements=data.elements||[];
-
-    // Auto expand to 15km if empty
-    if(elements.length===0){
-      showLoading('Expanding search to 15km...');
-      const query15=`[out:json][timeout:20];
-(node["amenity"="${type}"](around:15000,${lat},${lng});
-way["amenity"="${type}"](around:15000,${lat},${lng}););
-out body center 50;`;
-      data=await fetchFromOverpass(query15);
-      elements=data.elements||[];
-    }
-
-    hideLoading();
-
-    if(elements.length===0){
-      document.getElementById('noResults').classList.add('on');
-      document.getElementById('statusTxt').textContent='No '+type+'s found. Try a bigger city or different category.';
-      document.getElementById('resultsCount').textContent='0 found';
-      document.getElementById('resultsttl').textContent=cap(type)+'s Near You';
-      toast('⚠️ No '+type+'s found in this area','e');
-      return;
-    }
-
-    const results=[];
-    elements.forEach(el=>{
-      const la=el.lat||(el.center&&el.center.lat);
-      const lo=el.lon||(el.center&&el.center.lon);
-      if(!la||!lo)return;
-      const tags=el.tags||{};
-      const name=tags.name||tags['name:en']||(cap(type)+' (Unnamed)');
-      const parts=[tags['addr:housenumber'],tags['addr:street'],tags['addr:suburb']||tags['addr:city'],tags['addr:postcode']].filter(Boolean);
-      const addr=parts.length?parts.join(', '):'See map for location';
-      const phone=tags.phone||tags['contact:phone']||'';
-      results.push({name,addr,phone,lat:la,lng:lo,dist:getDist(lat,lng,la,lo),type});
-    });
-    results.sort((a,b)=>a.dist-b.dist);
-    const top=results.slice(0,40);
-
-    document.getElementById('resultsCount').textContent=top.length+' found';
-    document.getElementById('resultsttl').textContent=cap(type)+'s Near You';
-    document.getElementById('statusTxt').textContent='Showing '+top.length+' '+type+'s nearby';
-
-    const icoMap={hospital:'🏥',clinic:'🩺',laboratory:'🔬',pharmacy:'💊',dentist:'🦷',doctors:'👨‍⚕️'};
-    const typeClass={hospital:'ht-hosp',clinic:'ht-clinic',laboratory:'ht-lab',pharmacy:'ht-pharmacy',dentist:'ht-dental',doctors:'ht-doctors'};
-
-    top.forEach((r,i)=>{
-      const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}`;
-      const marker=L.marker([r.lat,r.lng],{icon:makeIcon(r.type)});
-      marker.bindPopup(`
-        <div class="popup-name">${esc(r.name)}</div>
-        <div class="popup-type">${cap(r.type)}</div>
-        <div class="popup-addr">📍 ${esc(r.addr)}</div>
-        <div class="popup-btns">
-          <a href="${dirUrl}" target="_blank" class="popup-btn">🗺️ Directions</a>
-          ${r.phone?`<button class="popup-btn2" onclick="window.open('tel:${r.phone}')">📞 Call</button>`:''}
-        </div>`);
-      marker.addTo(map);
-      currentMarkers.push(marker);
-
-      const card=document.createElement('div');
-      card.className='hcard';
-      card.style.cssText=`opacity:0;transform:translateY(14px);transition:opacity .4s ease ${i*.03}s,transform .4s ease ${i*.03}s`;
-      card.innerHTML=`
-        <div class="htop">
-          <div class="hico">${icoMap[r.type]||'🏥'}</div>
-          <div class="hinfo">
-            <div class="hname">${esc(r.name)}</div>
-            <span class="htype ${typeClass[r.type]||'ht-hosp'}">${cap(r.type)}</span>
-          </div>
-        </div>
-        <div class="haddr">📍 ${esc(r.addr)}</div>
-        <div class="hdist">📏 ${r.dist<1?(r.dist*1000).toFixed(0)+' m away':r.dist.toFixed(1)+' km away'}</div>
-        <div class="hbtns">
-          <a href="${dirUrl}" target="_blank" class="hbtn">🗺️ Directions</a>
-          ${r.phone
-            ?`<button class="hbtn hbtn-s" onclick="window.open('tel:${r.phone}')">📞 Call</button>`
-            :`<button class="hbtn hbtn-s" onclick="map.setView([${r.lat},${r.lng}],17);document.getElementById('map').scrollIntoView({behavior:'smooth'})">📍 Show</button>`
-          }
-        </div>`;
-      document.getElementById('cardsGrid').appendChild(card);
-      setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)'},40+i*30);
-    });
-
-    toast('✅ Found '+top.length+' '+type+'s!','s');
-
-  }catch(err){
-    hideLoading();
-    console.error('fetchPlaces error:',err);
-    document.getElementById('noResults').classList.add('on');
-    document.getElementById('statusTxt').textContent='Error loading data: '+err.message;
-    document.getElementById('resultsCount').textContent='0 found';
-    toast('⚠️ Could not load results. Try again.','e');
-  }
-}
-
-function getGPS(){
-  if(!navigator.geolocation){toast('⚠️ GPS not available on this device','e');return}
-  const btn=document.getElementById('gpsBtn');
-  btn.disabled=true;btn.textContent='📍 Locating...';
-  toast('📍 Detecting your location...');
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const{latitude:lat,longitude:lng}=pos.coords;
-    currentLat=lat;currentLng=lng;hasLocation=true;
-    map.setView([lat,lng],14);
-    if(userMarker){try{map.removeLayer(userMarker)}catch(e){}}
-    userMarker=L.marker([lat,lng],{icon:makeUserIcon()}).addTo(map);
-    userMarker.bindPopup('<b style="color:#34d399">📍 You are here</b>').openPopup();
-    document.getElementById('locBadge').classList.add('on');
-    document.getElementById('locTxt').textContent='Location detected';
-    btn.disabled=false;btn.textContent='📍 My Location';
-    toast('📍 Location found!','s');
-    fetchPlaces(lat,lng,currentType);
-  },()=>{
-    toast('⚠️ Location access denied. Please allow location.','e');
-    btn.disabled=false;btn.textContent='📍 My Location';
-  },{timeout:10000,enableHighAccuracy:true});
-}
-
-async function searchCity(){
-  const q=document.getElementById('cityInp').value.trim();
-  if(!q){toast('⚠️ Please enter a city or area name','e');return}
-  const btn=document.getElementById('searchBtn');
-  btn.disabled=true;btn.textContent='🔍 Searching...';
-  toast('🔍 Finding '+q+'...');
-  try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+', India')}&format=json&limit=1&countrycodes=in`,{headers:{'Accept-Language':'en'}});
-    if(!res.ok)throw new Error('Geocoding failed');
-    const data=await res.json();
-    if(!data||!data.length){toast('⚠️ Location not found. Try a different name.','e');btn.disabled=false;btn.textContent='🔍 Search';return}
-    const lat=parseFloat(data[0].lat);
-    const lng=parseFloat(data[0].lon);
-    currentLat=lat;currentLng=lng;hasLocation=true;
-    map.setView([lat,lng],14);
-    if(userMarker){try{map.removeLayer(userMarker)}catch(e){}}
-    userMarker=L.marker([lat,lng],{icon:makeUserIcon()}).addTo(map);
-    const cityName=data[0].display_name.split(',')[0];
-    userMarker.bindPopup(`<b style="color:#34d399">📍 ${esc(cityName)}</b>`).openPopup();
-    document.getElementById('locBadge').classList.add('on');
-    document.getElementById('locTxt').textContent=cityName;
-    btn.disabled=false;btn.textContent='🔍 Search';
-    fetchPlaces(lat,lng,currentType);
-  }catch(err){
-    toast('⚠️ Search failed. Check your connection.','e');
-    btn.disabled=false;btn.textContent='🔍 Search';
-  }
-}
-
-function filterType(type,btn){
+function setCat(type,btn){
   currentType=type;
   document.querySelectorAll('.cat').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  toast('🔍 Showing '+type+'s');
-  if(hasLocation){fetchPlaces(currentLat,currentLng,type)}
-  else{document.getElementById('statusTxt').textContent='Now search a city or use GPS to find '+type+'s near you'}
+  toast('🔍 Showing '+typeLabels[type]);
+  if(currentQuery){showMap(currentQuery,type)}
 }
 
-document.getElementById('cityInp').addEventListener('keydown',e=>{if(e.key==='Enter')searchCity()});
-setTimeout(()=>toast('🗺️ Search any city or use GPS!'),1200);
+function showMap(query,type){
+  currentQuery=query;
+  const searchTerm=typeSearch[type]+' '+query+' India';
+  const embedUrl=`https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU3s_o&q=${encodeURIComponent(searchTerm)}&zoom=13`;
+
+  // Use Google Maps search page link as iframe fallback
+  const mapSearchUrl=`https://maps.google.com/maps?q=${encodeURIComponent(searchTerm)}&output=embed`;
+
+  const container=document.getElementById('mapContainer');
+  container.innerHTML=`<iframe
+    src="${mapSearchUrl}"
+    width="100%"
+    height="500"
+    style="border:none;display:block"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title="Hospitals near ${query}">
+  </iframe>`;
+
+  // Show Google Maps open buttons
+  const btnRow=document.getElementById('gmapLinkRow');
+  const openUrl=`https://www.google.com/maps/search/${encodeURIComponent(typeSearch[type]+' '+query+' India')}`;
+  const dirUrl=`https://www.google.com/maps/search/${encodeURIComponent(typeSearch[type]+' near me')}`;
+
+  btnRow.innerHTML=`
+    <a href="${openUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:12px;font-weight:700;padding:10px 18px;border-radius:9px;text-decoration:none">
+      🗺️ Open Full Google Maps
+    </a>
+    <a href="https://www.google.com/maps/search/${encodeURIComponent(typeSearch[type]+' '+query)}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.08);color:var(--gl);font-size:12px;font-weight:700;padding:10px 18px;border-radius:9px;text-decoration:none;border:1px solid rgba(201,168,76,.2)">
+      📋 See All Results
+    </a>`;
+  document.getElementById('gmapBtns').style.display='block';
+
+  document.getElementById('statusTxt').textContent='Showing '+typeLabels[type]+' near '+query;
+  document.getElementById('statusBadge').classList.add('on');
+  document.getElementById('badgeTxt').textContent=query;
+
+  // Filter quick cards to match city
+  filterQuickCards(query);
+}
+
+function filterQuickCards(query){
+  const q=query.toLowerCase();
+  const cards=document.querySelectorAll('.qcard');
+  let shown=0;
+  cards.forEach(card=>{
+    const city=(card.dataset.city||'').toLowerCase();
+    const name=card.querySelector('.qname').textContent.toLowerCase();
+    const addr=card.querySelector('.qcity').textContent.toLowerCase();
+    if(city.includes(q)||q.includes(city.split(' ')[0])||name.includes(q)||addr.includes(q)){
+      card.style.display='';shown++;
+    }else{
+      card.style.display='none';
+    }
+  });
+  // If nothing matched show all
+  if(shown===0){cards.forEach(c=>c.style.display='')}
+}
+
+function showLoading(show,txt='Searching...'){
+  document.getElementById('loadingWrap').classList.toggle('on',show);
+  document.getElementById('loadingTxt').textContent=txt;
+}
+
+async function doSearch(){
+  const q=document.getElementById('cityInp').value.trim();
+  if(!q){toast('⚠️ Please enter a city or area name','e');return}
+
+  const btn=document.getElementById('searchBtn');
+  btn.disabled=true;btn.textContent='🔍 Searching...';
+  showLoading(true,'Finding '+currentType+'s near '+q+'...');
+
+  // Use Nominatim to validate + get proper city name
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+' India')}&format=json&limit=1&countrycodes=in`,{
+      headers:{'Accept-Language':'en','User-Agent':'MediGuide/1.0'}
+    });
+    if(res.ok){
+      const data=await res.json();
+      if(data&&data.length){
+        const cityName=data[0].display_name.split(',')[0];
+        showLoading(false);
+        showMap(cityName,currentType);
+        toast('✅ Showing '+typeLabels[currentType]+' near '+cityName,'s');
+      }else{
+        // City not found by Nominatim, still show map with original query
+        showLoading(false);
+        showMap(q,currentType);
+        toast('✅ Showing '+typeLabels[currentType]+' near '+q,'s');
+      }
+    }else{
+      showLoading(false);
+      showMap(q,currentType);
+      toast('✅ Showing '+typeLabels[currentType]+' near '+q,'s');
+    }
+  }catch(err){
+    // Even if geocoding fails, show map — it never fails!
+    showLoading(false);
+    showMap(q,currentType);
+    toast('✅ Showing '+typeLabels[currentType]+' near '+q,'s');
+  }
+
+  btn.disabled=false;btn.textContent='🔍 Search';
+}
+
+function getGPS(){
+  if(!navigator.geolocation){
+    toast('⚠️ GPS not available. Search a city instead.','e');
+    return;
+  }
+  const btn=document.getElementById('gpsBtn');
+  btn.disabled=true;btn.textContent='📍 Locating...';
+  toast('📍 Detecting your location...');
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const{latitude:lat,longitude:lng}=pos.coords;
+    btn.disabled=false;btn.textContent='📍 My Location';
+
+    // Show embed map using coordinates
+    const searchTerm=typeSearch[currentType]+' near me';
+    const mapUrl=`https://maps.google.com/maps?q=${encodeURIComponent(typeSearch[currentType])}&ll=${lat},${lng}&z=14&output=embed`;
+    const container=document.getElementById('mapContainer');
+    container.innerHTML=`<iframe
+      src="${mapUrl}"
+      width="100%" height="500"
+      style="border:none;display:block"
+      allowfullscreen="" loading="lazy"
+      title="Hospitals near your location">
+    </iframe>`;
+
+    // Open buttons
+    const openUrl=`https://www.google.com/maps/search/${encodeURIComponent(typeSearch[currentType])}/@${lat},${lng},14z`;
+    document.getElementById('gmapLinkRow').innerHTML=`
+      <a href="${openUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:12px;font-weight:700;padding:10px 18px;border-radius:9px;text-decoration:none">
+        🗺️ Open Full Google Maps
+      </a>`;
+    document.getElementById('gmapBtns').style.display='block';
+    document.getElementById('statusTxt').textContent='Showing '+typeLabels[currentType]+' near your location';
+    document.getElementById('statusBadge').classList.add('on');
+    document.getElementById('badgeTxt').textContent='Your location';
+    toast('📍 Location found! Showing hospitals near you.','s');
+  },()=>{
+    btn.disabled=false;btn.textContent='📍 My Location';
+    toast('⚠️ Location access denied. Please allow and try again.','e');
+  },{timeout:10000,enableHighAccuracy:true});
+}
+
+document.getElementById('cityInp').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+
+// Scroll fade in for cards
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}
+}),{threshold:.08});
+document.querySelectorAll('.qcard,.how-card').forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(18px)';
+  el.style.transition=`opacity .5s ease ${i*.04}s,transform .5s ease ${i*.04}s`;
+  obs.observe(el);
+});
+
+function callH(num){toast('📞 Calling '+num+'...');setTimeout(()=>window.open('tel:'+num),400)}
+
+setTimeout(()=>toast('🏥 Search any city to find hospitals!'),1200);
 </script>
 </body>
 </html>
