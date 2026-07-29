@@ -11,8 +11,6 @@
 body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(#7f1d1d,#dc2626);border-radius:10px}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
-
-/* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #111;transition:all .3s}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
 .logo-i{width:34px;height:34px;background:linear-gradient(135deg,var(--gd),var(--gold));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
@@ -34,18 +32,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .mmenu a{color:#777;text-decoration:none;font-size:15px;font-weight:500;padding:13px 14px;border-radius:10px;transition:all .2s;border-bottom:1px solid #0d0d0d}
 .mmenu a:hover{color:var(--gl)}
 .mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
-
-.wrap{max-width:860px;margin:0 auto;padding:100px 22px 90px;position:relative;z-index:2}
-
-/* ANIMATIONS */
+.wrap{max-width:900px;margin:0 auto;padding:100px 22px 90px;position:relative;z-index:2}
 @keyframes ping{0%{transform:scale(.9);opacity:1}100%{transform:scale(1.6);opacity:0}}
 @keyframes spulse{0%,100%{box-shadow:0 0 50px rgba(220,38,38,.4),0 0 100px rgba(220,38,38,.15)}50%{box-shadow:0 0 80px rgba(220,38,38,.7),0 0 160px rgba(220,38,38,.3)}}
 @keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes fup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes sp{to{transform:rotate(360deg)}}
 
-/* SOS HERO */
+/* SOS */
 .sos-sec{text-align:center;margin-bottom:52px;animation:fup .6s ease both}
 .sos-eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(220,38,38,.2);background:rgba(220,38,38,.04);color:#f87171;font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
 .sos-ttl{font-family:'Playfair Display',serif;font-size:clamp(28px,6vw,60px);font-weight:900;letter-spacing:-2px;color:#fca5a5;margin-bottom:14px;line-height:1.05}
@@ -62,30 +56,67 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .sos-stat{font-size:13px;color:#2a0505;margin-top:16px;min-height:20px;transition:color .3s;font-weight:500}
 .sos-stat.on{color:#f87171}
 
-/* QUICK CALL GRID */
-.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:40px}
-.qcard{background:#0a0a0a;border:1px solid rgba(220,38,38,.1);border-radius:16px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .3s}
-.qcard:hover{border-color:rgba(220,38,38,.3);transform:translateY(-2px)}
-.qico{font-size:24px;margin-bottom:8px;display:block}
-.qnum{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#f87171;margin-bottom:4px}
-.qlbl{font-size:11px;color:#444;font-weight:500}
-.qbtn{margin-top:10px;width:100%;padding:9px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1px solid rgba(220,38,38,.15);background:rgba(220,38,38,.06);color:#f87171;transition:all .2s}
-.qbtn:hover{background:rgba(220,38,38,.15)}
+/* CALL MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:9000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.on{display:flex}
+.modal{background:#0a0a0a;border:1px solid rgba(220,38,38,.3);border-radius:24px;padding:32px;max-width:380px;width:100%;text-align:center;animation:fup .3s ease}
+.modal-ico{font-size:52px;margin-bottom:16px}
+.modal-num{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:#f87171;margin-bottom:4px;letter-spacing:-1px}
+.modal-name{font-size:14px;color:#444;margin-bottom:24px}
+.modal-actions{display:flex;flex-direction:column;gap:10px}
+.modal-call{display:block;width:100%;padding:16px;border-radius:12px;background:linear-gradient(135deg,#7f1d1d,#dc2626);color:#fff;font-size:16px;font-weight:700;text-decoration:none;font-family:'Inter',sans-serif;text-align:center;border:none;cursor:pointer;transition:all .2s}
+.modal-call:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(220,38,38,.4)}
+.modal-copy{width:100%;padding:13px;border-radius:12px;background:#000;border:1px solid rgba(220,38,38,.2);color:#f87171;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.modal-copy:hover{background:rgba(220,38,38,.08)}
+.modal-close{width:100%;padding:11px;border-radius:12px;background:transparent;border:1px solid #1a1a1a;color:#444;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px}
+.modal-close:hover{color:#888;border-color:#333}
+.modal-hint{font-size:11px;color:#222;margin-top:12px;line-height:1.6}
 
-/* EMERGENCY CONTACTS */
+/* PERSONAL CONTACTS CALL MODAL */
+.pc-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:9000;align-items:center;justify-content:center;padding:20px}
+.pc-modal.on{display:flex}
+.pc-box{background:#0a0a0a;border:1px solid rgba(201,168,76,.2);border-radius:24px;padding:28px;max-width:360px;width:100%;text-align:center;animation:fup .3s ease}
+.pc-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.pc-num{font-size:28px;font-weight:700;color:var(--gl);margin-bottom:20px;font-family:'Playfair Display',serif}
+.pc-call{display:block;width:100%;padding:14px;border-radius:11px;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:15px;font-weight:700;text-decoration:none;text-align:center;font-family:'Inter',sans-serif;margin-bottom:8px;border:none;cursor:pointer}
+.pc-close{width:100%;padding:11px;border-radius:11px;background:transparent;border:1px solid #1a1a1a;color:#444;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* QUICK CALL GRID */
 .sec-head{margin-bottom:18px}
 .sec-eye{font-size:11px;font-weight:700;color:rgba(248,113,113,.5);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .sec-eye::after{content:'';flex:1;height:1px;background:rgba(220,38,38,.08)}
 .sec-ttl{font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:6px}
 .sec-sub{font-size:13px;color:#333;line-height:1.6}
 
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:40px}
+.qcard{background:#0a0a0a;border:1px solid rgba(220,38,38,.12);border-radius:18px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.qcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(220,38,38,.4),transparent);opacity:0;transition:opacity .3s}
+.qcard:hover{border-color:rgba(220,38,38,.35);transform:translateY(-2px)}
+.qcard:hover::before{opacity:1}
+.qico{font-size:28px;margin-bottom:10px;display:block}
+.qnum{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#f87171;margin-bottom:5px;letter-spacing:-0.5px}
+.qlbl{font-size:11px;color:#333;font-weight:500;margin-bottom:14px;line-height:1.4}
+.qbtn-row{display:flex;gap:6px}
+.qbtn{flex:1;padding:10px 6px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:none}
+.qbtn-call{background:linear-gradient(135deg,#7f1d1d,#dc2626);color:#fff}
+.qbtn-call:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(220,38,38,.4)}
+.qbtn-copy{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.15);color:#f87171}
+.qbtn-copy:hover{background:rgba(220,38,38,.14)}
+
+/* PERSONAL CONTACTS */
 .ccard{background:#0a0a0a;border:1px solid rgba(220,38,38,.08);border-radius:18px;padding:22px;margin-bottom:36px}
-.crow{display:flex;gap:9px;flex-wrap:wrap}
-.cinp{flex:1;min-width:180px;background:#000;border:1px solid rgba(220,38,38,.1);border-radius:9px;padding:11px 14px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.crow{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.cinp{flex:1;min-width:160px;background:#000;border:1px solid rgba(220,38,38,.1);border-radius:9px;padding:11px 14px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
 .cinp:focus{border-color:rgba(220,38,38,.3)}
 .cinp::placeholder{color:#111}
 .csave{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);color:#f87171;font-size:12px;font-weight:700;padding:11px 20px;border-radius:9px;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s}
 .csave:hover{background:rgba(220,38,38,.18)}
+.contacts-saved{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.contact-btn{background:#000;border:1px solid rgba(201,168,76,.1);border-radius:12px;padding:14px;text-align:left;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.contact-btn:hover{border-color:rgba(201,168,76,.25);transform:translateY(-1px)}
+.contact-btn-name{font-size:13px;font-weight:700;color:#ddd;margin-bottom:3px}
+.contact-btn-num{font-size:12px;color:var(--gold);font-weight:600;margin-bottom:8px}
+.contact-btn-call{width:100%;padding:8px;border-radius:8px;background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Inter',sans-serif}
 
 /* FIRST AID */
 .fagrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:44px}
@@ -104,27 +135,30 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .fast li:last-child{border-bottom:none}
 .fsd{color:rgba(201,168,76,.4);flex-shrink:0;margin-top:1px}
 
-/* NEAREST ER */
-.ergrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+/* ER GRID */
+.ergrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:40px}
 .ercard{background:linear-gradient(135deg,#080000,#0f0000);border:1px solid rgba(220,38,38,.1);border-radius:16px;padding:22px;transition:all .3s}
 .ercard:hover{border-color:rgba(220,38,38,.25);transform:translateY(-2px)}
 .ertop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px;gap:8px}
 .ern{font-size:14px;font-weight:700;color:#fca5a5;margin-bottom:3px}
 .era{font-size:12px;color:#7f5050;line-height:1.4}
 .erd{font-size:10px;color:#f87171;background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.12);padding:3px 9px;border-radius:100px;font-weight:600;flex-shrink:0;white-space:nowrap}
-.ert{font-size:11px;color:#7f5050;margin-bottom:12px;margin-top:6px}
-.erbtn{width:100%;padding:10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1px solid rgba(220,38,38,.15);background:rgba(220,38,38,.05);color:#f87171;transition:all .2s}
-.erbtn:hover{background:rgba(220,38,38,.14)}
+.ert{font-size:11px;color:#7f5050;margin-bottom:10px;margin-top:6px}
+.er-btns{display:flex;gap:7px;margin-top:10px}
+.er-dir{flex:2;padding:10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:none;background:linear-gradient(135deg,#7f1d1d,#dc2626);color:#fff;transition:all .2s;text-decoration:none;text-align:center}
+.er-dir:hover{transform:translateY(-1px)}
+.er-call{flex:1;padding:10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1px solid rgba(220,38,38,.2);background:rgba(220,38,38,.06);color:#f87171;transition:all .2s;text-decoration:none;text-align:center}
+.er-call:hover{background:rgba(220,38,38,.14)}
 
-/* RESPONSIVE */
 @media(max-width:900px){
 .nav{padding:0 20px}.nav-mid,.nav-r{display:none}.hbg{display:flex}
 .wrap{padding:86px 16px 60px}
 .sos-btn{width:140px;height:140px;font-size:24px}
 .qgrid{grid-template-columns:1fr 1fr}
 .fagrid,.ergrid{grid-template-columns:1fr}
-.crow{flex-direction:column}
-.cinp{min-width:unset;width:100%}
+.crow{flex-direction:column}.cinp{min-width:unset;width:100%}
+.contacts-saved{grid-template-columns:1fr}
+.qbtn-row{flex-direction:column}.qbtn{width:100%}
 }
 @media(max-width:380px){
 .qgrid{grid-template-columns:1fr 1fr}
@@ -133,6 +167,33 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </style>
 </head>
 <body>
+
+<!-- CALL MODAL -->
+<div class="modal-overlay" id="callModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-ico" id="modalIco">🚑</div>
+    <div class="modal-num" id="modalNum">108</div>
+    <div class="modal-name" id="modalName">Ambulance — Free</div>
+    <div class="modal-actions">
+      <a class="modal-call" id="modalCallBtn" href="tel:108">📞 Call Now</a>
+      <button class="modal-copy" id="modalCopyBtn" onclick="copyModalNum()">📋 Copy Number</button>
+      <button class="modal-close" onclick="closeCallModal()">✕ Close</button>
+    </div>
+    <p class="modal-hint" id="modalHint">On mobile this will dial the number directly. On desktop, copy the number and dial manually.</p>
+  </div>
+</div>
+
+<!-- PERSONAL CONTACT CALL MODAL -->
+<div class="pc-modal" id="pcModal" onclick="closePcModal(event)">
+  <div class="pc-box">
+    <div class="modal-ico">👤</div>
+    <div class="pc-name" id="pcName">Contact</div>
+    <div class="pc-num" id="pcNum">—</div>
+    <a class="pc-call" id="pcCallBtn" href="tel:">📞 Call Now</a>
+    <button class="pc-close" onclick="document.getElementById('pcModal').classList.remove('on')">✕ Close</button>
+  </div>
+</div>
+
 <nav class="nav" id="nav">
   <a href="index.html" class="logo"><div class="logo-i">⚕️</div><span class="logo-t">MediGuide</span></a>
   <div class="nav-mid">
@@ -184,61 +245,82 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="sec-head">
     <div class="sec-eye">📞 Emergency Numbers</div>
     <h2 class="sec-ttl">Call Instantly</h2>
-    <p class="sec-sub">Tap any button below to call directly. Click the number to copy it.</p>
+    <p class="sec-sub">Tap Call to dial directly on mobile. On desktop, tap Copy to copy the number.</p>
   </div>
   <div class="qgrid">
     <div class="qcard">
       <span class="qico">🚑</span>
-      <div class="qnum" onclick="copyN('108')">108</div>
-      <div class="qlbl">Ambulance — Free</div>
-      <button class="qbtn" onclick="callN('108')">📞 Call 108</button>
+      <div class="qnum">108</div>
+      <div class="qlbl">Ambulance — Free<br>All India</div>
+      <div class="qbtn-row">
+        <button class="qbtn qbtn-call" onclick="openCallModal('108','Ambulance — Free','🚑')">📞 Call</button>
+        <button class="qbtn qbtn-copy" onclick="copyNum('108')">📋 Copy</button>
+      </div>
     </div>
     <div class="qcard">
       <span class="qico">🆘</span>
-      <div class="qnum" onclick="copyN('112')">112</div>
-      <div class="qlbl">National Emergency</div>
-      <button class="qbtn" onclick="callN('112')">📞 Call 112</button>
+      <div class="qnum">112</div>
+      <div class="qlbl">National Emergency<br>Police + Fire + Ambulance</div>
+      <div class="qbtn-row">
+        <button class="qbtn qbtn-call" onclick="openCallModal('112','National Emergency','🆘')">📞 Call</button>
+        <button class="qbtn qbtn-copy" onclick="copyNum('112')">📋 Copy</button>
+      </div>
     </div>
     <div class="qcard">
       <span class="qico">🚔</span>
-      <div class="qnum" onclick="copyN('100')">100</div>
-      <div class="qlbl">Police</div>
-      <button class="qbtn" onclick="callN('100')">📞 Call 100</button>
+      <div class="qnum">100</div>
+      <div class="qlbl">Police<br>All India</div>
+      <div class="qbtn-row">
+        <button class="qbtn qbtn-call" onclick="openCallModal('100','Police','🚔')">📞 Call</button>
+        <button class="qbtn qbtn-copy" onclick="copyNum('100')">📋 Copy</button>
+      </div>
     </div>
     <div class="qcard">
       <span class="qico">🔥</span>
-      <div class="qnum" onclick="copyN('101')">101</div>
-      <div class="qlbl">Fire Brigade</div>
-      <button class="qbtn" onclick="callN('101')">📞 Call 101</button>
+      <div class="qnum">101</div>
+      <div class="qlbl">Fire Brigade<br>All India</div>
+      <div class="qbtn-row">
+        <button class="qbtn qbtn-call" onclick="openCallModal('101','Fire Brigade','🔥')">📞 Call</button>
+        <button class="qbtn qbtn-copy" onclick="copyNum('101')">📋 Copy</button>
+      </div>
     </div>
     <div class="qcard">
       <span class="qico">🧠</span>
-      <div class="qnum" onclick="copyN('9152987821')" style="font-size:15px">iCall</div>
-      <div class="qlbl">Mental Health</div>
-      <button class="qbtn" onclick="callN('9152987821')">📞 Call iCall</button>
+      <div class="qnum" style="font-size:16px;letter-spacing:-0.5px">iCall</div>
+      <div class="qlbl">Mental Health<br>9152987821</div>
+      <div class="qbtn-row">
+        <button class="qbtn qbtn-call" onclick="openCallModal('9152987821','iCall Mental Health','🧠')">📞 Call</button>
+        <button class="qbtn qbtn-copy" onclick="copyNum('9152987821')">📋 Copy</button>
+      </div>
     </div>
     <div class="qcard">
       <span class="qico">☠️</span>
-      <div class="qnum" onclick="copyN('18001116117')" style="font-size:13px">Poison</div>
-      <div class="qlbl">Poison Control</div>
-      <button class="qbtn" onclick="callN('18001116117')">📞 Call Now</button>
+      <div class="qnum" style="font-size:13px;letter-spacing:-0.5px">1800-11-6117</div>
+      <div class="qlbl">Poison Control<br>AIIMS — Free</div>
+      <div class="qbtn-row">
+        <button class="qbtn qbtn-call" onclick="openCallModal('18001116117','Poison Control — AIIMS','☠️')">📞 Call</button>
+        <button class="qbtn qbtn-copy" onclick="copyNum('18001116117')">📋 Copy</button>
+      </div>
     </div>
   </div>
 
-  <!-- EMERGENCY CONTACTS -->
+  <!-- PERSONAL CONTACTS -->
   <div class="sec-head">
     <div class="sec-eye">👤 Personal Contacts</div>
     <h2 class="sec-ttl">Your Emergency Contacts</h2>
-    <p class="sec-sub">Save two contacts to quickly reach family in an emergency. Saved locally on your device.</p>
+    <p class="sec-sub">Save two contacts below. They appear as call buttons in an emergency.</p>
   </div>
   <div class="ccard">
     <div class="crow">
-      <input class="cinp" id="c1" placeholder="Contact 1 name — e.g. Mummy" />
+      <input class="cinp" id="c1" placeholder="Contact 1 name — e.g. Mummy"/>
       <input class="cinp" id="c1p" placeholder="Phone number" type="tel"/>
+    </div>
+    <div class="crow">
       <input class="cinp" id="c2" placeholder="Contact 2 name — e.g. Papa"/>
       <input class="cinp" id="c2p" placeholder="Phone number" type="tel"/>
-      <button class="csave" onclick="saveContacts()">💾 Save</button>
+      <button class="csave" onclick="saveContacts()">💾 Save Contacts</button>
     </div>
+    <div class="contacts-saved" id="savedContacts"></div>
   </div>
 
   <!-- FIRST AID -->
@@ -249,8 +331,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
   <div class="fagrid">
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">01</span>
-      <span class="faico">💔</span>
+      <span class="fanum">01</span><span class="faico">💔</span>
       <div class="fattl">Heart Attack <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
@@ -262,21 +343,19 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </ul>
     </div>
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">02</span>
-      <span class="faico">🫁</span>
+      <span class="fanum">02</span><span class="faico">🫁</span>
       <div class="fattl">Choking <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
         <li><span class="fsd">→</span>Ask if they can speak or cough — encourage forceful coughing</li>
         <li><span class="fsd">→</span>Stand behind them and lean them slightly forward</li>
         <li><span class="fsd">→</span>Give 5 firm back blows between the shoulder blades</li>
-        <li><span class="fsd">→</span>Give 5 abdominal thrusts (Heimlich manoeuvre) if object remains</li>
+        <li><span class="fsd">→</span>Give 5 abdominal thrusts — Heimlich manoeuvre — if object remains</li>
         <li><span class="fsd">→</span>Call 108 immediately if object is not dislodged</li>
       </ul>
     </div>
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">03</span>
-      <span class="faico">🩸</span>
+      <span class="fanum">03</span><span class="faico">🩸</span>
       <div class="fattl">Severe Bleeding <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
@@ -288,8 +367,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </ul>
     </div>
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">04</span>
-      <span class="faico">⚡</span>
+      <span class="fanum">04</span><span class="faico">⚡</span>
       <div class="fattl">Electric Shock <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
@@ -301,8 +379,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </ul>
     </div>
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">05</span>
-      <span class="faico">🔥</span>
+      <span class="fanum">05</span><span class="faico">🔥</span>
       <div class="fattl">Burns <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
@@ -314,8 +391,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </ul>
     </div>
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">06</span>
-      <span class="faico">😵</span>
+      <span class="fanum">06</span><span class="faico">😵</span>
       <div class="fattl">Unconscious Person <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
@@ -327,8 +403,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </ul>
     </div>
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">07</span>
-      <span class="faico">🐍</span>
+      <span class="fanum">07</span><span class="faico">🐍</span>
       <div class="fattl">Snake Bite <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
@@ -340,8 +415,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </ul>
     </div>
     <div class="facard" onclick="toggleFA(this)">
-      <span class="fanum">08</span>
-      <span class="faico">🫀</span>
+      <span class="fanum">08</span><span class="faico">🫀</span>
       <div class="fattl">CPR Guide <span class="faarr">▼</span></div>
       <p class="fath">Tap to expand steps</p>
       <ul class="fast">
@@ -358,74 +432,56 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="sec-head">
     <div class="sec-eye">🏥 Nearest ERs</div>
     <h2 class="sec-ttl">Go Here Right Now</h2>
-    <p class="sec-sub">Nearest 24/7 emergency rooms in Delhi NCR — open right now.</p>
+    <p class="sec-sub">Nearest 24/7 emergency rooms in Delhi NCR. Tap Directions to open Google Maps. Tap Call to dial the hospital.</p>
   </div>
   <div class="ergrid">
     <div class="ercard">
-      <div class="ertop">
-        <div>
-          <div class="ern">AIIMS Trauma Centre</div>
-          <div class="era">Sri Aurobindo Marg, New Delhi — 110029</div>
-        </div>
-        <span class="erd">24/7 Open</span>
+      <div class="ertop"><div><div class="ern">AIIMS Trauma Centre</div><div class="era">Sri Aurobindo Marg, New Delhi — 110029</div></div><span class="erd">24/7 Open</span></div>
+      <div class="ert">🆓 Free · Government · Ambulance: 108</div>
+      <div class="er-btns">
+        <a class="er-dir" href="https://www.google.com/maps/dir/?api=1&destination=28.5672,77.2100" target="_blank">🗺️ Directions</a>
+        <button class="er-call" onclick="openCallModal('01126588500','AIIMS New Delhi','🏥')">📞 Call</button>
       </div>
-      <div class="ert">🆓 Free · Government Hospital · Ambulance: 108</div>
-      <button class="erbtn" onclick="goER('AIIMS Trauma Centre New Delhi')">🚨 Get Directions Now</button>
     </div>
     <div class="ercard">
-      <div class="ertop">
-        <div>
-          <div class="ern">Safdarjung Hospital ER</div>
-          <div class="era">Ring Road, Safdarjung, New Delhi — 110029</div>
-        </div>
-        <span class="erd">24/7 Open</span>
+      <div class="ertop"><div><div class="ern">Safdarjung Hospital ER</div><div class="era">Ring Road, Safdarjung, New Delhi — 110029</div></div><span class="erd">24/7 Open</span></div>
+      <div class="ert">🆓 Free · Government · Ambulance: 108</div>
+      <div class="er-btns">
+        <a class="er-dir" href="https://www.google.com/maps/dir/?api=1&destination=28.5672,77.2031" target="_blank">🗺️ Directions</a>
+        <button class="er-call" onclick="openCallModal('01126707444','Safdarjung Hospital','🏥')">📞 Call</button>
       </div>
-      <div class="ert">🆓 Free · Government Hospital · Ambulance: 108</div>
-      <button class="erbtn" onclick="goER('Safdarjung Hospital New Delhi')">🚨 Get Directions Now</button>
     </div>
     <div class="ercard">
-      <div class="ertop">
-        <div>
-          <div class="ern">RML Hospital ER</div>
-          <div class="era">Baba Kharak Singh Marg, New Delhi — 110001</div>
-        </div>
-        <span class="erd">24/7 Open</span>
+      <div class="ertop"><div><div class="ern">RML Hospital ER</div><div class="era">Baba Kharak Singh Marg, New Delhi — 110001</div></div><span class="erd">24/7 Open</span></div>
+      <div class="ert">🆓 Free · Government · Tel: 011-23404000</div>
+      <div class="er-btns">
+        <a class="er-dir" href="https://www.google.com/maps/dir/?api=1&destination=28.6276,77.2197" target="_blank">🗺️ Directions</a>
+        <button class="er-call" onclick="openCallModal('01123404000','RML Hospital','🏥')">📞 Call</button>
       </div>
-      <div class="ert">🆓 Free · Government Hospital · Tel: 011-23404000</div>
-      <button class="erbtn" onclick="goER('RML Hospital New Delhi')">🚨 Get Directions Now</button>
     </div>
     <div class="ercard">
-      <div class="ertop">
-        <div>
-          <div class="ern">Max Hospital Emergency</div>
-          <div class="era">Press Enclave Road, Saket, New Delhi — 110017</div>
-        </div>
-        <span class="erd">24/7 Open</span>
-      </div>
+      <div class="ertop"><div><div class="ern">Max Hospital Emergency</div><div class="era">Press Enclave Road, Saket, New Delhi — 110017</div></div><span class="erd">24/7 Open</span></div>
       <div class="ert">💳 Private · Tel: 011-26515050</div>
-      <button class="erbtn" onclick="goER('Max Hospital Saket New Delhi')">🚨 Get Directions Now</button>
+      <div class="er-btns">
+        <a class="er-dir" href="https://www.google.com/maps/dir/?api=1&destination=28.5244,77.2066" target="_blank">🗺️ Directions</a>
+        <button class="er-call" onclick="openCallModal('01126515050','Max Hospital Saket','🏥')">📞 Call</button>
+      </div>
     </div>
     <div class="ercard">
-      <div class="ertop">
-        <div>
-          <div class="ern">Apollo Hospital Emergency</div>
-          <div class="era">Sarita Vihar, Mathura Road, New Delhi — 110076</div>
-        </div>
-        <span class="erd">24/7 Open</span>
-      </div>
+      <div class="ertop"><div><div class="ern">Apollo Hospital Emergency</div><div class="era">Sarita Vihar, Mathura Road, New Delhi — 110076</div></div><span class="erd">24/7 Open</span></div>
       <div class="ert">💳 Private · Tel: 011-71791090</div>
-      <button class="erbtn" onclick="goER('Apollo Hospital Sarita Vihar New Delhi')">🚨 Get Directions Now</button>
+      <div class="er-btns">
+        <a class="er-dir" href="https://www.google.com/maps/dir/?api=1&destination=28.5486,77.2825" target="_blank">🗺️ Directions</a>
+        <button class="er-call" onclick="openCallModal('01171791090','Apollo Hospital Delhi','🏥')">📞 Call</button>
+      </div>
     </div>
     <div class="ercard">
-      <div class="ertop">
-        <div>
-          <div class="ern">Fortis Hospital Emergency</div>
-          <div class="era">Vasant Kunj, New Delhi — 110070</div>
-        </div>
-        <span class="erd">24/7 Open</span>
-      </div>
+      <div class="ertop"><div><div class="ern">Fortis Hospital Emergency</div><div class="era">Vasant Kunj, New Delhi — 110070</div></div><span class="erd">24/7 Open</span></div>
       <div class="ert">💳 Private · Tel: 011-42776222</div>
-      <button class="erbtn" onclick="goER('Fortis Hospital Vasant Kunj New Delhi')">🚨 Get Directions Now</button>
+      <div class="er-btns">
+        <a class="er-dir" href="https://www.google.com/maps/dir/?api=1&destination=28.5195,77.1586" target="_blank">🗺️ Directions</a>
+        <button class="er-call" onclick="openCallModal('01142776222','Fortis Hospital Vasant Kunj','🏥')">📞 Call</button>
+      </div>
     </div>
   </div>
 
@@ -446,25 +502,76 @@ function toast(msg,type='g'){
   document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 
-// Load saved contacts
-window.addEventListener('load',()=>{
-  document.getElementById('c1').value=localStorage.getItem('emg_c1')||'';
-  document.getElementById('c1p').value=localStorage.getItem('emg_c1p')||'';
-  document.getElementById('c2').value=localStorage.getItem('emg_c2')||'';
-  document.getElementById('c2p').value=localStorage.getItem('emg_c2p')||'';
-});
+// ✅ CALL MODAL — shows on both mobile and desktop
+let currentModalNum='';
+function openCallModal(num,name,ico){
+  currentModalNum=num;
+  document.getElementById('modalIco').textContent=ico;
+  document.getElementById('modalNum').textContent=num.replace(/(\d{3})(\d{3})(\d{4})/,'$1-$2-$3')||num;
+  document.getElementById('modalName').textContent=name;
+  document.getElementById('modalCallBtn').href='tel:'+num;
+  document.getElementById('callModal').classList.add('on');
+}
+function closeCallModal(){document.getElementById('callModal').classList.remove('on')}
+function closeModal(e){if(e.target.id==='callModal')closeCallModal()}
+function copyModalNum(){
+  navigator.clipboard.writeText(currentModalNum)
+    .then(()=>{toast('📋 '+currentModalNum+' copied!','s');closeCallModal()})
+    .catch(()=>{toast('📋 Number: '+currentModalNum,'g');closeCallModal()});
+}
+
+function copyNum(num){
+  navigator.clipboard.writeText(num)
+    .then(()=>toast('📋 '+num+' copied to clipboard!','s'))
+    .catch(()=>toast('📋 Number: '+num,'g'));
+}
+
+// PERSONAL CONTACTS
+function loadSavedContacts(){
+  const c1=localStorage.getItem('emg_c1')||'';
+  const c1p=localStorage.getItem('emg_c1p')||'';
+  const c2=localStorage.getItem('emg_c2')||'';
+  const c2p=localStorage.getItem('emg_c2p')||'';
+  document.getElementById('c1').value=c1;
+  document.getElementById('c1p').value=c1p;
+  document.getElementById('c2').value=c2;
+  document.getElementById('c2p').value=c2p;
+  renderSavedContacts(c1,c1p,c2,c2p);
+}
+
+function renderSavedContacts(n1,p1,n2,p2){
+  const el=document.getElementById('savedContacts');
+  let html='';
+  if(n1&&p1)html+=`<div class="contact-btn"><div class="contact-btn-name">👤 ${n1}</div><div class="contact-btn-num">${p1}</div><button class="contact-btn-call" onclick="callContact('${p1}','${n1}')">📞 Call ${n1}</button></div>`;
+  if(n2&&p2)html+=`<div class="contact-btn"><div class="contact-btn-name">👤 ${n2}</div><div class="contact-btn-num">${p2}</div><button class="contact-btn-call" onclick="callContact('${p2}','${n2}')">📞 Call ${n2}</button></div>`;
+  el.innerHTML=html;
+}
+
+function callContact(num,name){
+  document.getElementById('pcName').textContent=name;
+  document.getElementById('pcNum').textContent=num;
+  document.getElementById('pcCallBtn').href='tel:'+num;
+  document.getElementById('pcModal').classList.add('on');
+}
+function closePcModal(e){if(e.target.id==='pcModal')document.getElementById('pcModal').classList.remove('on')}
 
 function saveContacts(){
   const c1=document.getElementById('c1').value.trim();
   const c1p=document.getElementById('c1p').value.trim();
+  const c2=document.getElementById('c2').value.trim();
+  const c2p=document.getElementById('c2p').value.trim();
   if(!c1||!c1p){toast('⚠️ Please enter at least Contact 1 name and number','e');return}
   localStorage.setItem('emg_c1',c1);
   localStorage.setItem('emg_c1p',c1p);
-  localStorage.setItem('emg_c2',document.getElementById('c2').value.trim());
-  localStorage.setItem('emg_c2p',document.getElementById('c2p').value.trim());
+  localStorage.setItem('emg_c2',c2);
+  localStorage.setItem('emg_c2p',c2p);
+  renderSavedContacts(c1,c1p,c2,c2p);
   toast('✅ Emergency contacts saved!','s');
 }
 
+window.addEventListener('load',loadSavedContacts);
+
+// SOS
 let sosActive=false;
 function activateSOS(){
   if(sosActive)return;
@@ -478,8 +585,8 @@ function activateSOS(){
 
   if(!navigator.geolocation){
     stat.textContent='📞 Call 108 immediately — location unavailable!';
-    window.open('tel:108');
-    setTimeout(resetSOS,5000);
+    openCallModal('108','Ambulance — Free All India','🚑');
+    setTimeout(resetSOS,8000);
     return;
   }
 
@@ -487,17 +594,17 @@ function activateSOS(){
     pos=>{
       const{latitude:lat,longitude:lng}=pos.coords;
       stat.textContent='✅ Location found! Opening nearest hospitals...';
-      toast('📍 Location detected — opening map!','s');
+      toast('📍 Location detected!','s');
       setTimeout(()=>{
         window.open(`https://www.google.com/maps/search/emergency+hospital+near+me/@${lat},${lng},14z`,'_blank');
         setTimeout(resetSOS,5000);
-      },800);
+      },600);
     },
     ()=>{
-      stat.textContent='⚠️ Location denied — calling 108 now!';
+      stat.textContent='⚠️ Location denied — call 108 immediately!';
       toast('⚠️ Call 108 immediately!','e');
-      window.open('tel:108');
-      setTimeout(resetSOS,5000);
+      openCallModal('108','Ambulance — Free All India','🚑');
+      setTimeout(resetSOS,8000);
     },
     {timeout:8000,enableHighAccuracy:true}
   );
@@ -514,21 +621,7 @@ function resetSOS(){
 function toggleFA(card){
   const isOpen=card.classList.contains('exp');
   document.querySelectorAll('.facard').forEach(c=>c.classList.remove('exp'));
-  if(!isOpen){
-    card.classList.add('exp');
-    toast('📋 '+card.querySelector('.fattl').childNodes[0].textContent.trim());
-  }
-}
-
-function callN(num){toast('📞 Calling '+num+'...','e');setTimeout(()=>window.open('tel:'+num),500)}
-function copyN(num){
-  navigator.clipboard.writeText(num)
-    .then(()=>toast('📋 '+num+' copied to clipboard!'))
-    .catch(()=>toast('📋 Number: '+num));
-}
-function goER(place){
-  toast('🚨 Opening directions...','e');
-  setTimeout(()=>window.open('https://www.google.com/maps/search/'+encodeURIComponent(place),'_blank'),400);
+  if(!isOpen){card.classList.add('exp');toast('📋 '+card.querySelector('.fattl').childNodes[0].textContent.trim())}
 }
 
 // Scroll animations
@@ -541,7 +634,7 @@ document.querySelectorAll('.qcard,.facard,.ercard,.ccard').forEach((el,i)=>{
   obs.observe(el);
 });
 
-setTimeout(()=>toast('🚨 Emergency page loaded — stay safe!'),1200);
+setTimeout(()=>toast('🚨 Emergency page — stay safe!'),1200);
 </script>
 </body>
 </html>
