@@ -20,7 +20,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .nav-mid a:hover,.nav-mid a.act{color:#fff;background:#111}
 .nav-mid a.act{color:var(--gl)!important}
 .nav-r{display:flex;align-items:center;gap:10px}
-.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap;transition:color .2s}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap}
 .nav-si:hover{color:var(--gl)}
 .nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap}
 .hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
@@ -127,7 +127,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <svg class="ecg" viewBox="0 0 800 36" preserveAspectRatio="none">
     <polyline class="ecgp" points="0,18 80,18 110,18 124,2 138,34 152,6 166,30 180,18 260,18 290,18 304,2 318,34 332,6 346,30 360,18 440,18 470,18 484,2 498,34 512,6 526,30 540,18 620,18 650,18 664,2 678,34 692,6 706,30 720,18 800,18"/>
   </svg>
-  <div class="ai-badge"><div class="ai-dot"></div>Powered by Groq AI — LLaMA 3.3 70B Versatile</div>
+  <div class="ai-badge"><div class="ai-dot"></div>Powered by Groq AI</div>
   <div class="eye">⚕️ AI Symptom Checker</div>
   <h1 class="ptitle">AI <span>Symptom</span> Checker</h1>
   <p class="psub">Describe what you're feeling in Hindi or English. Our AI identifies the exact specialist, urgency level and tells you exactly what to do next.</p>
@@ -141,7 +141,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
     </div>
     <label class="flbl" id="flbl">Describe your symptoms</label>
-    <textarea class="fta" id="si" placeholder="e.g. I have chest pain and shortness of breath since this morning, also feeling dizzy and sweating a lot..."></textarea>
+    <textarea class="fta" id="si" placeholder="e.g. I have chest pain and shortness of breath since this morning, also feeling dizzy and sweating..."></textarea>
     <p class="hint" id="hint">💡 Mention duration, body part and severity for most accurate result</p>
     <span class="clbl">Quick add symptoms</span>
     <div class="chips">
@@ -161,17 +161,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <button class="bgold" id="abtn" onclick="check()">🤖 Analyse Symptoms with AI</button>
   </div>
 
-  <div class="ld" id="ld">
-    <div class="sp"></div>
-    <p id="lmsg">Connecting to Groq AI...</p>
-  </div>
+  <div class="ld" id="ld"><div class="sp"></div><p id="lmsg">Connecting to Groq AI...</p></div>
 
   <div class="rcard" id="rc">
     <div class="rtop">
       <div class="ricn">🩺</div>
       <div>
         <div class="rttl">AI Analysis Complete</div>
-        <div class="rsub" id="rsrc">Powered by Groq AI — LLaMA 3.3 70B</div>
+        <div class="rsub" id="rsrc">Powered by Groq AI</div>
       </div>
     </div>
     <div class="rgrid">
@@ -187,7 +184,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <button class="rbtn" onclick="resetForm()">🔄 Check Again</button>
     </div>
   </div>
-  <div class="disc">⚠️ MediGuide is an AI-powered information tool only. It does not replace professional medical advice. Always consult a qualified and registered doctor.</div>
+  <div class="disc">⚠️ MediGuide is an AI-powered information tool only. It does not replace professional medical advice. Always consult a qualified doctor.</div>
 </div>
 
 <script>
@@ -210,15 +207,14 @@ function setLang(l,btn){
   lang=l;
   document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  const inp=document.getElementById('si');
   if(l==='hi'){
-    inp.placeholder='जैसे: मुझे 3 दिन से तेज़ बुखार और सिरदर्द है, बहुत कमज़ोरी भी महसूस हो रही है...';
+    document.getElementById('si').placeholder='जैसे: मुझे 3 दिन से तेज़ बुखार और सिरदर्द है, बहुत कमज़ोरी भी है...';
     document.getElementById('flbl').textContent='अपने लक्षण बताएं';
     document.getElementById('hint').textContent='💡 कितने दिन से है, कहाँ दर्द है और कितना तेज़ है — सब बताएं';
     document.getElementById('abtn').textContent='🤖 AI से लक्षण जाँचें';
     toast('🌐 हिंदी में बदल दिया');
   }else{
-    inp.placeholder='e.g. I have chest pain and shortness of breath since this morning, also feeling dizzy...';
+    document.getElementById('si').placeholder='e.g. I have chest pain and shortness of breath since this morning, also feeling dizzy...';
     document.getElementById('flbl').textContent='Describe your symptoms';
     document.getElementById('hint').textContent='💡 Mention duration, body part and severity for most accurate result';
     document.getElementById('abtn').textContent='🤖 Analyse Symptoms with AI';
@@ -233,14 +229,13 @@ function addC(el,text){
   else{inp.value=inp.value.replace(new RegExp(',?\\s*'+text,'g'),'').trim().replace(/^,/,'').trim()}
   updateHint();
 }
-
 function updateHint(){
   const len=document.getElementById('si').value.length;
   const h=document.getElementById('hint');
   if(len===0){h.style.color='#222';h.textContent='💡 Mention duration, body part and severity for most accurate result'}
-  else if(len<20){h.style.color='#f87171';h.textContent=len+' chars — please add more detail'}
+  else if(len<20){h.style.color='#f87171';h.textContent=len+' chars — add more detail'}
   else if(len<60){h.style.color='#fbbf24';h.textContent=len+' chars — good, mention since when'}
-  else{h.style.color='#34d399';h.textContent=len+' chars ✅ Great detail!'}
+  else{h.style.color='#34d399';h.textContent=len+' chars ✅ Great!'}
 }
 document.getElementById('si').addEventListener('input',updateHint);
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey)check()});
@@ -255,7 +250,7 @@ function resetForm(){
   toast('🔄 Ready for new symptoms');
 }
 
-const lmsgs=['Connecting to Groq AI...','Analysing your symptoms...','LLaMA 3.3 70B processing...','Identifying the right specialist...','Checking urgency level...','Preparing your results...'];
+const lmsgs=['Connecting to Groq AI...','Analysing symptoms...','Identifying specialist...','Checking urgency...','Almost ready...'];
 let lIdx=0,lTimer;
 function startLoader(){lIdx=0;document.getElementById('lmsg').textContent=lmsgs[0];lTimer=setInterval(()=>{lIdx=(lIdx+1)%lmsgs.length;document.getElementById('lmsg').textContent=lmsgs[lIdx]},1200)}
 function stopLoader(){clearInterval(lTimer)}
@@ -263,7 +258,7 @@ function stopLoader(){clearInterval(lTimer)}
 async function check(){
   const v=document.getElementById('si').value.trim();
   if(!v){toast('⚠️ Please describe your symptoms first','e');document.getElementById('si').style.borderColor='rgba(248,113,113,.4)';setTimeout(()=>document.getElementById('si').style.borderColor='',2000);return}
-  if(v.length<15){toast('⚠️ Please add more detail about your symptoms','e');return}
+  if(v.length<10){toast('⚠️ Please add more detail','e');return}
 
   const btn=document.getElementById('abtn');
   btn.disabled=true;btn.textContent='⏳ Analysing...';
@@ -272,74 +267,53 @@ async function check(){
   startLoader();
   toast('🤖 Sending to Groq AI...');
 
-  const systemPrompt=`You are Dr. MediGuide, a senior specialist doctor with 30 years of clinical experience at AIIMS New Delhi. You have expertise across all medical specialties and provide ACCURATE, SPECIFIC guidance for patients in India.
+  const systemPrompt=`You are Dr. MediGuide, a senior specialist doctor with 30 years at AIIMS New Delhi. Give ACCURATE, SPECIFIC medical guidance for Indian patients.
 
-STRICT RULES — FOLLOW EXACTLY:
-1. ALWAYS identify the MOST SPECIFIC specialist. NEVER say just "General Physician" unless symptoms are completely vague.
+RULES:
+1. ALWAYS identify the MOST SPECIFIC specialist:
    - Heart/chest/palpitations → Cardiologist
    - Brain/nerves/seizures/stroke → Neurologist
-   - Lungs/breathing/cough chronic → Pulmonologist
-   - Skin/rash/acne/eczema → Dermatologist
+   - Lungs/breathing/chronic cough → Pulmonologist
+   - Skin/rash/acne → Dermatologist
    - Stomach/gut/liver/acidity → Gastroenterologist
-   - Ear/nose/throat/sinus → ENT Specialist
-   - Bones/joints/back/knee → Orthopaedic Surgeon
+   - Ear/nose/throat → ENT Specialist
+   - Bones/joints/back → Orthopaedic Surgeon
    - Eyes/vision → Ophthalmologist
-   - Kidney/urinary → Urologist
-   - Female reproductive/periods/pregnancy → Gynaecologist
+   - Urinary/kidney → Urologist
+   - Female/periods/pregnancy → Gynaecologist
    - Mental health/anxiety/depression → Psychiatrist
-   - Diabetes/thyroid/hormones → Endocrinologist
+   - Diabetes/thyroid → Endocrinologist
    - Teeth/gums → Dentist
-   - Children under 18 → Paediatrician
-   - Cancer suspicion → Oncologist
-   - Blood disorders → Haematologist
+   - Children → Paediatrician
+   - NEVER default to General Physician unless symptoms are completely vague
+2. Urgency: High=emergency today, Medium=24-48 hours, Low=can wait 3-5 days
+3. Advice: Specific OTC medicine names with correct Indian dosages, tests to get, hospital type recommendation
+4. RESPOND ONLY WITH VALID JSON — no markdown, no extra text`;
 
-2. URGENCY:
-   - High: life-threatening today — chest pain, stroke, severe bleeding, high fever in child, loss of consciousness
-   - Medium: serious — persistent fever 3+ days, infections, moderate pain
-   - Low: can wait 3-5 days — mild rash, minor cold
+  const userPrompt=`Patient in India: "${v}"
+Language: ${lang==='hi'?'Hindi':'English'}
 
-3. Use proper medical terminology for condition name.
-
-4. ADVICE: Name exact OTC medicines with correct Indian dosage, specific tests to get, government vs private hospital recommendation, mention Jan Aushadhi for affordable medicines.
-
-5. EXAMPLES:
-   - chest pain radiating to left arm, sweating → Cardiologist, High, Possible Acute Myocardial Infarction, Call 108 immediately
-   - fever 102F for 3 days, body ache, rash → Infectious Disease Specialist, High, Possible Dengue Fever, Get NS1 antigen test today
-   - skin rash, itching, no fever → Dermatologist, Low, Allergic Dermatitis, Cetirizine 10mg at night
-   - burning urination, lower abdominal pain → Urologist, Medium, Urinary Tract Infection, Urine culture test
-   - irregular periods, weight gain, hair fall → Gynaecologist, Medium, Possible PCOS, TSH and hormone tests
-
-6. RESPOND ONLY WITH VALID JSON — no markdown, no code blocks, no extra text outside JSON.`;
-
-  const userPrompt=`Patient in India says: "${v}"
-Response language: ${lang==='hi'?'Hindi':'English'}
-
-Respond ONLY as this exact JSON with no other text:
-{"specialist":"exact most specific doctor type","urgency":"High or Medium or Low","condition":"specific medical condition name","action":"specific action with clear timeline","advice":"3-4 detailed sentences with specific medicine names correct Indian dosages specific diagnostic tests and hospital recommendation"}`;
+Respond ONLY as this JSON:
+{"specialist":"exact doctor type","urgency":"High or Medium or Low","condition":"specific medical condition name","action":"specific action with timeline","advice":"3-4 sentences with medicine names dosages tests and hospital recommendation for Indian patient"}`;
 
   try{
     const res=await fetch('/api/groq',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        messages:[
-          {role:'system',content:systemPrompt},
-          {role:'user',content:userPrompt}
-        ],
+        messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],
         temperature:0,
-        max_tokens:1000
+        max_tokens:900
       })
     });
 
     if(!res.ok){
       const errText=await res.text();
-      throw new Error('API error '+res.status+': '+errText.substring(0,200));
+      throw new Error('HTTP '+res.status+': '+errText.substring(0,150));
     }
 
     const data=await res.json();
-    if(!data.choices||!data.choices[0]||!data.choices[0].message||!data.choices[0].message.content){
-      throw new Error('Unexpected response: '+JSON.stringify(data).substring(0,200));
-    }
+    if(!data.choices?.[0]?.message?.content) throw new Error('No content in response: '+JSON.stringify(data).substring(0,150));
 
     let raw=data.choices[0].message.content.trim();
     raw=raw.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
@@ -347,18 +321,18 @@ Respond ONLY as this exact JSON with no other text:
     let parsed;
     try{parsed=JSON.parse(raw)}
     catch(e){
-      const match=raw.match(/\{[\s\S]*\}/);
-      if(match){try{parsed=JSON.parse(match[0])}catch(e2){throw new Error('JSON parse failed: '+raw.substring(0,200))}}
-      else{throw new Error('No JSON in response: '+raw.substring(0,200))}
+      const m=raw.match(/\{[\s\S]*\}/);
+      if(m)try{parsed=JSON.parse(m[0])}catch(e2){throw new Error('JSON parse failed')}
+      else throw new Error('No JSON found in: '+raw.substring(0,100));
     }
 
-    if(!parsed||!parsed.specialist||!parsed.urgency){throw new Error('Missing fields in response: '+JSON.stringify(parsed))}
+    if(!parsed?.specialist||!parsed?.urgency) throw new Error('Missing fields in AI response');
 
     document.getElementById('rsp').textContent=parsed.specialist;
     document.getElementById('rco').textContent=parsed.condition||'Needs evaluation';
     document.getElementById('rac').textContent=parsed.action||'Visit a doctor soon';
     document.getElementById('radv').textContent=parsed.advice||'Please consult a qualified doctor.';
-    document.getElementById('rsrc').textContent='✅ Groq AI — LLaMA 3.3 70B Versatile';
+    document.getElementById('rsrc').textContent='✅ Groq AI — '+(data._model_used||'Live Result');
 
     const urgEl=document.getElementById('rug');
     const urg=(parsed.urgency||'Medium').trim();
@@ -366,20 +340,17 @@ Respond ONLY as this exact JSON with no other text:
     urgEl.className='rval '+(urg==='High'?'uhigh':urg==='Low'?'ulow':'umid');
 
     document.getElementById('rc').classList.add('on');
-    toast('✅ AI Analysis complete!','s');
+    toast('✅ Analysis complete!','s');
     setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
 
   }catch(err){
-    console.error('Symptom AI error:',err.message);
-    toast('⚠️ Error: '+err.message.substring(0,80),'e');
+    console.error('Symptoms error:',err.message);
+    toast('⚠️ '+err.message.substring(0,70),'e');
   }finally{
-    btn.disabled=false;
-    btn.textContent='🤖 Analyse Symptoms with AI';
-    stopLoader();
-    document.getElementById('ld').classList.remove('on');
+    btn.disabled=false;btn.textContent='🤖 Analyse Symptoms with AI';
+    stopLoader();document.getElementById('ld').classList.remove('on');
   }
 }
-
 setTimeout(()=>toast('🤖 AI Symptom Checker ready!'),1500);
 </script>
 </body>
