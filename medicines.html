@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff;--mt:#555}
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6f2e;--bg:#000;--c1:#0a0a0a;--b1:#1a1a1a;--tx:#fff}
 body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(var(--gd),var(--gold));border-radius:10px}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.3}
@@ -20,7 +20,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .nav-mid a:hover,.nav-mid a.act{color:#fff;background:#111}
 .nav-mid a.act{color:var(--gl)!important}
 .nav-r{display:flex;align-items:center;gap:10px}
-.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap}
+.nav-si{color:#555;text-decoration:none;font-size:13px;white-space:nowrap;transition:color .2s}
+.nav-si:hover{color:var(--gl)}
 .nav-ct{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px;white-space:nowrap}
 .hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
 .hbg span{display:block;width:22px;height:2px;background:var(--gl);border-radius:2px;transition:all .3s}
@@ -33,16 +34,18 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .mmenu a:hover{color:var(--gl)}
 .mmenu .mcta{background:linear-gradient(135deg,var(--gd),var(--gold));color:#000!important;font-weight:700!important;margin-top:8px;text-align:center;border:none!important;border-radius:10px}
 .wrap{max-width:860px;margin:0 auto;padding:120px 22px 90px;position:relative;z-index:2}
-.eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
-.ptitle{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,56px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.05}
-.ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.psub{font-size:15px;color:#444;line-height:1.8;margin-bottom:40px}
 @keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes gsh{to{background-position:200% center}}
 @keyframes sp{to{transform:rotate(360deg)}}
 @keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .ai-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);color:#34d399;font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px;margin-bottom:20px}
 .ai-dot{width:5px;height:5px;background:#34d399;border-radius:50%;animation:blk 2s infinite}
+.eye{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--gold);font-size:11px;font-weight:600;padding:6px 16px;border-radius:100px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.ptitle{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,56px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.05}
+.ptitle span{background:linear-gradient(135deg,var(--gd),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.psub{font-size:15px;color:#444;line-height:1.8;margin-bottom:40px}
+/* HISTORY */
 .hist-wrap{margin-bottom:22px;display:none}
 .hist-wrap.on{display:block}
 .hist-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -52,6 +55,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .hist-chips{display:flex;flex-wrap:wrap;gap:7px}
 .hchip{background:#0a0a0a;border:1px solid #111;color:#333;font-size:12px;padding:5px 13px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
 .hchip:hover{color:var(--gl);border-color:rgba(201,168,76,.2)}
+/* SEARCH */
 .scard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:22px;padding:28px;margin-bottom:20px}
 .flbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;display:block}
 .sbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
@@ -60,15 +64,17 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .sinp::placeholder{color:#1a1a1a}
 .bgold{display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#8a6f2e,var(--gold),#8a6f2e);background-size:200% auto;color:#000;font-size:14px;font-weight:700;padding:13px 28px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 0 36px rgba(201,168,76,.2);transition:all .3s;animation:gsh 4s linear infinite;white-space:nowrap}
 .bgold:hover{transform:translateY(-2px)}
-.bgold:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.bgold:disabled{opacity:.6;cursor:not-allowed;transform:none;animation:none}
 .pop-lbl{font-size:11px;font-weight:700;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:block}
 .pchips{display:flex;flex-wrap:wrap;gap:7px}
 .pchip{background:#000;border:1px solid #1a1a1a;color:#444;font-size:12px;font-weight:500;padding:7px 14px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
 .pchip:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.22);color:var(--gl)}
+/* LOADER */
 .ld{display:none;text-align:center;padding:44px}
 .ld.on{display:block}
 .sp{width:34px;height:34px;border:2px solid #1a1a1a;border-top-color:var(--gold);border-radius:50%;animation:sp .9s linear infinite;margin:0 auto 14px}
 .ld p{color:#333;font-size:14px}
+/* RESULT */
 .rcard{display:none;animation:fup .5s ease}
 .rcard.on{display:block}
 .med-hero{background:#0a0a0a;border:1px solid rgba(201,168,76,.12);border-radius:22px;padding:32px;margin-bottom:14px}
@@ -98,6 +104,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .racts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .rbtn{flex:1;padding:12px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid #1a1a1a;background:#0a0a0a;color:#555;min-width:140px}
 .rbtn:hover{border-color:rgba(201,168,76,.2);color:var(--gl)}
+/* QUICK CARDS */
 .sew{display:flex;align-items:center;gap:12px;margin-bottom:12px;margin-top:48px}
 .set{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.12em;text-transform:uppercase}
 .ser{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.25),transparent);max-width:70px}
@@ -154,11 +161,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <div class="wrap">
-  <div class="ai-badge"><div class="ai-dot"></div>Powered by Groq AI — Live</div>
+  <div class="ai-badge"><div class="ai-dot"></div>Powered by Groq AI — LLaMA 3 70B</div>
   <div class="eye">💊 AI Medicine Lookup</div>
   <h1 class="ptitle"><span>Medicine</span> Information</h1>
-  <p class="psub">Search any medicine in the world to instantly get dosage, uses, side effects and cheaper generic alternatives available in India.</p>
+  <p class="psub">Search any medicine in the world — get dosage, uses, side effects, Indian MRP price and cheaper Jan Aushadhi generic alternatives instantly.</p>
 
+  <!-- HISTORY -->
   <div class="hist-wrap" id="hw">
     <div class="hist-top">
       <span class="hist-lbl">Recent Searches</span>
@@ -167,10 +175,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="hist-chips" id="hchips"></div>
   </div>
 
+  <!-- SEARCH -->
   <div class="scard">
-    <label class="flbl">Search Any Medicine Name</label>
+    <label class="flbl">Search Any Medicine</label>
     <div class="sbar">
-      <input class="sinp" id="mi" placeholder="Search any medicine — Paracetamol, Aspirin, Metformin, Lisinopril, Amoxicillin..."/>
+      <input class="sinp" id="mi" placeholder="Type any medicine name — Paracetamol, Metformin, Azithromycin, Lisinopril, Ibuprofen..."/>
       <button class="bgold" id="sbtn" onclick="searchMed()">💊 Search</button>
     </div>
     <span class="pop-lbl">Popular searches</span>
@@ -188,8 +197,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
   </div>
 
+  <!-- LOADER -->
   <div class="ld" id="ld"><div class="sp"></div><p id="lmsg">Looking up medicine...</p></div>
 
+  <!-- RESULT -->
   <div class="rcard" id="rc">
     <div class="med-hero">
       <div class="med-top">
@@ -206,9 +217,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
       <div class="mgrid">
         <div class="mbox"><div class="mbox-lbl">Primary Use</div><div class="mbox-val" id="mu">—</div></div>
-        <div class="mbox"><div class="mbox-lbl">Typical Dosage</div><div class="mbox-val" id="md">—</div></div>
-        <div class="mbox"><div class="mbox-lbl">Available As</div><div class="mbox-val" id="mf">—</div></div>
-        <div class="mbox"><div class="mbox-lbl">Approx. Price</div><div class="mbox-val" id="mp">—</div></div>
+        <div class="mbox"><div class="mbox-lbl">Adult Dosage</div><div class="mbox-val" id="md">—</div></div>
+        <div class="mbox"><div class="mbox-lbl">Available Forms</div><div class="mbox-val" id="mf">—</div></div>
+        <div class="mbox"><div class="mbox-lbl">Indian MRP</div><div class="mbox-val" id="mp">—</div></div>
       </div>
     </div>
     <div class="msec">
@@ -216,7 +227,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="se-wrap" id="mse"></div>
     </div>
     <div class="msec">
-      <div class="msec-ttl">Cheaper Generic Alternative</div>
+      <div class="msec-ttl">Jan Aushadhi Generic Alternative</div>
       <div class="gen-card">
         <div class="gen-name" id="mgn">—</div>
         <div class="gen-desc" id="mgd">—</div>
@@ -231,8 +242,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
   </div>
 
+  <!-- QUICK ACCESS CARDS -->
   <div class="sew"><span class="set">Common Medicines</span><div class="ser"></div></div>
-  <h2 class="stitle">Frequently Used</h2>
+  <h2 class="stitle">Frequently Searched</h2>
   <p class="sdesc">Most commonly used medicines in India — click any to look up instantly.</p>
   <div class="cgrid">
     <div class="ccard" onclick="quick('Paracetamol')"><span class="ccico">🌡️</span><div class="ccname">Paracetamol</div><div class="ccuse">Fever, headache, mild to moderate pain</div><button class="ccbtn">Look up instantly →</button></div>
@@ -246,7 +258,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <script>
-let hist=JSON.parse(localStorage.getItem('med_hist')||'[]');
+let hist = JSON.parse(localStorage.getItem('med_hist')||'[]');
 
 function toggleMenu(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mmenu').classList.toggle('open')}
 function closeMenu(){document.getElementById('hbg').classList.remove('open');document.getElementById('mmenu').classList.remove('open')}
@@ -258,148 +270,195 @@ function toast(msg,type='g'){
   const colors={e:['rgba(248,113,113,.12)','rgba(248,113,113,.35)','#f87171'],s:['rgba(52,211,153,.12)','rgba(52,211,153,.35)','#34d399'],g:['rgba(201,168,76,.12)','rgba(201,168,76,.35)','#c9a84c']};
   const c=colors[type]||colors.g;
   t.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:99999;background:${c[0]};border:1px solid ${c[1]};color:${c[2]};padding:13px 22px;border-radius:11px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;backdrop-filter:blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tin .4s ease both;max-width:calc(100vw - 40px)`;
-  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}} @keyframes gsh{to{background-position:200% center}} @keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);
+  const s=document.createElement('style');s.textContent='@keyframes tin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}} @keyframes sp{to{transform:rotate(360deg)}} @keyframes gsh{to{background-position:200% center}}';document.head.appendChild(s);
   document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 
 function renderHist(){
   if(!hist.length){document.getElementById('hw').classList.remove('on');return}
   document.getElementById('hw').classList.add('on');
-  document.getElementById('hchips').innerHTML=hist.slice(0,6).map(h=>`<div class="hchip" onclick="quick('${h}')">🕐 ${h}</div>`).join('');
+  document.getElementById('hchips').innerHTML=hist.slice(0,8).map(h=>`<div class="hchip" onclick="quick('${h}')">🕐 ${h}</div>`).join('');
 }
-function addHist(name){hist=[name,...hist.filter(h=>h!==name)].slice(0,8);localStorage.setItem('med_hist',JSON.stringify(hist));renderHist()}
+function addHist(name){
+  hist=[name,...hist.filter(h=>h!==name)].slice(0,10);
+  localStorage.setItem('med_hist',JSON.stringify(hist));
+  renderHist();
+}
 function clearHist(){hist=[];localStorage.removeItem('med_hist');renderHist();toast('🗑️ History cleared')}
 renderHist();
 
-const lms=['Looking up medicine...','Checking pharmacopoeia database...','Finding Indian generic alternatives...','Almost ready...'];
-let li=0,lt;
-function startL(){li=0;document.getElementById('lmsg').textContent=lms[0];lt=setInterval(()=>{li=(li+1)%lms.length;document.getElementById('lmsg').textContent=lms[li]},1000)}
-function stopL(){clearInterval(lt)}
+const lmsgs=['Looking up medicine...','Checking pharmacopoeia...','Finding Indian alternatives...','Almost ready...'];
+let lIdx=0, lTimer;
+function startLoader(){
+  lIdx=0;
+  document.getElementById('lmsg').textContent=lmsgs[0];
+  lTimer=setInterval(()=>{lIdx=(lIdx+1)%lmsgs.length;document.getElementById('lmsg').textContent=lmsgs[lIdx]},1100);
+}
+function stopLoader(){clearInterval(lTimer)}
 
 function quick(name){document.getElementById('mi').value=name;searchMed()}
-function resetSearch(){document.getElementById('rc').classList.remove('on');document.getElementById('mi').value='';window.scrollTo({top:0,behavior:'smooth'});toast('🔄 Search another medicine')}
+function resetSearch(){
+  document.getElementById('rc').classList.remove('on');
+  document.getElementById('mi').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast('🔄 Search another medicine');
+}
 document.getElementById('mi').addEventListener('keydown',e=>{if(e.key==='Enter')searchMed()})
 
-const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}}),{threshold:.1})
-document.querySelectorAll('.ccard').forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition=`opacity .5s ease ${i*.07}s,transform .5s ease ${i*.07}s`;obs.observe(el)})
+// Scroll animations for quick cards
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}
+}),{threshold:.1})
+document.querySelectorAll('.ccard').forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';
+  el.style.transition=`opacity .5s ease ${i*.07}s,transform .5s ease ${i*.07}s`;
+  obs.observe(el);
+})
 
-function fillResult(p,med){
-  document.getElementById('mn').textContent=p.name||med;
-  document.getElementById('mg').textContent=p.generic||'Generic info unavailable';
-  document.getElementById('mt').textContent=p.type||'Medicine';
-  document.getElementById('mr').textContent=p.rx||'Consult Pharmacist';
-  document.getElementById('ms').textContent=p.safe||'Use with Caution';
-  document.getElementById('mu').textContent=p.use||'—';
-  document.getElementById('md').textContent=p.dose||'As prescribed by doctor';
-  document.getElementById('mf').textContent=p.form||'Tablet';
-  document.getElementById('mp').textContent=p.price||'Check at pharmacy';
-  document.getElementById('mgn').textContent='💚 '+(p.genericName||'Ask your pharmacist');
-  document.getElementById('mgd').textContent=p.genericDesc||'Ask pharmacist for generic alternative.';
-  document.getElementById('mgs').textContent='💰 '+(p.savings||'Generics save 50-80%');
-  document.getElementById('mw').textContent='⚠️ '+(p.warning||'Always consult a doctor before taking any medicine.');
-  const se=document.getElementById('mse');
+function fillResult(p){
+  document.getElementById('mn').textContent = p.name||'Unknown Medicine';
+  document.getElementById('mg').textContent = p.generic||'Generic information unavailable';
+  document.getElementById('mt').textContent = p.type||'Medicine';
+  document.getElementById('mr').textContent = p.rx||'Consult Pharmacist';
+  document.getElementById('ms').textContent = p.safe||'Use with Caution';
+  document.getElementById('mu').textContent = p.use||'—';
+  document.getElementById('md').textContent = p.dose||'As prescribed by doctor';
+  document.getElementById('mf').textContent = p.form||'Tablet';
+  document.getElementById('mp').textContent = p.price||'Check at pharmacy';
+  document.getElementById('mgn').textContent = '💚 '+(p.genericName||'Ask pharmacist for generic');
+  document.getElementById('mgd').textContent = p.genericDesc||'Visit Jan Aushadhi Kendra for affordable alternatives.';
+  document.getElementById('mgs').textContent = '💰 '+(p.savings||'Generics save 50-80% vs branded');
+  document.getElementById('mw').textContent = '⚠️ '+(p.warning||'Always consult a doctor before taking any medicine.');
+  const se = document.getElementById('mse');
   se.innerHTML='';
-  const effects=Array.isArray(p.sideEffects)&&p.sideEffects.length?p.sideEffects:['Consult doctor for side effect information'];
-  effects.forEach(e=>{const tag=document.createElement('div');tag.className='se-tag';tag.textContent=e;se.appendChild(tag)});
+  const effects = Array.isArray(p.sideEffects)&&p.sideEffects.length ? p.sideEffects : ['Consult doctor for side effect information'];
+  effects.forEach(e=>{
+    const tag=document.createElement('div');
+    tag.className='se-tag';
+    tag.textContent=e;
+    se.appendChild(tag);
+  });
 }
 
 async function searchMed(){
-  const med=document.getElementById('mi').value.trim();
-  if(!med){toast('⚠️ Please enter a medicine name','e');document.getElementById('mi').style.borderColor='rgba(248,113,113,.4)';setTimeout(()=>document.getElementById('mi').style.borderColor='',2000);return}
+  const med = document.getElementById('mi').value.trim();
+  if(!med){
+    toast('⚠️ Please enter a medicine name','e');
+    document.getElementById('mi').style.borderColor='rgba(248,113,113,.4)';
+    setTimeout(()=>document.getElementById('mi').style.borderColor='',2000);
+    return;
+  }
   if(med.length<2){toast('⚠️ Please enter at least 2 characters','e');return}
 
   const btn=document.getElementById('sbtn');
   btn.disabled=true;btn.textContent='⏳ Loading...';
   document.getElementById('ld').classList.add('on');
   document.getElementById('rc').classList.remove('on');
-  startL();
+  startLoader();
   toast('💊 Looking up '+med+'...');
 
-  const systemPrompt=`You are an expert pharmacist and clinical doctor with 25 years of experience. You have complete knowledge of ALL medicines worldwide — branded, generic, OTC, prescription, traditional, herbal, Indian, international, rare and common.
+  // ✅ HIGHLY DETAILED SYSTEM PROMPT with examples
+  const systemPrompt = `You are a senior clinical pharmacist and doctor with 25 years of experience in India. You have complete and accurate knowledge of ALL medicines worldwide — branded, generic, OTC, prescription, Indian, international, herbal, vitamins, and vaccines.
 
-CRITICAL RULES:
-1. Provide information for ANY medicine searched — Indian brands, international brands, generic salts, traditional medicines, herbal supplements, vitamins, vaccines, anything
-2. Give REAL Indian brand names where available (Crocin, Dolo, Omez, Brufen, Azithral, etc)
-3. For international medicines give the global brand name and Indian equivalent if available
-4. Give REAL Indian MRP prices in rupees where available, or international price if India price unknown
-5. Give EXACT dosage that doctors actually prescribe — not vague estimates
-6. Give REAL specific medical side effects — never use placeholder text like "effect1"
-7. Give a REAL cheaper Indian generic or Jan Aushadhi alternative with actual price comparison
-8. Warning must be specific, practical and accurate for the exact medicine
-9. For unknown or very rare medicines still give best available information
-10. Respond ONLY with valid JSON. No markdown. No code blocks. No extra text outside JSON.`;
+STRICT RULES:
+1. Provide ACCURATE information for ANY medicine — Indian brands, international brands, generic salts, supplements
+2. REAL Indian brand names where available (e.g. Crocin for Paracetamol, Dolo-650, Azithral, Omez, Brufen, Glycomet)
+3. REAL Indian MRP in rupees — actual price ranges (e.g. "₹15-25 for strip of 15 tablets")
+4. EXACT dosage that Indian doctors prescribe — with meal instructions (before/after food)
+5. REAL specific side effects — 5 actual clinical side effects, never generic placeholders
+6. REAL Jan Aushadhi or generic alternative with actual price comparison
+7. Specific WARNING relevant to this exact medicine — interactions, contraindications, when to avoid
 
-  const userPrompt=`Give complete accurate medical information for the medicine: "${med}"
+EXAMPLES for reference:
+- Paracetamol: Generic=Acetaminophen 500mg, Indian brands=Crocin/Dolo-650/Pyrigesic, MRP=₹15-25/strip, Dose=500mg-1g every 4-6 hrs max 4g/day, Side effects=Liver damage on overdose/nausea/rash/low BP, Generic alt=Jan Aushadhi Paracetamol 500mg at ₹1-2/tablet
+- Metformin: Generic=Metformin HCl 500/850/1000mg, Indian brands=Glycomet/Glucophage/Obimet, MRP=₹30-60/strip, Dose=500mg twice daily with meals, Side effects=Nausea/diarrhoea/metallic taste/B12 deficiency/lactic acidosis
+- Azithromycin: Generic=Azithromycin 500mg, Indian brands=Azithral/Zithromax/Azax, MRP=₹80-150 for 3-tab pack, Dose=500mg once daily for 3-5 days, Side effects=Nausea/abdominal pain/diarrhoea/QT prolongation/hepatotoxicity
 
-Respond ONLY as this exact JSON structure with no text outside it:
-{"name":"exact medicine name with common Indian/global brand in brackets","generic":"Salt/INN: exact generic name and strength","type":"exact pharmacological class","rx":"OTC or Prescription Required","safe":"Generally Safe or Use with Caution or Avoid without Prescription","use":"exact primary medical use in simple clear language","dose":"exact adult dosage with frequency and meal instructions","form":"available forms e.g. Tablet Syrup Injection Cream","price":"Indian MRP in rupees or international price if India price unknown","sideEffects":["real side effect 1","real side effect 2","real side effect 3","real side effect 4","real side effect 5"],"genericName":"exact cheaper Indian generic or Jan Aushadhi alternative","genericDesc":"specific price comparison and where to buy in India including Jan Aushadhi stores","savings":"exact savings percentage or cost comparison","warning":"specific important warning for this exact medicine"}`;
+RESPOND ONLY WITH VALID JSON — no markdown, no code blocks, no extra text.`;
 
-  try{
-    const res=await fetch('/api/groq',{
+  const userPrompt = `Give complete accurate pharmacological information for: "${med}"
+
+Respond ONLY as this exact JSON (no other text whatsoever):
+{
+  "name": "medicine name with most common Indian brand in brackets e.g. Paracetamol (Crocin/Dolo-650)",
+  "generic": "Salt/INN: exact generic salt name and strength e.g. Salt: Paracetamol 500mg",
+  "type": "exact pharmacological class e.g. Analgesic and Antipyretic",
+  "rx": "OTC (No Prescription) or Prescription Required",
+  "safe": "Generally Safe or Use with Caution or Avoid without Prescription",
+  "use": "primary medical use in one clear sentence",
+  "dose": "exact adult dosage with frequency and meal instructions e.g. 500mg every 6 hours after food",
+  "form": "available forms e.g. Tablet, Syrup, Injection, Cream",
+  "price": "Indian MRP range e.g. ₹15-25 per strip of 15 tablets",
+  "sideEffects": ["specific side effect 1", "specific side effect 2", "specific side effect 3", "specific side effect 4", "specific side effect 5"],
+  "genericName": "exact Jan Aushadhi or generic alternative name with salt",
+  "genericDesc": "specific price of generic vs branded and where to buy — mention Jan Aushadhi Kendra specifically",
+  "savings": "exact percentage or amount saved e.g. Save 70-80% — ₹2 vs ₹20 per tablet",
+  "warning": "specific important warning for this medicine — interactions, who should avoid, when to stop"
+}`;
+
+  try {
+    const res = await fetch('/api/groq',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
+      body: JSON.stringify({
         messages:[
-          {role:'system',content:systemPrompt},
-          {role:'user',content:userPrompt}
+          {role:'system', content: systemPrompt},
+          {role:'user', content: userPrompt}
         ],
-        temperature:0.15,
-        max_tokens:1000
+        temperature: 0,
+        max_tokens: 1200
       })
     });
 
-    if(!res.ok){throw new Error('HTTP '+res.status)}
-    const data=await res.json();
-    if(!data.choices||!data.choices[0]||!data.choices[0].message){throw new Error('No response')}
-
-    let raw=data.choices[0].message.content.trim();
-    raw=raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
-
-    let p;
-    try{
-      p=JSON.parse(raw);
-    }catch{
-      const match=raw.match(/\{[\s\S]*\}/);
-      if(match){p=JSON.parse(match[0])}
-      else{throw new Error('JSON parse failed')}
+    if(!res.ok){
+      const errText=await res.text();
+      throw new Error('API error '+res.status+': '+errText.substring(0,200));
     }
 
-    if(!p||!p.name){throw new Error('Incomplete response')}
+    const data=await res.json();
 
-    fillResult(p,med);
+    if(!data.choices||!data.choices[0]||!data.choices[0].message||!data.choices[0].message.content){
+      throw new Error('Unexpected API response: '+JSON.stringify(data).substring(0,200));
+    }
+
+    let raw=data.choices[0].message.content.trim();
+    raw=raw.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+
+    let p;
+    try {
+      p=JSON.parse(raw);
+    } catch(e) {
+      const match=raw.match(/\{[\s\S]*\}/);
+      if(match){
+        try{p=JSON.parse(match[0])}
+        catch(e2){throw new Error('JSON parse failed. Raw: '+raw.substring(0,300))}
+      } else {
+        throw new Error('No JSON in response. Raw: '+raw.substring(0,300));
+      }
+    }
+
+    if(!p||!p.name){
+      throw new Error('Response missing required fields: '+JSON.stringify(p));
+    }
+
+    fillResult(p);
     addHist(p.name||med);
-    toast('✅ Medicine info loaded from Groq AI!','s');
+    toast('✅ Medicine info loaded!','s');
+    document.getElementById('rc').classList.add('on');
+    setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
 
-  }catch(err){
-    console.warn('Groq AI unavailable, using fallback:',err.message);
-    fillResult({
-      name:med,
-      generic:'Salt information — consult pharmacist',
-      type:'Medicine',
-      rx:'Consult a registered pharmacist or doctor',
-      safe:'Use with Caution',
-      use:'Please consult a pharmacist or doctor for complete information about this medicine.',
-      dose:'As prescribed by your doctor. Do not self-medicate.',
-      form:'Varies — check with pharmacist',
-      price:'Check at your local pharmacy',
-      sideEffects:['Consult your doctor for side effects','Individual reactions may vary','Read the package insert carefully','Report any unusual symptoms to your doctor','Do not take with alcohol without checking'],
-      genericName:'Ask your pharmacist for generic alternative',
-      genericDesc:'Visit any Jan Aushadhi Kendra to get the same medicine at 50-80% lower cost. Show the brand name to the pharmacist and they will provide the generic equivalent at much lower price.',
-      savings:'Generics typically save 50-80% vs branded medicines',
-      warning:'Always consult a registered doctor or pharmacist before taking any medicine. Do not self-medicate. Inform your doctor of all medicines you are currently taking to avoid interactions.'
-    },med);
-    addHist(med);
-    toast('⚠️ Using offline medicine info','e');
+  } catch(err) {
+    console.error('Medicine AI error:',err.message);
+    toast('⚠️ AI error: '+err.message.substring(0,60),'e');
+  } finally {
+    btn.disabled=false;
+    btn.textContent='💊 Search';
+    stopLoader();
+    document.getElementById('ld').classList.remove('on');
   }
-
-  btn.disabled=false;btn.textContent='💊 Search';
-  stopL();
-  document.getElementById('ld').classList.remove('on');
-  document.getElementById('rc').classList.add('on');
-  setTimeout(()=>document.getElementById('rc').scrollIntoView({behavior:'smooth',block:'start'}),300);
 }
 
-setTimeout(()=>toast('💊 AI Medicine Lookup ready — search any medicine!'),1500);
+setTimeout(()=>toast('💊 AI Medicine Lookup ready — LLaMA 3 70B'),1500);
 </script>
 </body>
 </html>
