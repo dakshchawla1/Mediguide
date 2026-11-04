@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — MediGuide India</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .profile-page { max-width: 860px; margin: 0 auto; }
+
+    /* ── Hero Avatar Card ── */
+    .profile-hero {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--theme-gradient);
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .profile-hero-stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--theme-gradient);
+    }
+    .profile-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--theme-primary);
+      box-shadow: 0 0 0 5px var(--theme-subtle), 0 8px 24px var(--theme-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+      background: var(--theme-gradient);
+      overflow: hidden;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .profile-status-dot {
+      position: absolute;
+      bottom: 4px; right: 4px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--success);
+      border: 2.5px solid var(--bg-surface);
+    }
+    .profile-hero-info { flex: 1; min-width: 0; }
+    .profile-hero-name {
+      font-size: 1.65rem;
+      font-weight: 900;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .profile-hero-email {
+      font-size: 0.88rem;
+      color: var(--text-faint);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .profile-hero-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .profile-role-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--theme-subtle);
+      color: var(--theme-primary);
+      border: 1.5px solid var(--theme-border);
+    }
+    .profile-verified-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: rgba(5,150,105,0.08);
+      color: var(--success);
+      border: 1.5px solid rgba(5,150,105,0.2);
+    }
+    .profile-hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── Stats Grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      text-align: center;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--theme-gradient);
+      transform: scaleX(0);
+      transition: transform var(--transition);
+    }
+    .stat-card:hover { border-color: var(--theme-border); transform: translateY(-2px); box-shadow: 0 6px 20px var(--theme-glow); }
+    .stat-card:hover::after { transform: scaleX(1); }
+    .stat-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--theme-subtle);
+      color: var(--theme-primary);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px;
+    }
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--text-main);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Two-col layout ── */
+    .profile-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .profile-cols-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px; }
+
+    /* ── Section Card ── */
+    .profile-section {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-head-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.95rem; font-weight: 800; color: var(--text-main);
+    }
+    .section-head-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--theme-subtle); color: var(--theme-primary);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .section-body { padding: 20px 22px; }
+
+    /* ── Activity List ── */
+    .activity-list { display: flex; flex-direction: column; gap: 12px; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all var(--transition);
+    }
+    .activity-item:hover { border-color: var(--theme-border); background: var(--theme-subtle); }
+    .activity-dot {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      background: var(--theme-subtle); color: var(--theme-primary);
+      display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+    }
+    .activity-info { flex: 1; min-width: 0; }
+    .activity-title { font-size: 0.88rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+    .activity-sub { font-size: 0.78rem; color: var(--text-faint); }
+    .activity-badge {
+      font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; flex-shrink: 0; align-self: center;
+    }
+    .badge-low { background: rgba(5,150,105,0.1); color: var(--success); }
+    .badge-med { background: rgba(217,119,6,0.1); color: var(--warning); }
+    .badge-high { background: rgba(220,38,38,0.1); color: var(--danger); }
+
+    /* ── Quick Actions ── */
+    .quick-actions { display: flex; flex-direction: column; gap: 10px; }
+    .quick-action-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 16px;
+      background: var(--bg-muted);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .quick-action-btn:hover {
+      border-color: var(--theme-border);
+      background: var(--theme-subtle);
+      color: var(--theme-primary);
+      transform: translateX(3px);
+    }
+    .quick-action-icon {
+      width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qa-arrow { margin-left: auto; color: var(--text-faint); }
+
+    /* ── Account Info ── */
+    .info-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { font-size: 0.82rem; font-weight: 600; color: var(--text-faint); }
+    .info-val { font-size: 0.88rem; font-weight: 700; color: var(--text-main); text-align: right; }
+
+    /* ── Danger Zone ── */
+    .danger-zone {
+      background: var(--bg-surface);
+      border: 1.5px solid rgba(220,38,38,0.25);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-bottom: 40px;
+    }
+    .danger-zone-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.88rem; font-weight: 800; color: var(--danger);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+    .danger-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .profile-hero { flex-direction: column; text-align: center; padding: 24px 20px; }
+      .profile-hero-badges { justify-content: center; }
+      .profile-hero-actions { width: 100%; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .stat-value { font-size: 1.3rem; }
+      .profile-cols, .profile-cols-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="site-container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-logo-link">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="13" y="3" width="10" height="30" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <rect x="3" y="13" width="30" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <path d="M2 22 L7 22 L10 16 L13 26 L16 18 L19 24 L22 20 L25 22 L28 22" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+        </a>
+
+        <ul class="nav-links-desktop">
+          <li><a href="index.html" class="nav-link-item">Home</a></li>
+          <li><a href="symptoms.html" class="nav-link-item">Symptoms</a></li>
+          <li><a href="medicines.html" class="nav-link-item">Medicines</a></li>
+          <li><a href="hospitals.html" class="nav-link-item">Hospitals</a></li>
+          <li><a href="opd.html" class="nav-link-item">OPD Timings</a></li>
+          <li><a href="helplines.html" class="nav-link-item">Helplines</a></li>
+        </ul>
+
+        <div class="nav-actions-desktop">
+          <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span>Theme</span>
+          </button>
+          <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">SOS 108</a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+      <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a href="index.html" class="mobile-nav-item" onclick="closeMobileMenu()">Home</a>
+    <a href="symptoms.html" class="mobile-nav-item" onclick="closeMobileMenu()">Symptom Triage</a>
+    <a href="medicines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Jan Aushadhi Medicines</a>
+    <a href="hospitals.html" class="mobile-nav-item" onclick="closeMobileMenu()">Find Hospitals</a>
+    <a href="opd.html" class="mobile-nav-item" onclick="closeMobileMenu()">OPD Timings</a>
+    <a href="helplines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Helplines</a>
+    <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+      <a href="emergency.html" class="btn-rect btn-rect-emergency" style="width:100%; justify-content:center; display:flex;" onclick="closeMobileMenu()">🚨 SOS 108</a>
+    </div>
+  </div>
+  <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+
+  <main style="padding: 40px 0 0;">
+    <div class="site-container">
+      <div class="profile-page" id="profilePage" style="display:none;">
+
+        <!-- Hero Card -->
+        <div class="profile-hero">
+          <div class="profile-hero-stripe"></div>
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="heroAvatar"></div>
+            <div class="profile-status-dot"></div>
+            <!-- Change photo button -->
+            <label title="Change profile photo" style="position:absolute;bottom:0;right:0;width:28px;height:28px;border-radius:50%;background:var(--theme-primary);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--bg-surface);box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <input type="file" accept="image/*" style="display:none;" onchange="changeProfilePhoto(this)">
+            </label>
+          </div>
+          <div class="profile-hero-info">
+            <div class="profile-hero-name" id="heroName">Loading...</div>
+            <div class="profile-hero-email" id="heroEmail">—</div>
+            <div class="profile-hero-badges">
+              <span class="profile-role-badge" id="heroRoleBadge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Patient
+              </span>
+              <span class="profile-verified-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                Verified Account
+              </span>
+            </div>
+          </div>
+          <div class="profile-hero-actions">
+            <a href="symptoms.html" class="btn-rect btn-rect-primary btn-rect-sm">Check Symptoms</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="signOutUser()">Sign Out</button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="stat-value" id="statMemberDays">—</div>
+            <div class="stat-label">Days Active</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="stat-value" id="statChecks">0</div>
+            <div class="stat-label">Symptom Checks</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div class="stat-value" id="statHealthScore">A+</div>
+            <div class="stat-label">Health Score</div>
+          </div>
+        </div>
+
+        <!-- Activity + Quick Actions -->
+        <div class="profile-cols-3">
+          <!-- Recent Activity -->
+          <div class="profile-section">
+            <div class="section-head">
+              <div class="section-head-title">
+                <div class="section-head-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                Recent Activity
+              </div>
+              <span class="badge-modern" style="font-size:0.72rem;">Last 7 days</span>
+            </div>
+            <div class="section-body">
+              <div class="activity-list" id="activityList">
+                <div class="activity-item">
+                  <div class="activity-dot">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+                  <div class="activity-info">
+                    <div class="activity-title">Symptom check — Headache &amp; Fever</div>
+                    <div class="activity-sub">Today at 10:34 AM</div>
+                  </div>
+                  <span class="activity-badge badge-med">Moderate</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <div class="activity-info">
+                    <div class="activity-title">Found hospital — AIIMS Delhi</div>
+                    <div class="activity-sub">Yesterday at 3:12 PM</div>
+                  </div>
+                  <span class="activity-badge badge-low">Done</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </div>
+                  <div class="activity-info">
+                    <div class="activity-title">Medicine info — Paracetamol 500mg</div>
+                    <div class="activity-sub">3 days ago</div>
+                  </div>
+                  <span class="activity-badge badge-low">Info</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="profile-section">
+            <div class="section-head">
+              <div class="section-head-title">
+                <div class="section-head-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                Quick Access
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="quick-actions">
+                <a href="symptoms.html" class="quick-action-btn">
+                  <div class="quick-action-icon" style="background:rgba(124,58,237,0.1); color:#7c3aed;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </div>
+                  Symptom Checker
+                  <span class="qa-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                </a>
+                <a href="medicines.html" class="quick-action-btn">
+                  <div class="quick-action-icon" style="background:rgba(5,150,105,0.1); color:#059669;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-10 0H2v20h20V2z"/></svg>
+                  </div>
+                  Jan Aushadhi Medicines
+                  <span class="qa-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                </a>
+                <a href="hospitals.html" class="quick-action-btn">
+                  <div class="quick-action-icon" style="background:rgba(2,132,199,0.1); color:#0284c7;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                  </div>
+                  Find Hospitals
+                  <span class="qa-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                </a>
+                <a href="emergency.html" class="quick-action-btn">
+                  <div class="quick-action-icon" style="background:rgba(220,38,38,0.1); color:#dc2626;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </div>
+                  Emergency SOS
+                  <span class="qa-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Info + Health History -->
+        <div class="profile-cols">
+          <!-- Account Info -->
+          <div class="profile-section" style="margin-bottom:0;">
+            <div class="section-head">
+              <div class="section-head-title">
+                <div class="section-head-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                Account Details
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="info-row">
+                <span class="info-label">Full Name</span>
+                <span class="info-val" id="infoName">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Email Address</span>
+                <span class="info-val" id="infoEmail">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Role</span>
+                <span class="info-val" id="infoRole">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Member Since</span>
+                <span class="info-val" id="infoSince">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Last Login</span>
+                <span class="info-val" id="infoLogin">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Health Notes -->
+          <div class="profile-section" style="margin-bottom:0;">
+            <div class="section-head">
+              <div class="section-head-title">
+                <div class="section-head-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                Health Notes
+              </div>
+            </div>
+            <div class="section-body">
+              <textarea
+                id="healthNotes"
+                placeholder="Add personal health notes, allergies, or medical conditions you want to remember..."
+                style="width:100%; min-height:150px; padding:12px 14px; font-size:0.88rem; font-family:inherit; color:var(--text-main); background:var(--bg-muted); border:1.5px solid var(--border); border-radius:10px; outline:none; resize:vertical; line-height:1.6; transition:all var(--transition);"
+                oninput="saveHealthNotes(this.value)"
+              ></textarea>
+              <div style="margin-top:10px; font-size:0.76rem; color:var(--text-faint);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Notes are saved locally on your device.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="danger-zone" style="margin-top:24px;">
+          <div class="danger-zone-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Danger Zone
+          </div>
+          <div class="danger-actions">
+            <button type="button" class="btn-rect" style="background:rgba(220,38,38,0.08); color:var(--danger); border:1.5px solid rgba(220,38,38,0.25); padding:10px 22px; font-size:0.85rem;" onclick="signOutUser()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px; margin-right:6px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign Out
+            </button>
+            <button type="button" class="btn-rect" style="background:rgba(220,38,38,0.05); color:var(--danger); border:1.5px solid rgba(220,38,38,0.15); padding:10px 22px; font-size:0.85rem;" onclick="clearAllData()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px; margin-right:6px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Clear All Local Data
+            </button>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-faint); margin-top:12px; margin-bottom:0;">
+            Signing out removes your session. All data is stored locally on your device — MediGuide never transmits personal health data.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Not logged in state -->
+      <div id="notLoggedIn" style="display:none; text-align:center; padding:80px 20px;">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--bg-surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--text-faint);">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h2 style="font-size:1.4rem; font-weight:900; margin-bottom:8px;">Not Signed In</h2>
+        <p style="color:var(--text-faint); margin-bottom:24px; font-size:0.95rem;">Sign in to access your profile and health dashboard.</p>
+        <a href="login.html" class="btn-rect btn-rect-primary" style="padding:12px 32px;">Sign In to Portal →</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-bottom-bar" style="border:none; padding-top:0;">
+        <span>&copy; 2026 MediGuide India &bull; Your health data stays on your device.</span>
+        <span><a href="emergency.html" style="color:var(--color-sos); font-weight:700;">Emergency: 108</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const SESSION_KEY  = 'mediguide_user_session';
+    const ACCOUNTS_KEY = 'mediguide_accounts';
+
+    function getAccounts() {
+      try { return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}'); } catch { return {}; }
+    }
+
+    /* Normalize email: handles old sessions that stored email in 'id' field */
+    function resolveEmail(u) {
+      if (u.email && u.email.includes('@')) return u.email;
+      if (u.id   && u.id.includes('@'))    return u.id;
+      return u.email || u.id || '';
+    }
+
+    function loadProfile() {
+      const sess = localStorage.getItem(SESSION_KEY);
+      const page = document.getElementById('profilePage');
+      const notLoggedIn = document.getElementById('notLoggedIn');
+
+      if (!sess) {
+        page.style.display = 'none';
+        notLoggedIn.style.display = 'block';
+        return;
+      }
+
+      try {
+        const u = JSON.parse(sess);
+
+        // Migrate old sessions: ensure 'email' field is always correct
+        if (!u.email || !u.email.includes('@')) {
+          u.email = resolveEmail(u);
+          localStorage.setItem(SESSION_KEY, JSON.stringify(u));
+        }
+
+        page.style.display = 'block';
+        notLoggedIn.style.display = 'none';
+
+        /* ── Avatar ── */
+        const avatarEl = document.getElementById('heroAvatar');
+        const initials  = (u.name || 'U').charAt(0).toUpperCase();
+        // Check for locally-uploaded photo override first
+        const localPhoto = localStorage.getItem('mg_profile_photo');
+        const photoSrc   = localPhoto || u.photo || null;
+
+        if (photoSrc) {
+          avatarEl.innerHTML = `<img src="${photoSrc}" referrerpolicy="no-referrer" alt="${initials}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+          avatarEl.style.background = 'transparent';
+          avatarEl.style.padding    = '0';
+        } else {
+          avatarEl.textContent  = initials;
+        }
+
+        /* ── Hero info ── */
+        const userEmail = resolveEmail(u);
+        document.getElementById('heroName').textContent = u.name || 'User';
+        document.getElementById('heroEmail').textContent = userEmail || 'No email set';
+        document.getElementById('heroRoleBadge').innerHTML = `
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          ${u.role === 'doctor' ? 'Clinician / Staff' : 'Patient'}
+        `;
+
+        /* ── Stats ── */
+        const loginDate  = new Date(u.loginTime);
+        const daysActive = Math.max(1, Math.floor((Date.now() - loginDate) / 86400000) + 1);
+        document.getElementById('statMemberDays').textContent = daysActive;
+        const checks = parseInt(localStorage.getItem('mg_symptom_checks') || '0');
+        document.getElementById('statChecks').textContent = checks;
+
+        /* ── Account detail rows ── */
+        document.getElementById('infoName').textContent  = u.name || '—';
+        document.getElementById('infoEmail').textContent = userEmail || '—';
+        document.getElementById('infoRole').textContent  = u.role === 'doctor' ? 'Clinician / Staff' : 'Patient';
+        document.getElementById('infoSince').textContent = loginDate.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+        document.getElementById('infoLogin').textContent = loginDate.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' }) + ', ' + loginDate.toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+
+        /* ── Health notes ── */
+        document.getElementById('healthNotes').value = localStorage.getItem('mg_health_notes') || '';
+      } catch (e) {
+        page.style.display = 'none';
+        notLoggedIn.style.display = 'block';
+      }
+    }
+
+    /* ── Change profile photo (file → base64 → localStorage) ── */
+    function changeProfilePhoto(input) {
+      if (!input.files || !input.files[0]) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const b64 = ev.target.result;
+        localStorage.setItem('mg_profile_photo', b64);
+        // Also update session photo
+        try {
+          const u = JSON.parse(localStorage.getItem(SESSION_KEY) || '{}');
+          u.photo = b64;
+          localStorage.setItem(SESSION_KEY, JSON.stringify(u));
+          // Update accounts registry too
+          const email = resolveEmail(u).toLowerCase();
+          const all   = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}');
+          if (all[email]) { all[email].photo = b64; localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(all)); }
+        } catch {}
+        showToast('Profile photo updated!', 'success');
+        loadProfile(); // re-render
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    function saveHealthNotes(val) {
+      localStorage.setItem('mg_health_notes', val);
+    }
+
+    function signOutUser() {
+      if (!confirm('Sign out of MediGuide?')) return;
+      localStorage.removeItem(SESSION_KEY);
+      showToast('Signed out successfully', 'info');
+      setTimeout(() => { window.location.href = 'login.html'; }, 900);
+    }
+
+    function clearAllData() {
+      if (!confirm('This will clear all your local MediGuide data. This cannot be undone. Continue?')) return;
+      ['mediguide_user_session','mediguide_theme','mg_health_notes','mg_symptom_checks','mediguide_history','mg_profile_photo'].forEach(k => localStorage.removeItem(k));
+      showToast('All local data cleared', 'success');
+      setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+    }
+
+    window.addEventListener('DOMContentLoaded', loadProfile);
+  </script>
+</body>
+</html>

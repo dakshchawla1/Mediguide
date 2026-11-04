@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>National Health Helplines &amp; Crisis Support — MediGuide India</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="theme-helplines">
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="site-container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-logo-link">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="13" y="3" width="10" height="30" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <rect x="3" y="13" width="30" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <path d="M2 22 L7 22 L10 16 L13 26 L16 18 L19 24 L22 20 L25 22 L28 22" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+        </a>
+
+        <ul class="nav-links-desktop">
+          <li><a href="index.html" class="nav-link-item">Home</a></li>
+          <li><a href="symptoms.html" class="nav-link-item">Symptoms</a></li>
+          <li><a href="medicines.html" class="nav-link-item">Medicines</a></li>
+          <li><a href="hospitals.html" class="nav-link-item">Hospitals</a></li>
+          <li><a href="opd.html" class="nav-link-item">OPD Timings</a></li>
+          <li><a href="helplines.html" class="nav-link-item active">Helplines</a></li>
+        </ul>
+
+        <div class="nav-actions-desktop">
+          <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span>Theme</span>
+          </button>
+          <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">SOS 108</a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+      <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a href="index.html" class="mobile-nav-item" onclick="closeMobileMenu()">Home</a>
+    <a href="symptoms.html" class="mobile-nav-item" onclick="closeMobileMenu()">Symptom Triage</a>
+    <a href="medicines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Jan Aushadhi Medicines</a>
+    <a href="hospitals.html" class="mobile-nav-item" onclick="closeMobileMenu()">Hospitals &amp; Clinics</a>
+    <a href="opd.html" class="mobile-nav-item" onclick="closeMobileMenu()">OPD Timings</a>
+    <a href="helplines.html" class="mobile-nav-item active" onclick="closeMobileMenu()">Helplines</a>
+    <a href="login.html" class="mobile-nav-item" onclick="closeMobileMenu()">Portal Login</a>
+    <a href="emergency.html" class="mobile-nav-item" style="color:var(--color-sos); font-weight:700;" onclick="closeMobileMenu()">Emergency SOS (108)</a>
+    <div style="margin-top:auto; padding-top:20px;">
+      <button type="button" class="btn-rect btn-rect-secondary w-100 theme-toggle-btn" onclick="toggleTheme();">
+        Toggle Theme
+      </button>
+    </div>
+  </div>
+
+  <main style="padding: 56px 0 84px;">
+    <div class="site-container">
+
+      <!-- Page Header -->
+      <div style="text-align: center; margin-bottom: 36px;">
+        <span class="hero-pill-badge" style="background:var(--color-help-subtle); border-color:var(--color-help-border); color:var(--color-help);">
+          National Crisis &amp; Medical Directory
+        </span>
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">National Emergency &amp; Support Helplines</h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 620px; margin: 0 auto;">
+          Verified toll-free emergency contacts, mental health crisis counseling, poison control, and maternal welfare desks across India.
+        </p>
+      </div>
+
+      <!-- Filter Card -->
+      <div class="card-modern card-accent-help" style="margin-bottom: 32px; padding: 24px;">
+        <div style="margin-bottom: 16px;">
+          <input type="text" id="helplineFilterInput" class="clinical-input" placeholder="Search by name or keyword (e.g. Poison, Mental Health, Ambulance, Child, Women, PM-JAY)..." oninput="filterHelplines()">
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <span style="font-size:0.86rem; font-weight:700; color:var(--text-muted); margin-right:4px;">Filter categories:</span>
+          <button type="button" class="quick-tag-pill active" onclick="setCategory(this, 'all')">All Hotlines</button>
+          <button type="button" class="quick-tag-pill" onclick="setCategory(this, 'emergency')">Emergency SOS</button>
+          <button type="button" class="quick-tag-pill" onclick="setCategory(this, 'mental')">Mental Health</button>
+          <button type="button" class="quick-tag-pill" onclick="setCategory(this, 'women')">Women &amp; Child</button>
+          <button type="button" class="quick-tag-pill" onclick="setCategory(this, 'schemes')">Government Schemes</button>
+          <button type="button" class="quick-tag-pill" onclick="setCategory(this, 'poison')">Poison Control</button>
+        </div>
+      </div>
+
+      <!-- Helplines Grid -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;" id="helplineCardsContainer">
+        
+        <!-- 108 -->
+        <div class="card-modern card-accent-sos" data-cat="emergency" data-info="ambulance emergency 108 free medical trauma">
+          <span class="badge-modern" style="background:var(--color-sos-subtle); border:1px solid var(--color-sos-border); color:var(--color-sos); font-weight:700; margin-bottom:12px;">
+            Ambulance Emergency
+          </span>
+          <div style="font-family:var(--font-mono); font-size:2rem; font-weight:900; color:var(--color-sos); margin-bottom:6px;">108</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">National Ambulance Dispatch</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            Free 24/7 emergency medical transport, paramedic dispatch, and trauma coordination across all Indian states.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:108" class="btn-rect btn-rect-emergency btn-rect-sm" style="flex:1;">Call 108</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('108')">Copy</button>
+          </div>
+        </div>
+
+        <!-- 112 -->
+        <div class="card-modern card-accent-hosp" data-cat="emergency" data-info="central 112 police ambulance fire disaster">
+          <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+            Unified Central Response
+          </span>
+          <div style="font-family:var(--font-mono); font-size:2rem; font-weight:900; color:var(--color-hosp); margin-bottom:6px;">112</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">National Unified Emergency</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            Single all-in-one national emergency number seamlessly connecting Police, Fire, Ambulance, and Disaster response.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:112" class="btn-rect btn-rect-sm" style="flex:1; background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow);">Call 112</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('112')">Copy</button>
+          </div>
+        </div>
+
+        <!-- Tele-MANAS -->
+        <div class="card-modern card-accent-symptoms" data-cat="mental" data-info="tele manas mental health anxiety counseling depression 14416">
+          <span class="badge-modern" style="background:var(--color-symptoms-subtle); border:1px solid var(--color-symptoms-border); color:var(--color-symptoms); font-weight:700; margin-bottom:12px;">
+            Mental Health Care
+          </span>
+          <div style="font-family:var(--font-mono); font-size:2rem; font-weight:900; color:var(--color-symptoms); margin-bottom:6px;">14416</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">Tele-MANAS Counseling</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            24/7 toll-free psychiatric support and psychological counseling managed by NIMHANS in 20+ regional Indian languages.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:14416" class="btn-rect btn-rect-sm" style="flex:1; background:var(--color-symptoms-grad); color:#fff; box-shadow:0 3px 10px var(--color-symptoms-glow);">Call 14416</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('14416')">Copy</button>
+          </div>
+        </div>
+
+        <!-- Women -->
+        <div class="card-modern card-accent-help" data-cat="women" data-info="women safety harassment distress 1091 181 rescue">
+          <span class="badge-modern" style="background:var(--color-help-subtle); border:1px solid var(--color-help-border); color:var(--color-help); font-weight:700; margin-bottom:12px;">
+            Women Protection
+          </span>
+          <div style="font-family:var(--font-mono); font-size:1.8rem; font-weight:900; color:var(--color-help); margin-bottom:6px;">1091 / 181</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">Women Helpline Desk</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            24-hour national crisis and security hotline for women facing harassment, domestic distress, or emergency rescue needs.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:1091" class="btn-rect btn-rect-sm" style="flex:1; background:var(--color-help-grad); color:#fff; box-shadow:0 3px 10px var(--color-help-glow);">Call 1091</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('1091')">Copy</button>
+          </div>
+        </div>
+
+        <!-- Childline -->
+        <div class="card-modern card-accent-opd" data-cat="women" data-info="childline child protection abuse 1098 missing runaway">
+          <span class="badge-modern" style="background:var(--color-opd-subtle); border:1px solid var(--color-opd-border); color:var(--color-opd); font-weight:700; margin-bottom:12px;">
+            Child Welfare Desk
+          </span>
+          <div style="font-family:var(--font-mono); font-size:2rem; font-weight:900; color:var(--color-opd); margin-bottom:6px;">1098</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">National Childline</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            Dedicated 24/7 emergency telephone outreach service for children in need of medical care, rescue, and protection.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:1098" class="btn-rect btn-rect-sm" style="flex:1; background:var(--color-opd-grad); color:#fff; box-shadow:0 3px 10px var(--color-opd-glow);">Call 1098</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('1098')">Copy</button>
+          </div>
+        </div>
+
+        <!-- Poison Control -->
+        <div class="card-modern card-accent-sos" data-cat="poison" data-info="poison control overdose toxicology bites aiims 1800116117 chemical">
+          <span class="badge-modern" style="background:var(--color-sos-subtle); border:1px solid var(--color-sos-border); color:var(--color-sos); font-weight:700; margin-bottom:12px;">
+            Toxicology Advisory
+          </span>
+          <div style="font-family:var(--font-mono); font-size:1.5rem; font-weight:900; color:var(--color-sos); margin-bottom:6px;">1800-116-117</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">National Poison Centre (AIIMS)</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            24x7 expert clinical toxicological advisory for accidental pesticide ingestion, snakebites, and acute medication overdose.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:1800116117" class="btn-rect btn-rect-emergency btn-rect-sm" style="flex:1;">Call Poison Desk</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('1800116117')">Copy</button>
+          </div>
+        </div>
+
+        <!-- Ayushman Bharat -->
+        <div class="card-modern card-accent-meds" data-cat="schemes" data-info="ayushman bharat pmjay health card 14555 cashless insurance">
+          <span class="badge-modern" style="background:var(--color-meds-subtle); border:1px solid var(--color-meds-border); color:var(--color-meds); font-weight:700; margin-bottom:12px;">
+            Government Health Cover
+          </span>
+          <div style="font-family:var(--font-mono); font-size:2rem; font-weight:900; color:var(--color-meds); margin-bottom:6px;">14555</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">Ayushman Bharat (PM-JAY)</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            Toll-free portal for verifying ₹5 Lakh cashless family hospital coverage, e-card eligibility, and empanelled hospital lists.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:14555" class="btn-rect btn-rect-sm" style="flex:1; background:var(--color-meds-grad); color:#fff; box-shadow:0 3px 10px var(--color-meds-glow);">Call 14555</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('14555')">Copy</button>
+          </div>
+        </div>
+
+        <!-- Jan Aushadhi -->
+        <div class="card-modern card-accent-meds" data-cat="schemes" data-info="jan aushadhi generic store 18001808080 medicine subsidy kendra">
+          <span class="badge-modern" style="background:var(--color-meds-subtle); border:1px solid var(--color-meds-border); color:var(--color-meds); font-weight:700; margin-bottom:12px;">
+            Generic Medicine Subsidy
+          </span>
+          <div style="font-family:var(--font-mono); font-size:1.5rem; font-weight:900; color:var(--color-meds); margin-bottom:6px;">1800-180-8080</div>
+          <h3 style="font-size:1.15rem; margin-bottom:8px;">Jan Aushadhi Kendra Support</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px; flex:1; line-height:1.5;">
+            Locate nearby PMBJP generic drug stores and verify live availability of generic formulations and subsidized surgical supplies.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="tel:18001808080" class="btn-rect btn-rect-sm" style="flex:1; background:var(--color-meds-grad); color:#fff; box-shadow:0 3px 10px var(--color-meds-glow);">Call Store Help</a>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="copyNumber('18001808080')">Copy</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-bottom-bar" style="border:none; padding-top:0;">
+        <span>&copy; 2026 MediGuide India &bull; National Verified Helplines Directory.</span>
+        <span><a href="tel:108" style="color:var(--color-sos); font-weight:800;">Emergency Hotline: 108</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    let activeCat = 'all';
+
+    function setCategory(btn, cat) {
+      document.querySelectorAll('.quick-tag-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = cat;
+      filterHelplines();
+    }
+
+    function filterHelplines() {
+      const q = document.getElementById('helplineFilterInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('#helplineCardsContainer .card-modern');
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-cat') || '';
+        const info = (card.getAttribute('data-info') || '').toLowerCase();
+
+        const matchCat = activeCat === 'all' || cat === activeCat;
+        const matchQuery = !q || info.includes(q);
+
+        if (matchCat && matchQuery) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function copyNumber(num) {
+      navigator.clipboard.writeText(num).then(() => {
+        showToast(`Copied ${num} to clipboard`, 'success');
+      }).catch(() => {
+        showToast(`Helpline: ${num}`, 'info');
+      });
+    }
+  </script>
+</body>
+</html>

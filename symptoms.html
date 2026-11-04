@@ -1,0 +1,483 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symptom Triage — MediGuide India</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .triage-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .symptom-textarea {
+      width: 100%;
+      min-height: 130px;
+      padding: 16px 18px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background: var(--bg-surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      resize: vertical;
+      transition: all var(--transition);
+      line-height: 1.6;
+    }
+    .symptom-textarea:focus {
+      border-color: var(--color-symptoms);
+      box-shadow: 0 0 0 4px var(--color-symptoms-glow);
+    }
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .symptom-chip {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      color: var(--text-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .symptom-chip:hover {
+      background: var(--color-symptoms-subtle);
+      border-color: var(--color-symptoms-border);
+      color: var(--color-symptoms);
+      transform: translateY(-1px);
+    }
+    .symptom-chip.active {
+      background: var(--color-symptoms-grad);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 4px 12px var(--color-symptoms-glow);
+    }
+    .result-panel {
+      display: none;
+      margin-top: 36px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 36px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .result-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--color-symptoms-grad);
+    }
+    .result-panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .loader-box {
+      display: none;
+      text-align: center;
+      padding: 44px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-top: 28px;
+    }
+    .loader-box.active { display: block; }
+  </style>
+</head>
+<body class="theme-symptoms">
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="site-container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-logo-link">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="13" y="3" width="10" height="30" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <rect x="3" y="13" width="30" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <path d="M2 22 L7 22 L10 16 L13 26 L16 18 L19 24 L22 20 L25 22 L28 22" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+        </a>
+
+        <ul class="nav-links-desktop">
+          <li><a href="index.html" class="nav-link-item">Home</a></li>
+          <li><a href="symptoms.html" class="nav-link-item active">Symptoms</a></li>
+          <li><a href="medicines.html" class="nav-link-item">Medicines</a></li>
+          <li><a href="hospitals.html" class="nav-link-item">Hospitals</a></li>
+          <li><a href="opd.html" class="nav-link-item">OPD Timings</a></li>
+          <li><a href="helplines.html" class="nav-link-item">Helplines</a></li>
+        </ul>
+
+        <div class="nav-actions-desktop">
+          <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span>Theme</span>
+          </button>
+          <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">SOS 108</a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+      <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a href="index.html" class="mobile-nav-item" onclick="closeMobileMenu()">Home</a>
+    <a href="symptoms.html" class="mobile-nav-item active" onclick="closeMobileMenu()">Symptom Triage</a>
+    <a href="medicines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Jan Aushadhi Medicines</a>
+    <a href="hospitals.html" class="mobile-nav-item" onclick="closeMobileMenu()">Hospitals &amp; Clinics</a>
+    <a href="opd.html" class="mobile-nav-item" onclick="closeMobileMenu()">OPD Timings</a>
+    <a href="helplines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Helplines</a>
+    <a href="login.html" class="mobile-nav-item" onclick="closeMobileMenu()">Portal Login</a>
+    <a href="emergency.html" class="mobile-nav-item" style="color:var(--color-sos); font-weight:700;" onclick="closeMobileMenu()">Emergency SOS (108)</a>
+    <div style="margin-top:auto; padding-top:20px;">
+      <button type="button" class="btn-rect btn-rect-secondary w-100 theme-toggle-btn" onclick="toggleTheme();">
+        Toggle Theme
+      </button>
+    </div>
+  </div>
+
+  <main style="padding: 56px 0 84px;">
+    <div class="site-container">
+      <div class="triage-wrap">
+
+        <!-- Page Header -->
+        <div style="text-align: center; margin-bottom: 36px;">
+          <span class="hero-pill-badge" style="background:var(--color-symptoms-subtle); border-color:var(--color-symptoms-border); color:var(--color-symptoms);">
+            AI Clinical Decision Support
+          </span>
+          <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Intelligent Symptom Triage</h1>
+          <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 580px; margin: 0 auto;">
+            Describe symptoms naturally in English or Hindi to receive clinical urgency classifications and medical specialist advice.
+          </p>
+        </div>
+
+        <!-- Workbench Card -->
+        <div class="card-modern card-accent-symptoms">
+          
+          <!-- Language Toggle -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div style="width:10px; height:10px; border-radius:50%; background:var(--color-symptoms);"></div>
+              <span style="font-size:0.9rem; font-weight:700; color:var(--text-main);">Clinical Language Model</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="quick-tag-pill active" id="langEnBtn" onclick="switchLanguage('en')">English</button>
+              <button type="button" class="quick-tag-pill" id="langHiBtn" onclick="switchLanguage('hi')">हिंदी (Hindi)</button>
+            </div>
+          </div>
+
+          <!-- Textarea -->
+          <div style="margin-bottom: 24px;">
+            <label id="inputLabel" style="font-size:0.92rem; font-weight:700; color:var(--text-main); display:block; margin-bottom:10px;">
+              Describe your symptoms:
+            </label>
+            <textarea id="symptomInput" class="symptom-textarea" placeholder="e.g. High fever with severe chills for 2 days, throbbing headache, and muscle pain..."></textarea>
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; color:var(--text-faint); margin-top:8px;">
+              <span>Mention how long it has lasted and pain level</span>
+              <span id="charCountBadge">0 characters</span>
+            </div>
+          </div>
+
+          <!-- Common Chips -->
+          <div style="margin-bottom: 28px;">
+            <span style="font-size:0.86rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:8px;">Quick select common presentations:</span>
+            <div class="chip-container">
+              <button type="button" class="symptom-chip" onclick="toggleSymptomChip(this, 'Chest pain or pressure')">Chest Pain / Heaviness</button>
+              <button type="button" class="symptom-chip" onclick="toggleSymptomChip(this, 'High fever with chills')">High Fever (102°F+)</button>
+              <button type="button" class="symptom-chip" onclick="toggleSymptomChip(this, 'Shortness of breath')">Shortness of Breath</button>
+              <button type="button" class="symptom-chip" onclick="toggleSymptomChip(this, 'Severe migraine headache')">Severe Headache</button>
+              <button type="button" class="symptom-chip" onclick="toggleSymptomChip(this, 'Stomach pain and nausea')">Abdominal Cramps</button>
+              <button type="button" class="symptom-chip" onclick="toggleSymptomChip(this, 'Dizziness and blurred vision')">Dizziness</button>
+            </div>
+          </div>
+
+          <button type="button" id="analyseBtn" class="btn-rect btn-rect-lg" style="width:100%; background:var(--color-symptoms-grad); color:#ffffff; box-shadow:0 6px 18px var(--color-symptoms-glow);" onclick="runSymptomAnalysis()">
+            <span>Evaluate Symptoms &rarr;</span>
+          </button>
+        </div>
+
+        <!-- Loader -->
+        <div id="loaderCard" class="loader-box">
+          <div style="display:inline-block; width:36px; height:36px; border:3px solid var(--color-symptoms-subtle); border-top-color:var(--color-symptoms); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:16px;"></div>
+          <div style="font-weight:800; color:var(--text-main); font-size:1.1rem; margin-bottom:6px;">Analyzing Clinical Symptoms...</div>
+          <p style="font-size:0.9rem; color:var(--text-muted);">Cross-referencing triage protocols and specialist registers.</p>
+        </div>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+        <!-- Result Card -->
+        <div id="assessmentResultCard" class="result-panel">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+            <div>
+              <span class="badge-modern" style="background:var(--color-symptoms-subtle); border:1px solid var(--color-symptoms-border); color:var(--color-symptoms); font-weight:700; margin-bottom:10px;">
+                Triage Assessment Complete
+              </span>
+              <h2 id="resSpecialist" style="font-size:1.6rem; color:var(--color-symptoms); margin-top:6px;">—</h2>
+            </div>
+            <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="resetForm()">New Check</button>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:28px;">
+            <div style="background:var(--bg-subtle); padding:20px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+              <div style="font-size:0.78rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.04em;">Triage Urgency</div>
+              <div id="resUrgency" style="font-weight:900; font-size:1.25rem;">—</div>
+            </div>
+            <div style="background:var(--bg-subtle); padding:20px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+              <div style="font-size:0.78rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.04em;">Suspected Clinical Presentation</div>
+              <div id="resCondition" style="font-weight:800; font-size:1.05rem; color:var(--text-main);">—</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:28px;">
+            <div style="font-size:0.9rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">Recommended Clinical Actions:</div>
+            <div id="resAdvice" style="font-size:0.96rem; color:var(--text-body); background:var(--bg-subtle); padding:20px; border-radius:var(--radius-sm); line-height:1.7; border:1px solid var(--border);">—</div>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="hospitals.html" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow);">Find Nearest Hospital &rarr;</a>
+            <a href="opd.html" class="btn-rect btn-rect-sm" style="background:var(--color-opd-grad); color:#fff; box-shadow:0 3px 10px var(--color-opd-glow);">Check OPD Timetables &rarr;</a>
+            <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">Ambulance SOS (108)</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-bottom-bar" style="border:none; padding-top:0;">
+        <span>&copy; 2026 MediGuide India &bull; Informational clinical decision support. Not a substitute for emergency medicine.</span>
+        <span><a href="emergency.html" style="color:var(--color-sos); font-weight:700;">Emergency Hotline: 108</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    let currentLanguage = 'en';
+
+    function evaluateSymptomsClientSide(input, lang) {
+      const text = (input || '').toLowerCase();
+      const isHi = lang === 'hi' || text.includes('दर्द') || text.includes('बुखार') || text.includes('सीने') || text.includes('सांस');
+
+      if (text.includes('chest') || text.includes('heart') || text.includes('arm') || text.includes('tightness') || text.includes('सीने') || text.includes('दिल')) {
+        return isHi ? {
+          specialist: "हृदय रोग विशेषज्ञ (Cardiologist)",
+          urgency: "तत्काल आपातकालीन (Emergency)",
+          condition: "संभावित हृदय संबंधी समस्या (Suspected Cardiac Event)",
+          action: "तुरंत 108 पर कॉल करें या नजदीकी आपातकालीन केंद्र पहुंचें।",
+          advice: "चिकित्सा में देरी न करें। खुद गाड़ी न चलाएं। यदि एलर्जी न हो तो एक एस्पिरिन 300mg चबाएं और तत्काल ईसीजी कराएं।"
+        } : {
+          specialist: "Cardiologist",
+          urgency: "Immediate Emergency",
+          condition: "Acute Coronary / Cardiac Presentation",
+          action: "Call 108 or go to the nearest emergency room immediately.",
+          advice: "Do not drive yourself. If not allergic, chew an Aspirin 300mg and request an urgent 12-lead ECG at the nearest casualty."
+        };
+      }
+
+      if (text.includes('stroke') || text.includes('slur') || text.includes('droop') || text.includes('numb') || text.includes('headache') || text.includes('सिरदर्द') || text.includes('चक्कर')) {
+        return isHi ? {
+          specialist: "न्यूरोलॉजिस्ट (Neurologist)",
+          urgency: "उच्च / तत्काल (High Urgency)",
+          condition: "न्यूरोलॉजिकल लक्षण (Neurological Presentation)",
+          action: "न्यूरोलॉजी ओपीडी या इमरजेंसी में संपर्क करें।",
+          advice: "यदि बोलने में कठिनाई या चेहरे पर कमजोरी हो तो बिना देरी किए अस्पताल जाएं। शांत कमरे में आराम करें।"
+        } : {
+          specialist: "Neurologist",
+          urgency: "High / Urgent",
+          condition: "Neurological Presentation",
+          action: "Consult a neurologist or visit emergency if sudden onset.",
+          advice: "If sudden weakness, slurred speech, or facial drooping is present, seek immediate emergency care."
+        };
+      }
+
+      if (text.includes('breath') || text.includes('wheez') || text.includes('cough') || text.includes('asthma') || text.includes('सांस') || text.includes('खांसी')) {
+        return isHi ? {
+          specialist: "फेफड़ा रोग विशेषज्ञ (Pulmonologist)",
+          urgency: "उच्च (High)",
+          condition: "श्वसन संबंधी समस्या (Respiratory Illness)",
+          action: "ऑक्सीजन (SpO2) जांचें और पल्मोनोलॉजिस्ट से मिलें।",
+          advice: "यदि सांस लेने में गंभीर कठिनाई हो तो तुरंत आपातकालीन कक्ष जाएं। भाप लें और धूल से बचें।"
+        } : {
+          specialist: "Pulmonologist",
+          urgency: "High",
+          condition: "Respiratory / Bronchial Presentation",
+          action: "Check SpO2 with a pulse oximeter and consult a chest physician.",
+          advice: "If oxygen is below 93% or severe shortness of breath occurs, seek immediate emergency care."
+        };
+      }
+
+      if (text.includes('fever') || text.includes('chills') || text.includes('बुखार')) {
+        return isHi ? {
+          specialist: "जनरल फिजिशियन (Internal Medicine)",
+          urgency: "मध्यम (Moderate)",
+          condition: "वायरल या मौसमी बुखार (Acute Febrile Illness)",
+          action: "48 घंटे से अधिक बुखार होने पर रक्त जांच (CBC) कराएं।",
+          advice: "पर्याप्त पानी और तरल पदार्थ लें। आवश्यकतानुसार पैरासिटामोल 650mg लें। आराम करें।"
+        } : {
+          specialist: "Internal Medicine Specialist",
+          urgency: "Moderate",
+          condition: "Acute Febrile Illness / Viral Infection",
+          action: "Visit an outpatient clinic if fever exceeds 101°F or lasts over 48 hours.",
+          advice: "Get a Complete Blood Count (CBC) test. Stay well hydrated with fluids and take paracetamol as needed."
+        };
+      }
+
+      return isHi ? {
+        specialist: "जनरल फिजिशियन (Consultant Physician)",
+        urgency: "सामान्य (Routine)",
+        condition: "प्राथमिक लक्षण (Primary Symptoms)",
+        action: "ओपीडी में सामान्य चिकित्सक से परामर्श लें।",
+        advice: "अपने लक्षणों और दवाइयों का विवरण डॉक्टर को दिखाएं। पर्याप्त आराम करें।"
+      } : {
+        specialist: "Consultant Physician",
+        urgency: "Routine",
+        condition: "General Clinical Presentation",
+        action: "Schedule an outpatient visit at your nearest clinic.",
+        advice: "Keep a note of when symptoms started and bring any current medications to your consultation."
+      };
+    }
+
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
+      document.getElementById('langHiBtn').classList.toggle('active', lang === 'hi');
+
+      const label = document.getElementById('inputLabel');
+      const textarea = document.getElementById('symptomInput');
+      const btn = document.getElementById('analyseBtn');
+
+      if (lang === 'hi') {
+        label.textContent = 'अपने लक्षणों का वर्णन करें:';
+        textarea.placeholder = 'उदा. 2 दिनों से तेज बुखार, सिरदर्द और बदन दर्द है...';
+        btn.querySelector('span').textContent = 'लक्षण जांचें →';
+      } else {
+        label.textContent = 'Describe your symptoms:';
+        textarea.placeholder = 'e.g. High fever with severe chills for 2 days, throbbing headache, and muscle pain...';
+        btn.querySelector('span').textContent = 'Evaluate Symptoms →';
+      }
+    }
+
+    function toggleSymptomChip(btn, text) {
+      btn.classList.toggle('active');
+      const textarea = document.getElementById('symptomInput');
+      let currentVal = textarea.value.trim();
+
+      if (btn.classList.contains('active')) {
+        textarea.value = currentVal ? currentVal + ', ' + text : text;
+      } else {
+        const regex = new RegExp('(,\\s*)?' + text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        textarea.value = textarea.value.replace(regex, '').trim().replace(/^,\s*/, '');
+      }
+      updateCharCount();
+    }
+
+    function updateCharCount() {
+      const val = document.getElementById('symptomInput').value;
+      document.getElementById('charCountBadge').textContent = val.length + ' characters';
+    }
+    document.getElementById('symptomInput').addEventListener('input', updateCharCount);
+
+    async function runSymptomAnalysis() {
+      const input = document.getElementById('symptomInput').value.trim();
+      if (!input) {
+        showToast('Please type your symptoms first', 'warning');
+        return;
+      }
+
+      const loader = document.getElementById('loaderCard');
+      const resultCard = document.getElementById('assessmentResultCard');
+      const btn = document.getElementById('analyseBtn');
+
+      loader.classList.add('active');
+      resultCard.classList.remove('active');
+      btn.disabled = true;
+
+      let assessment = null;
+
+      try {
+        const resp = await fetch('/api/triage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ symptoms: input, language: currentLanguage })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.specialist) assessment = data;
+        }
+      } catch (e) {}
+
+      if (!assessment) {
+        assessment = evaluateSymptomsClientSide(input, currentLanguage);
+      }
+
+      document.getElementById('resSpecialist').textContent = assessment.specialist || 'Consultant Physician';
+      const urgEl = document.getElementById('resUrgency');
+      urgEl.textContent = assessment.urgency || 'Moderate';
+      
+      if ((assessment.urgency || '').toLowerCase().includes('emergency') || (assessment.urgency || '').toLowerCase().includes('तत्काल')) {
+        urgEl.style.color = 'var(--color-sos)';
+      } else {
+        urgEl.style.color = 'var(--color-symptoms)';
+      }
+
+      document.getElementById('resCondition').textContent = assessment.condition || 'General Symptoms';
+      document.getElementById('resAdvice').textContent = assessment.advice || 'Consult your physician.';
+
+      loader.classList.remove('active');
+      resultCard.classList.add('active');
+      btn.disabled = false;
+      showToast('Assessment ready', 'success');
+      resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function resetForm() {
+      document.getElementById('symptomInput').value = '';
+      document.querySelectorAll('.symptom-chip').forEach(c => c.classList.remove('active'));
+      document.getElementById('assessmentResultCard').classList.remove('active');
+      updateCharCount();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        document.getElementById('symptomInput').value = q;
+        updateCharCount();
+        runSymptomAnalysis();
+      }
+    });
+  </script>
+</body>
+</html>

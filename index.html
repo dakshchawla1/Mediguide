@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediGuide India — Modern Healthcare Navigation & Emergency Care</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="site-container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-logo-link">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="13" y="3" width="10" height="30" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <rect x="3" y="13" width="30" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <path d="M2 22 L7 22 L10 16 L13 26 L16 18 L19 24 L22 20 L25 22 L28 22" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+        </a>
+
+        <ul class="nav-links-desktop">
+          <li><a href="index.html" class="nav-link-item active">Home</a></li>
+          <li><a href="symptoms.html" class="nav-link-item">Symptoms</a></li>
+          <li><a href="medicines.html" class="nav-link-item">Medicines</a></li>
+          <li><a href="hospitals.html" class="nav-link-item">Hospitals</a></li>
+          <li><a href="opd.html" class="nav-link-item">OPD Timings</a></li>
+          <li><a href="helplines.html" class="nav-link-item">Helplines</a></li>
+        </ul>
+
+        <div class="nav-actions-desktop">
+          <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span>Theme</span>
+          </button>
+          <a href="login.html" class="btn-rect btn-rect-secondary btn-rect-sm">Portal</a>
+          <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">SOS 108</a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+      <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a href="index.html" class="mobile-nav-item active" onclick="closeMobileMenu()">Home</a>
+    <a href="symptoms.html" class="mobile-nav-item" onclick="closeMobileMenu()">Symptom Triage</a>
+    <a href="medicines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Jan Aushadhi Medicines</a>
+    <a href="hospitals.html" class="mobile-nav-item" onclick="closeMobileMenu()">Hospitals &amp; Clinics</a>
+    <a href="opd.html" class="mobile-nav-item" onclick="closeMobileMenu()">OPD Timings</a>
+    <a href="helplines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Helplines</a>
+    <a href="login.html" class="mobile-nav-item" onclick="closeMobileMenu()">Portal Login</a>
+    <a href="emergency.html" class="mobile-nav-item" style="color:var(--color-sos); font-weight:700;" onclick="closeMobileMenu()">Emergency SOS (108)</a>
+    <div style="margin-top:auto; padding-top:20px;">
+      <button type="button" class="btn-rect btn-rect-secondary w-100 theme-toggle-btn" onclick="toggleTheme();">
+        Toggle Dark/Light Mode
+      </button>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- Hero Section -->
+    <section class="hero-wrapper">
+      <div class="site-container" style="max-width: 860px;">
+        <span class="hero-pill-badge">Verified National Clinical Portal</span>
+        <h1 style="margin-bottom: 16px;">
+          Healthcare guidance.<br>
+          <span class="hero-headline-gradient">Clear, fast, and verified.</span>
+        </h1>
+        <p style="font-size: 1.15rem; color: var(--text-muted); margin-bottom: 36px; max-width: 620px; margin-left: auto; margin-right: auto;">
+          Intelligent AI symptom triage, verified Jan Aushadhi generic medicines saving up to 85%, and live government hospital OPD schedules across India.
+        </p>
+
+        <!-- Search Bar -->
+        <form class="modern-search-bar" onsubmit="routeUserSearch(event)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="omniSearchInput" class="modern-search-input" placeholder="Search symptoms, generic medicines (e.g. Dolo 650), or hospitals..." autocomplete="off">
+          <button type="submit" class="btn-rect btn-rect-primary" style="padding: 12px 26px;">Search</button>
+        </form>
+
+        <!-- Quick Trending Pills -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; margin-top:22px;">
+          <span style="font-size:0.84rem; color:var(--text-faint); font-weight:700;">Trending:</span>
+          <a href="symptoms.html?q=High+Fever" class="quick-tag-pill" style="border-color: var(--color-symptoms-border); color: var(--color-symptoms);">Fever &amp; Chills</a>
+          <a href="symptoms.html?q=Chest+Pain" class="quick-tag-pill" style="border-color: var(--color-sos-border); color: var(--color-sos);">Chest Discomfort</a>
+          <a href="medicines.html?q=Dolo+650" class="quick-tag-pill" style="border-color: var(--color-meds-border); color: var(--color-meds);">Dolo 650 (Paracetamol)</a>
+          <a href="medicines.html?q=Pan+40" class="quick-tag-pill" style="border-color: var(--color-meds-border); color: var(--color-meds);">Pan 40 (Pantoprazole)</a>
+          <a href="hospitals.html?city=New+Delhi" class="quick-tag-pill" style="border-color: var(--color-hosp-border); color: var(--color-hosp);">AIIMS New Delhi</a>
+          <a href="emergency.html" class="quick-tag-pill" style="border-color: var(--color-sos-border); color: var(--color-sos); font-weight:700;">Ambulance 108</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Multi-Colored Quick Emergency Tiles -->
+    <section style="padding: 12px 0 44px;">
+      <div class="site-container">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;">
+          
+          <!-- 108 SOS -->
+          <a href="tel:108" class="card-modern card-accent-sos" style="padding: 20px; flex-direction:row; align-items:center; gap:16px; text-decoration:none;">
+            <div style="width:52px; height:52px; border-radius:var(--radius-sm); background:var(--color-sos-subtle); color:var(--color-sos); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:900; font-size:1.35rem; border:1px solid var(--color-sos-border); box-shadow:0 2px 8px var(--color-sos-glow);">
+              108
+            </div>
+            <div>
+              <div style="font-weight:800; color:var(--text-main); font-size:0.98rem;">Ambulance SOS</div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">Free 24/7 medical transport</div>
+            </div>
+          </a>
+
+          <!-- 112 National -->
+          <a href="tel:112" class="card-modern card-accent-hosp" style="padding: 20px; flex-direction:row; align-items:center; gap:16px; text-decoration:none;">
+            <div style="width:52px; height:52px; border-radius:var(--radius-sm); background:var(--color-hosp-subtle); color:var(--color-hosp); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:900; font-size:1.35rem; border:1px solid var(--color-hosp-border); box-shadow:0 2px 8px var(--color-hosp-glow);">
+              112
+            </div>
+            <div>
+              <div style="font-weight:800; color:var(--text-main); font-size:0.98rem;">All Emergencies</div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">Police, Fire &amp; Rescue</div>
+            </div>
+          </a>
+
+          <!-- 14416 Mental Health -->
+          <a href="tel:14416" class="card-modern card-accent-symptoms" style="padding: 20px; flex-direction:row; align-items:center; gap:16px; text-decoration:none;">
+            <div style="width:52px; height:52px; border-radius:var(--radius-sm); background:var(--color-symptoms-subtle); color:var(--color-symptoms); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:900; font-size:1.15rem; border:1px solid var(--color-symptoms-border); box-shadow:0 2px 8px var(--color-symptoms-glow);">
+              14416
+            </div>
+            <div>
+              <div style="font-weight:800; color:var(--text-main); font-size:0.98rem;">Tele-MANAS</div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">24/7 Mental health support</div>
+            </div>
+          </a>
+
+          <!-- 102 Maternal -->
+          <a href="tel:102" class="card-modern card-accent-meds" style="padding: 20px; flex-direction:row; align-items:center; gap:16px; text-decoration:none;">
+            <div style="width:52px; height:52px; border-radius:var(--radius-sm); background:var(--color-meds-subtle); color:var(--color-meds); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:900; font-size:1.35rem; border:1px solid var(--color-meds-border); box-shadow:0 2px 8px var(--color-meds-glow);">
+              102
+            </div>
+            <div>
+              <div style="font-weight:800; color:var(--text-main); font-size:0.98rem;">Maternal &amp; Infant</div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">Free pregnancy helpline</div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 Rich Core Pillars -->
+    <section style="padding: 24px 0 72px;">
+      <div class="site-container">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 32px; flex-wrap:wrap; gap:16px;">
+          <div>
+            <h2 style="font-size: 1.8rem; margin-bottom: 6px;">Essential Healthcare Services</h2>
+            <p style="color:var(--text-muted); font-size:0.96rem;">Accredited clinical tools and government verified data across India.</p>
+          </div>
+          <a href="emergency.html" class="btn-rect btn-rect-secondary btn-rect-sm">Open Emergency Hub &rarr;</a>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
+          
+          <!-- Card 1: Symptoms (Violet) -->
+          <div class="card-modern card-accent-symptoms">
+            <div class="icon-box-multi icon-box-symptoms">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </div>
+            <h3 style="margin-bottom: 10px;">Clinical Symptom Checker</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; flex:1; line-height: 1.55;">
+              Describe what hurts in English or Hindi. Get instant AI triage urgency classifications and specialist care paths.
+            </p>
+            <a href="symptoms.html" class="btn-rect btn-rect-sm" style="background:var(--color-symptoms-grad); color:#fff; box-shadow:0 4px 12px var(--color-symptoms-glow);">Check Symptoms &rarr;</a>
+          </div>
+
+          <!-- Card 2: Medicines (Emerald) -->
+          <div class="card-modern card-accent-meds">
+            <div class="icon-box-multi icon-box-meds">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+            </div>
+            <h3 style="margin-bottom: 10px;">Jan Aushadhi Generic Drugs</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; flex:1; line-height: 1.55;">
+              Compare branded medicines with certified PMBJP generic equivalents. Save up to 85% on verified monthly prescriptions.
+            </p>
+            <a href="medicines.html" class="btn-rect btn-rect-sm" style="background:var(--color-meds-grad); color:#fff; box-shadow:0 4px 12px var(--color-meds-glow);">Search Medicines &rarr;</a>
+          </div>
+
+          <!-- Card 3: OPD Timings (Amber) -->
+          <div class="card-modern card-accent-opd">
+            <div class="icon-box-multi icon-box-opd">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <h3 style="margin-bottom: 10px;">Live Hospital OPD Schedules</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; flex:1; line-height: 1.55;">
+              View real-time counter registration windows, doctor duty shifts, and clinic hours for major government medical colleges.
+            </p>
+            <a href="opd.html" class="btn-rect btn-rect-sm" style="background:var(--color-opd-grad); color:#fff; box-shadow:0 4px 12px var(--color-opd-glow);">View OPD Hours &rarr;</a>
+          </div>
+
+          <!-- Card 4: Hospitals (Azure) -->
+          <div class="card-modern card-accent-hosp">
+            <div class="icon-box-multi icon-box-hosp">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"></path><path d="m9 16 3-3 3 3"></path><path d="m9 8 3 3 3-3"></path></svg>
+            </div>
+            <h3 style="margin-bottom: 10px;">Hospitals &amp; Trauma Centers</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; flex:1; line-height: 1.55;">
+              Locate verified government medical centers, 24/7 trauma units, and intensive care beds with GPS turn-by-turn routing.
+            </p>
+            <a href="hospitals.html" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 4px 12px var(--color-hosp-glow);">Find Facilities &rarr;</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modern Clean Minimal Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-matrix-grid">
+        <div>
+          <div style="font-weight:800; font-size:1.15rem; color:var(--text-main); margin-bottom:8px;">MediGuide India</div>
+          <p style="font-size:0.88rem; color:var(--text-muted); max-width:300px; line-height:1.5;">
+            Verified clinical guidance, generic drug savings, and 24/7 emergency care navigation for every citizen across India.
+          </p>
+        </div>
+
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; text-transform:uppercase; color:var(--text-faint); margin-bottom:12px; letter-spacing:0.05em;">Clinical Tools</div>
+          <a href="symptoms.html" class="footer-link-item">AI Symptom Checker</a>
+          <a href="medicines.html" class="footer-link-item">Jan Aushadhi Drugs</a>
+          <a href="hospitals.html" class="footer-link-item">Hospital Directory</a>
+          <a href="opd.html" class="footer-link-item">OPD Schedules</a>
+        </div>
+
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; text-transform:uppercase; color:var(--text-faint); margin-bottom:12px; letter-spacing:0.05em;">Emergency Helplines</div>
+          <a href="tel:108" class="footer-link-item" style="color:var(--color-sos); font-weight:700;">Ambulance: 108</a>
+          <a href="tel:112" class="footer-link-item">Emergency: 112</a>
+          <a href="tel:14416" class="footer-link-item">Tele-MANAS: 14416</a>
+          <a href="helplines.html" class="footer-link-item">All National Helplines</a>
+        </div>
+
+        <div>
+          <div style="font-size:0.76rem; font-weight:700; text-transform:uppercase; color:var(--text-faint); margin-bottom:12px; letter-spacing:0.05em;">Access Portal</div>
+          <a href="login.html" class="footer-link-item">Patient Sign-In</a>
+          <a href="login.html" class="footer-link-item">Clinician Portal</a>
+          <a href="emergency.html" class="footer-link-item">First Aid Emergency Guide</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <span>&copy; 2026 MediGuide India. For informational and triage guidance only. In severe emergencies, immediately dial 108.</span>
+        <span>Built with Clinical Integrity</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    function routeUserSearch(e) {
+      e.preventDefault();
+      const val = document.getElementById('omniSearchInput').value.trim();
+      if (!val) {
+        showToast('Please enter a symptom, medicine, or city', 'warning');
+        return;
+      }
+      const lower = val.toLowerCase();
+      if (lower.includes('pain') || lower.includes('fever') || lower.includes('cough') || lower.includes('headache') || lower.includes('vomit') || lower.includes('cold') || lower.includes('breath') || lower.includes('dizzy') || lower.includes('chest')) {
+        window.location.href = 'symptoms.html?q=' + encodeURIComponent(val);
+      } else if (lower.includes('dolo') || lower.includes('pan') || lower.includes('crocin') || lower.includes('para') || lower.includes('tablet') || lower.includes('capsule') || lower.includes('syrup') || lower.includes('azith') || lower.includes('drug') || lower.includes('medicine')) {
+        window.location.href = 'medicines.html?q=' + encodeURIComponent(val);
+      } else if (lower.includes('hospital') || lower.includes('clinic') || lower.includes('delhi') || lower.includes('mumbai') || lower.includes('aiims') || lower.includes('jaipur')) {
+        window.location.href = 'hospitals.html?q=' + encodeURIComponent(val);
+      } else {
+        window.location.href = 'symptoms.html?q=' + encodeURIComponent(val);
+      }
+    }
+  </script>
+</body>
+</html>

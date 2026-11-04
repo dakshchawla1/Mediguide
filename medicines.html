@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jan Aushadhi Generic Medicine Search — MediGuide India</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .med-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .savings-card {
+      background: var(--color-meds-subtle);
+      border: 1.5px solid var(--color-meds-border);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 4px 14px var(--color-meds-glow);
+    }
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .spec-card {
+      background: var(--bg-subtle);
+      padding: 18px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .dossier-card {
+      display: none;
+      margin-top: 36px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 36px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .dossier-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--color-meds-grad);
+    }
+    .dossier-card.active {
+      display: block;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .loader-box {
+      display: none;
+      text-align: center;
+      padding: 44px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-top: 28px;
+    }
+    .loader-box.active { display: block; }
+  </style>
+</head>
+<body class="theme-medicines">
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="site-container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-logo-link">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="13" y="3" width="10" height="30" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <rect x="3" y="13" width="30" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <path d="M2 22 L7 22 L10 16 L13 26 L16 18 L19 24 L22 20 L25 22 L28 22" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+        </a>
+
+        <ul class="nav-links-desktop">
+          <li><a href="index.html" class="nav-link-item">Home</a></li>
+          <li><a href="symptoms.html" class="nav-link-item">Symptoms</a></li>
+          <li><a href="medicines.html" class="nav-link-item active">Medicines</a></li>
+          <li><a href="hospitals.html" class="nav-link-item">Hospitals</a></li>
+          <li><a href="opd.html" class="nav-link-item">OPD Timings</a></li>
+          <li><a href="helplines.html" class="nav-link-item">Helplines</a></li>
+        </ul>
+
+        <div class="nav-actions-desktop">
+          <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span>Theme</span>
+          </button>
+          <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">SOS 108</a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+      <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a href="index.html" class="mobile-nav-item" onclick="closeMobileMenu()">Home</a>
+    <a href="symptoms.html" class="mobile-nav-item" onclick="closeMobileMenu()">Symptom Triage</a>
+    <a href="medicines.html" class="mobile-nav-item active" onclick="closeMobileMenu()">Jan Aushadhi Medicines</a>
+    <a href="hospitals.html" class="mobile-nav-item" onclick="closeMobileMenu()">Hospitals &amp; Clinics</a>
+    <a href="opd.html" class="mobile-nav-item" onclick="closeMobileMenu()">OPD Timings</a>
+    <a href="helplines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Helplines</a>
+    <a href="login.html" class="mobile-nav-item" onclick="closeMobileMenu()">Portal Login</a>
+    <a href="emergency.html" class="mobile-nav-item" style="color:var(--color-sos); font-weight:700;" onclick="closeMobileMenu()">Emergency SOS (108)</a>
+    <div style="margin-top:auto; padding-top:20px;">
+      <button type="button" class="btn-rect btn-rect-secondary w-100 theme-toggle-btn" onclick="toggleTheme();">
+        Toggle Theme
+      </button>
+    </div>
+  </div>
+
+  <main style="padding: 56px 0 84px;">
+    <div class="site-container">
+      <div class="med-wrap">
+
+        <!-- Page Header -->
+        <div style="text-align: center; margin-bottom: 36px;">
+          <span class="hero-pill-badge" style="background:var(--color-meds-subtle); border-color:var(--color-meds-border); color:var(--color-meds);">
+            Pradhan Mantri Jan Aushadhi Pariyojana
+          </span>
+          <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Generic Medicine Equivalents</h1>
+          <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+            Search branded pharmaceuticals to identify active salt compositions, approved adult dosages, and verified low-cost generic alternatives.
+          </p>
+        </div>
+
+        <!-- Search Card -->
+        <div class="card-modern card-accent-meds">
+          <form onsubmit="handleMedSearch(event)">
+            <label style="font-size:0.92rem; font-weight:700; color:var(--text-main); display:block; margin-bottom:10px;">
+              Enter Medicine or Chemical Salt:
+            </label>
+            <div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+              <input type="text" id="medicineQueryInput" class="clinical-input" style="flex:1; min-width:240px;" placeholder="e.g. Dolo 650, Pan 40, Azithral, Augmentin 625, Glycomet..." autocomplete="off">
+              <button type="submit" id="searchDrugBtn" class="btn-rect btn-rect-primary" style="background:var(--color-meds-grad); color:#fff; box-shadow:0 4px 12px var(--color-meds-glow); white-space:nowrap;">
+                Search Formulary
+              </button>
+            </div>
+          </form>
+
+          <div>
+            <span style="font-size:0.86rem; font-weight:700; color:var(--text-muted); margin-right:10px;">Popular prescriptions:</span>
+            <div style="display:inline-flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
+              <button type="button" class="quick-tag-pill" onclick="quickSelectDrug('Dolo 650')">Dolo 650</button>
+              <button type="button" class="quick-tag-pill" onclick="quickSelectDrug('Pan 40')">Pan 40</button>
+              <button type="button" class="quick-tag-pill" onclick="quickSelectDrug('Azithral 500')">Azithral 500</button>
+              <button type="button" class="quick-tag-pill" onclick="quickSelectDrug('Augmentin 625')">Augmentin 625</button>
+              <button type="button" class="quick-tag-pill" onclick="quickSelectDrug('Glycomet 500')">Glycomet 500</button>
+              <button type="button" class="quick-tag-pill" onclick="quickSelectDrug('Telma 40')">Telma 40</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loader -->
+        <div id="medLoaderCard" class="loader-box">
+          <div style="display:inline-block; width:36px; height:36px; border:3px solid var(--color-meds-subtle); border-top-color:var(--color-meds); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:16px;"></div>
+          <div style="font-weight:800; color:var(--text-main); font-size:1.1rem; margin-bottom:6px;">Querying National Pharmacopeia Index...</div>
+          <p style="font-size:0.9rem; color:var(--text-muted);">Finding active salt formulations and Jan Aushadhi subsidy schedules.</p>
+        </div>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+        <!-- Detail Dossier Card -->
+        <div id="medicineDossierCard" class="dossier-card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
+            <div>
+              <span class="badge-modern" style="background:var(--color-meds-subtle); border:1px solid var(--color-meds-border); color:var(--color-meds); font-weight:700; margin-bottom:8px;">
+                Verified Drug Formulary
+              </span>
+              <h2 id="medBrandName" style="font-size:1.8rem; color:var(--text-main); margin-top:6px;">Dolo 650</h2>
+              <div id="medSaltComp" style="font-size:1.1rem; font-weight:700; color:var(--color-meds); margin-top:4px;">Paracetamol 650mg IP</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:var(--text-faint);">Market MRP (Est.)</div>
+              <div id="medPriceText" style="font-family:var(--font-mono); font-size:1.5rem; font-weight:900; color:var(--text-main);">₹32 – ₹36</div>
+            </div>
+          </div>
+
+          <!-- Jan Aushadhi Savings Banner -->
+          <div class="savings-card">
+            <div>
+              <div style="font-weight:900; color:var(--color-meds); font-size:1.15rem; margin-bottom:4px;">
+                Jan Aushadhi Generic Bioequivalent
+              </div>
+              <div id="janDrugName" style="font-weight:800; color:var(--text-main); font-size:1.02rem;">—</div>
+              <div id="janDrugDesc" style="font-size:0.88rem; color:var(--text-body); margin-top:4px;">—</div>
+            </div>
+            <div>
+              <span id="janSavingsPercent" class="badge-modern" style="background:var(--color-meds); color:#fff; font-size:1.05rem; font-weight:800; padding:10px 18px; box-shadow:0 4px 12px var(--color-meds-glow);">
+                Save ~70%
+              </span>
+            </div>
+          </div>
+
+          <!-- Specs Grid -->
+          <div class="spec-grid">
+            <div class="spec-card">
+              <div style="font-size:0.76rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.04em;">Primary Clinical Indication</div>
+              <div id="medIndication" style="font-weight:700; color:var(--text-main); font-size:0.95rem;">—</div>
+            </div>
+            <div class="spec-card">
+              <div style="font-size:0.76rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.04em;">Standard Adult Dosage</div>
+              <div id="medDosage" style="font-weight:700; color:var(--text-main); font-size:0.95rem;">—</div>
+            </div>
+            <div class="spec-card">
+              <div style="font-size:0.76rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.04em;">Dosage Formulation</div>
+              <div id="medDosageForm" style="font-weight:700; color:var(--text-main); font-size:0.95rem;">—</div>
+            </div>
+          </div>
+
+          <!-- Side Effects -->
+          <div style="margin-bottom: 24px;">
+            <div style="font-size:0.9rem; font-weight:800; color:var(--text-main); margin-bottom:10px;">Documented Side Effects:</div>
+            <div id="sideEffectsTags" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+          </div>
+
+          <!-- Doctor's Caution -->
+          <div style="background:var(--bg-subtle); border:1.5px solid var(--border-strong); padding:20px; border-radius:var(--radius-sm);">
+            <div style="font-weight:800; color:var(--text-main); font-size:0.92rem; margin-bottom:6px;">Clinician's Cautionary Advisory:</div>
+            <div id="medWarningText" style="font-size:0.9rem; color:var(--text-body); line-height:1.65;">—</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-bottom-bar" style="border:none; padding-top:0;">
+        <span>&copy; 2026 MediGuide India &bull; Pradhan Mantri Bhartiya Janaushadhi Pariyojana pricing data.</span>
+        <span>Always verify with a licensed pharmacist or physician before switching medications.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const LOCAL_PHARMA_DATABASE = {
+      // ── Fever, Pain & NSAIDs ──
+      dolo: {
+        name: "Dolo 650",
+        generic: "Paracetamol (Acetaminophen) 650mg IP",
+        use: "Fever reduction (antipyretic), severe headache, body aches, toothache, and post-viral pyrexia.",
+        dose: "1 tablet after meals every 6-8 hours as required. Maximum 3000mg (4 tablets) in 24 hours.",
+        form: "Film-coated Tablet",
+        price: "₹32 – ₹36 (Strip of 15 Tablets)",
+        sideEffects: ["Mild gastric discomfort", "Nausea", "Rare skin rash"],
+        genericName: "Paracetamol 650mg Tablets IP (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi Kendra price: ₹10 – ₹12 per strip of 10.",
+        savings: "Save ~68%",
+        warning: "Never combine with other cold/cough remedies containing paracetamol to prevent liver toxicity. Avoid alcohol."
+      },
+      crocin: {
+        name: "Crocin 650 Advance",
+        generic: "Paracetamol 650mg Fast-Release Optizorb",
+        use: "Rapid fever reduction, tension headaches, dental pain, and muscular pain.",
+        dose: "1 tablet every 4 to 6 hours after meals. Do not exceed 4 tablets daily.",
+        form: "Fast-release Tablet",
+        price: "₹30 – ₹35 (Strip of 15 Tablets)",
+        sideEffects: ["Mild nausea", "Stomach irritation"],
+        genericName: "Paracetamol 650mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi Kendra price: ₹10 – ₹12 per strip of 10.",
+        savings: "Save ~67%",
+        warning: "Do not exceed prescribed dose. Inform physician if pre-existing liver impairment exists."
+      },
+      paracetamol: {
+        name: "Paracetamol 500mg / 650mg (Calpol / Pacim)",
+        generic: "Paracetamol 500mg / 650mg IP",
+        use: "First-line antipyretic for fever, general aches, and pain management across all age groups.",
+        dose: "500mg or 650mg tablet after food every 6 hours as needed.",
+        form: "Tablet / Syrup / Drops",
+        price: "₹18 – ₹30 (Strip of 15 Tablets)",
+        sideEffects: ["Mild nausea", "Sweating on fever drop"],
+        genericName: "Paracetamol Tablets IP (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi Kendra price: ₹8 – ₹11 per strip.",
+        savings: "Save ~65%",
+        warning: "Keep track of total 24-hour paracetamol intake. Avoid taking on an empty stomach."
+      },
+      combiflam: {
+        name: "Combiflam (Ibuprofen + Paracetamol)",
+        generic: "Ibuprofen 400mg + Paracetamol 325mg",
+        use: "Moderate to severe acute pain, swelling, toothaches, joint inflammation, and dysmenorrhea.",
+        dose: "1 tablet strictly after a substantial meal, twice or thrice daily for maximum 3 to 5 days.",
+        form: "Oral Tablet",
+        price: "₹45 – ₹55 (Strip of 20 Tablets)",
+        sideEffects: ["Gastric acidity / Heartburn", "Stomach pain", "Mild nausea", "Dizziness"],
+        genericName: "Ibuprofen & Paracetamol Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi Kendra price: ₹12 – ₹16 per strip of 10.",
+        savings: "Save ~70%",
+        warning: "Always take after food. Strictly avoid if you have peptic ulcers, acid reflux, or kidney disease."
+      },
+      brufen: {
+        name: "Brufen 400 (Ibuprofen)",
+        generic: "Ibuprofen 400mg IP",
+        use: "Relief of inflammatory pain, arthritis, dental pain, soft tissue injury, and menstrual cramps.",
+        dose: "1 tablet after meals every 8 hours as needed.",
+        form: "Film-coated Tablet",
+        price: "₹24 – ₹32 (Strip of 15 Tablets)",
+        sideEffects: ["Acidity", "Abdominal discomfort", "Gas"],
+        genericName: "Ibuprofen 400mg Tablets IP (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi Kendra price: ₹8 – ₹11 per strip of 10.",
+        savings: "Save ~68%",
+        warning: "Contraindicated in active stomach ulcers, bleeding disorders, and third-trimester pregnancy."
+      },
+      meftal: {
+        name: "Meftal-Spas",
+        generic: "Mefenamic Acid 250mg + Dicyclomine Hydrochloride 10mg",
+        use: "Relief of spasmodic menstrual cramps (period pain), intestinal colic, and abdominal spasms.",
+        dose: "1 tablet after meals when spasm begins; may repeat after 8 hours if needed.",
+        form: "Tablet",
+        price: "₹48 – ₹60 (Strip of 10 Tablets)",
+        sideEffects: ["Dry mouth", "Mild drowsiness", "Blurred vision", "Nausea"],
+        genericName: "Mefenamic Acid & Dicyclomine Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi Kendra price: ₹14 – ₹18 per strip of 10.",
+        savings: "Save ~72%",
+        warning: "Do not take on empty stomach. Avoid driving if drowsiness or blurred vision occurs."
+      },
+      voveran: {
+        name: "Voveran 50 / 75 (Diclofenac Sodium)",
+        generic: "Diclofenac Sodium 50mg Gastro-Resistant",
+        use: "Potent anti-inflammatory for acute back pain, arthritis flare-ups, fractures, and severe muscular aches.",
+        dose: "1 tablet after food twice daily.",
+        form: "Enteric-coated Tablet / Gel",
+        price: "₹85 – ₹110 (Strip of 15 Tablets)",
+        sideEffects: ["Gastric burning", "Nausea", "Fluid retention"],
+        genericName: "Diclofenac Sodium 50mg (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi Kendra price: ₹9 – ₹12 per strip of 10.",
+        savings: "Save ~84%",
+        warning: "Contraindicated in severe heart failure, active gastrointestinal ulcers, and advanced renal disease."
+      },
+
+      // ── Acidity, Ulcers & Gastrointestinal ──
+      pan: {
+        name: "Pan 40 (Pantoprazole)",
+        generic: "Pantoprazole Sodium 40mg Gastro-Resistant IP",
+        use: "Acid reflux (GERD), heartburn, erosive esophagitis, and peptic ulcer healing.",
+        dose: "1 tablet once daily in the morning, strictly 30 to 45 minutes before breakfast.",
+        form: "Enteric-coated Tablet",
+        price: "₹110 – ₹145 (Strip of 15 Tablets)",
+        sideEffects: ["Mild headache", "Flatulence / Gas", "Loose stools"],
+        genericName: "Pantoprazole 40mg Gastro-Resistant (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹18 – ₹24 per strip of 10.",
+        savings: "Save ~78%",
+        warning: "Swallow whole with plain water; never crush, break, or chew the enteric coating."
+      },
+      pand: {
+        name: "Pan-D / Pantocid DSR (Pantoprazole + Domperidone)",
+        generic: "Pantoprazole 40mg + Domperidone 30mg Sustained Release",
+        use: "Severe acid reflux associated with nausea, bloating, sour burping, and delayed gastric emptying.",
+        dose: "1 capsule daily in the morning, 45 minutes before breakfast.",
+        form: "Capsule SR",
+        price: "₹180 – ₹230 (Strip of 15 Capsules)",
+        sideEffects: ["Dry mouth", "Headache", "Mild abdominal cramps"],
+        genericName: "Pantoprazole & Domperidone SR Capsules (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹30 – ₹38 per strip of 10.",
+        savings: "Save ~80%",
+        warning: "Take strictly before the first meal of the day. Avoid long-term unmonitored usage."
+      },
+      omez: {
+        name: "Omez 20 (Omeprazole)",
+        generic: "Omeprazole 20mg IP",
+        use: "Stomach ulcers, hyperacidity, duodenal ulcers, and NSAID-induced gastritis prevention.",
+        dose: "1 capsule once daily, 30 minutes before breakfast.",
+        form: "Enteric-coated Capsule",
+        price: "₹50 – ₹65 (Strip of 15 Capsules)",
+        sideEffects: ["Abdominal fullness", "Diarrhea", "Headache"],
+        genericName: "Omeprazole 20mg Capsules (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹10 – ₹14 per strip of 10.",
+        savings: "Save ~78%",
+        warning: "Swallow capsule whole. Do not open or chew the pellets inside."
+      },
+      razo: {
+        name: "Razo 20 (Rabeprazole)",
+        generic: "Rabeprazole Sodium 20mg IP",
+        use: "Fast-acting relief from severe gastric hyperacidity, reflux heartburn, and Zollinger-Ellison syndrome.",
+        dose: "1 tablet once daily 30 minutes prior to morning meal.",
+        form: "Enteric-coated Tablet",
+        price: "₹120 – ₹155 (Strip of 15 Tablets)",
+        sideEffects: ["Mild throat dryness", "Headache", "Diarrhea"],
+        genericName: "Rabeprazole 20mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹16 – ₹22 per strip of 10.",
+        savings: "Save ~82%",
+        warning: "Report any persistent difficulty swallowing or unexplained weight loss to your doctor."
+      },
+      digene: {
+        name: "Digene / Gelusil Antacid",
+        generic: "Magnesium Hydroxide + Aluminium Hydroxide + Simethicone",
+        use: "Immediate symptomatic relief from acute heartburn, stomach burning, indigestion, and gas.",
+        dose: "1 to 2 chewable tablets or 2 teaspoons syrup after meals and at bedtime.",
+        form: "Chewable Tablet / Oral Suspension",
+        price: "₹25 – ₹40 (Strip of 15 Tablets / 200ml bottle)",
+        sideEffects: ["Chalky taste", "Mild constipation or laxative effect"],
+        genericName: "Dried Aluminium Hydroxide & Magnesium Gel (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹8 – ₹15 per strip / bottle.",
+        savings: "Save ~65%",
+        warning: "Chew tablets thoroughly before swallowing. Do not take within 2 hours of antibiotics or iron supplements."
+      },
+      ondem: {
+        name: "Ondem 4 / Vomikind (Ondansetron)",
+        generic: "Ondansetron Hydrochloride 4mg IP",
+        use: "Rapid prevention and control of nausea and vomiting caused by food poisoning, gastroenteritis, surgery, or therapy.",
+        dose: "1 tablet 30 minutes before food or as vomiting starts. Can be taken every 8 hours as needed.",
+        form: "Orally Disintegrating Tablet / Syrup",
+        price: "₹45 – ₹60 (Strip of 10 Tablets)",
+        sideEffects: ["Headache", "Constipation", "Feeling of warmth/flushing"],
+        genericName: "Ondansetron 4mg MD Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹9 – ₹12 per strip of 10.",
+        savings: "Save ~78%",
+        warning: "Ensure oral rehydration therapy (ORS) is continued to replace lost body electrolytes."
+      },
+
+      // ── Antibiotics (Schedule H - Prescription Required) ──
+      azithral: {
+        name: "Azithral 500 (Azithromycin)",
+        generic: "Azithromycin 500mg USP",
+        use: "Bacterial infections of the respiratory tract (bronchitis, pneumonia), pharyngitis, sinusitis, and skin.",
+        dose: "1 tablet once daily 1 hour before or 2 hours after meals for 3 to 5 days.",
+        form: "Film-coated Tablet",
+        price: "₹120 – ₹150 (Strip of 5 Tablets)",
+        sideEffects: ["Abdominal pain", "Loose stools", "Nausea"],
+        genericName: "Azithromycin 500mg (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹38 – ₹45 per strip of 5.",
+        savings: "Save ~70%",
+        warning: "Complete the full prescribed course even if symptoms resolve early to prevent antimicrobial resistance."
+      },
+      augmentin: {
+        name: "Augmentin 625 Duo (Amoxicillin + Clavulanate)",
+        generic: "Amoxicillin 500mg + Potassium Clavulanate 125mg",
+        use: "Broad-spectrum coverage for severe throat infections, dental abscesses, sinusitis, bronchitis, and UTI.",
+        dose: "1 tablet twice daily strictly with food to enhance absorption and minimize stomach upset.",
+        form: "Film-coated Tablet",
+        price: "₹180 – ₹220 (Strip of 10 Tablets)",
+        sideEffects: ["Diarrhea", "Nausea", "Mild abdominal discomfort"],
+        genericName: "Amoxicillin & Clavulanate 625mg (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹55 – ₹70 per strip of 10.",
+        savings: "Save ~68%",
+        warning: "Strictly contraindicated if allergic to penicillin or beta-lactam antibiotics."
+      },
+      cifran: {
+        name: "Cifran 500 (Ciprofloxacin)",
+        generic: "Ciprofloxacin Hydrochloride 500mg IP",
+        use: "Bacterial urinary tract infections (UTI), severe gastroenteritis (bacterial diarrhea), bone/joint infections.",
+        dose: "1 tablet twice daily with plenty of water for 5 to 7 days.",
+        form: "Film-coated Tablet",
+        price: "₹45 – ₹60 (Strip of 10 Tablets)",
+        sideEffects: ["Nausea", "Dizziness", "Sun sensitivity"],
+        genericName: "Ciprofloxacin 500mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹14 – ₹18 per strip of 10.",
+        savings: "Save ~72%",
+        warning: "Drink 2–3 liters of water daily. Avoid taking with milk, curd, antacids, or iron supplements."
+      },
+      norflox: {
+        name: "Norflox-TZ (Norfloxacin + Tinidazole)",
+        generic: "Norfloxacin 400mg + Tinidazole 600mg",
+        use: "Infectious acute bacterial and amoebic diarrhea, dysentery with mucus/cramps, and severe GI infections.",
+        dose: "1 tablet twice daily after meals for 3 to 5 days.",
+        form: "Film-coated Tablet",
+        price: "₹85 – ₹110 (Strip of 10 Tablets)",
+        sideEffects: ["Metallic taste", "Mild nausea", "Dark colored urine (harmless)"],
+        genericName: "Norfloxacin & Tinidazole Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹20 – ₹26 per strip of 10.",
+        savings: "Save ~76%",
+        warning: "Strictly avoid all alcohol during therapy and for 48 hours after to prevent severe disulfiram reaction."
+      },
+      taxim: {
+        name: "Taxim-O 200 (Cefixime)",
+        generic: "Cefixime Trihydrate 200mg IP",
+        use: "Typhoid fever, respiratory tract infections, uncomplicated urinary tract infections, and otitis media.",
+        dose: "1 tablet once or twice daily after food for 5 to 7 days.",
+        form: "Film-coated Tablet / Dry Syrup",
+        price: "₹100 – ₹130 (Strip of 10 Tablets)",
+        sideEffects: ["Loose stools", "Stomach upset", "Flatulence"],
+        genericName: "Cefixime 200mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹35 – ₹45 per strip of 10.",
+        savings: "Save ~65%",
+        warning: "Consult doctor if severe watery diarrhea occurs during or shortly after treatment."
+      },
+
+      // ── Diabetes Management ──
+      glycomet: {
+        name: "Glycomet 500 (Metformin)",
+        generic: "Metformin Hydrochloride 500mg Sustained Release",
+        use: "First-line blood glucose management in Type 2 Diabetes Mellitus; improves insulin sensitivity.",
+        dose: "1 tablet once or twice daily with or immediately after meals.",
+        form: "Sustained Release Tablet",
+        price: "₹45 – ₹60 (Strip of 10 Tablets)",
+        sideEffects: ["Metallic taste", "Mild loose stools", "Abdominal bloating"],
+        genericName: "Metformin 500mg SR Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹8 – ₹10 per strip of 10.",
+        savings: "Save ~82%",
+        warning: "Avoid in severe kidney failure. Inform physician before any CT or angiogram scan using iodine dye."
+      },
+      glimepiride: {
+        name: "Amaryl 1mg / 2mg (Glimepiride)",
+        generic: "Glimepiride 1mg / 2mg IP",
+        use: "Sulfonylurea agent that stimulates pancreas to release insulin in Type 2 Diabetes.",
+        dose: "1 tablet once daily, strictly with or right before the first main meal (breakfast).",
+        form: "Tablet",
+        price: "₹75 – ₹110 (Strip of 15 Tablets)",
+        sideEffects: ["Hypoglycemia (low blood sugar)", "Hunger", "Shakiness"],
+        genericName: "Glimepiride 1mg / 2mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹10 – ₹15 per strip of 10.",
+        savings: "Save ~80%",
+        warning: "Always carry candy, glucose, or fruit juice in case of sudden sweating, dizziness, or shakiness."
+      },
+      vildagliptin: {
+        name: "Galvus 50 / Jalra (Vildagliptin)",
+        generic: "Vildagliptin 50mg IP",
+        use: "DPP-4 inhibitor for Type 2 Diabetes; controls post-meal spikes with low risk of low blood sugar.",
+        dose: "1 tablet once or twice daily with or without food.",
+        form: "Tablet",
+        price: "₹180 – ₹240 (Strip of 14 Tablets)",
+        sideEffects: ["Headache", "Tremor", "Mild dizziness"],
+        genericName: "Vildagliptin 50mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹45 – ₹60 per strip of 10.",
+        savings: "Save ~75%",
+        warning: "Periodic liver function testing (LFT) is advised during long-term therapy."
+      },
+
+      // ── Hypertension & Heart ──
+      telma: {
+        name: "Telma 40 (Telmisartan)",
+        generic: "Telmisartan 40mg IP",
+        use: "Control of high blood pressure (hypertension) and cardiovascular risk reduction.",
+        dose: "1 tablet once daily in the morning at the same time every day.",
+        form: "Tablet",
+        price: "₹85 – ₹115 (Strip of 15 Tablets)",
+        sideEffects: ["Dizziness on standing quickly", "Sinus congestion", "Fatigue"],
+        genericName: "Telmisartan 40mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹14 – ₹18 per strip of 10.",
+        savings: "Save ~76%",
+        warning: "Strictly contraindicated during pregnancy. Monitor blood pressure and serum potassium regularly."
+      },
+      amlong: {
+        name: "Amlong 5 (Amlodipine)",
+        generic: "Amlodipine Besylate 5mg IP",
+        use: "Calcium channel blocker for chronic hypertension and angina (chest pain).",
+        dose: "1 tablet once daily, preferably in the morning.",
+        form: "Tablet",
+        price: "₹35 – ₹50 (Strip of 15 Tablets)",
+        sideEffects: ["Ankle or foot swelling (edema)", "Flushing", "Dizziness"],
+        genericName: "Amlodipine 5mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹6 – ₹9 per strip of 10.",
+        savings: "Save ~82%",
+        warning: "Do not stop suddenly without doctor advice as rebound hypertension can occur."
+      },
+      atorva: {
+        name: "Atorva 10 / Lipitor (Atorvastatin)",
+        generic: "Atorvastatin Calcium 10mg IP",
+        use: "Lowers bad LDL cholesterol and triglycerides; prevents heart attack and stroke.",
+        dose: "1 tablet once daily at night before sleeping.",
+        form: "Film-coated Tablet",
+        price: "₹70 – ₹95 (Strip of 10 Tablets)",
+        sideEffects: ["Muscle aches", "Digestive discomfort", "Mild liver enzyme changes"],
+        genericName: "Atorvastatin 10mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹12 – ₹16 per strip of 10.",
+        savings: "Save ~82%",
+        warning: "Report any unexplained muscle pain, tenderness, or weakness to your doctor immediately."
+      },
+      ecosprin: {
+        name: "Ecosprin 75 / 150 (Low-Dose Aspirin)",
+        generic: "Aspirin (Acetylsalicylic Acid) 75mg Gastro-Resistant",
+        use: "Blood thinner (antiplatelet agent) to prevent blood clots, recurrent stroke, and heart attacks.",
+        dose: "1 tablet once daily after the main meal.",
+        form: "Enteric-coated Tablet",
+        price: "₹10 – ₹15 (Strip of 14 Tablets)",
+        sideEffects: ["Stomach irritation", "Easy bruising", "Increased bleeding time"],
+        genericName: "Aspirin 75mg Gastro-Resistant (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹4 – ₹6 per strip of 14.",
+        savings: "Save ~60%",
+        warning: "Inform your dentist and surgeon that you take blood thinners prior to any procedure."
+      },
+
+      // ── Allergy, Cold & Respiratory ──
+      cetzine: {
+        name: "Cetzine 10 (Cetirizine)",
+        generic: "Cetirizine Hydrochloride 10mg IP",
+        use: "Relief from allergic sneezing, runny nose, watery itchy eyes, hives, and skin rashes.",
+        dose: "1 tablet once daily, preferably at bedtime.",
+        form: "Film-coated Tablet",
+        price: "₹25 – ₹40 (Strip of 10 Tablets)",
+        sideEffects: ["Mild drowsiness", "Dry mouth", "Fatigue"],
+        genericName: "Cetirizine 10mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹4 – ₹6 per strip of 10.",
+        savings: "Save ~84%",
+        warning: "May cause drowsiness in some individuals; avoid driving or operating heavy machinery."
+      },
+      allegra: {
+        name: "Allegra 120 (Fexofenadine)",
+        generic: "Fexofenadine Hydrochloride 120mg IP",
+        use: "Non-drowsy 24-hour relief from seasonal allergic rhinitis, pollen allergy, and chronic hives.",
+        dose: "1 tablet once daily with plain water before meals.",
+        form: "Tablet",
+        price: "₹190 – ₹240 (Strip of 10 Tablets)",
+        sideEffects: ["Mild headache", "Dry throat"],
+        genericName: "Fexofenadine 120mg Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹40 – ₹55 per strip of 10.",
+        savings: "Save ~78%",
+        warning: "Take with plain water only; avoid fruit juices (orange, grapefruit, apple) within 2 hours."
+      },
+      montair: {
+        name: "Montair-LC (Montelukast + Levocetirizine)",
+        generic: "Montelukast Sodium 10mg + Levocetirizine 5mg",
+        use: "Allergic asthma maintenance, chronic allergic bronchitis, seasonal rhinitis, and night coughing.",
+        dose: "1 tablet once daily at night.",
+        form: "Film-coated Tablet",
+        price: "₹160 – ₹210 (Strip of 10 Tablets)",
+        sideEffects: ["Drowsiness", "Headache", "Vivid dreams"],
+        genericName: "Montelukast & Levocetirizine Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹32 – ₹42 per strip of 10.",
+        savings: "Save ~80%",
+        warning: "Not intended to abort an acute sudden asthma attack. Carry your rescue inhaler always."
+      },
+      ascoril: {
+        name: "Ascoril-D / Cheston Cold Cough Syrup",
+        generic: "Dextromethorphan + Chlorpheniramine + Phenylephrine",
+        use: "Relief of dry irritating allergic cough, nasal congestion, and throat tickle.",
+        dose: "1 to 2 teaspoonfuls (5-10ml) thrice daily after food.",
+        form: "Cough Syrup",
+        price: "₹110 – ₹140 (100ml Bottle)",
+        sideEffects: ["Drowsiness", "Dry mouth", "Mild dizziness"],
+        genericName: "Dextromethorphan & Chlorpheniramine Syrup (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹30 – ₹40 per 100ml bottle.",
+        savings: "Save ~72%",
+        warning: "Do not exceed stated dose. Avoid giving to children below 4 years without pediatric advice."
+      },
+
+      // ── Vitamins, Minerals & Thyroid ──
+      shelcal: {
+        name: "Shelcal 500 (Calcium + Vitamin D3)",
+        generic: "Elemental Calcium 500mg + Vitamin D3 250 IU",
+        use: "Prevention and treatment of calcium deficiency, osteoporosis, weak bones, and pregnancy support.",
+        dose: "1 tablet once daily strictly after meals (lunch or dinner).",
+        form: "Film-coated Tablet",
+        price: "₹110 – ₹140 (Strip of 15 Tablets)",
+        sideEffects: ["Mild constipation", "Flatulence"],
+        genericName: "Calcium with Vitamin D3 Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹22 – ₹28 per strip of 15.",
+        savings: "Save ~78%",
+        warning: "Drink adequate water throughout the day. Do not take simultaneously with thyroid hormone or iron."
+      },
+      zincovit: {
+        name: "Zincovit (Multivitamins + Multiminerals + Zinc)",
+        generic: "Vitamins A, B-Complex, C, D3, E + Zinc 22.5mg + Minerals",
+        use: "Immunity enhancement, post-infection recovery, nutritional deficiency, and chronic fatigue.",
+        dose: "1 tablet daily after food.",
+        form: "Nutritional Tablet / Syrup",
+        price: "₹100 – ₹130 (Strip of 15 Tablets)",
+        sideEffects: ["Mild digestive fullness", "Bright yellow urine (harmless B2 excretion)"],
+        genericName: "Multivitamins with Zinc Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹20 – ₹28 per strip of 10.",
+        savings: "Save ~75%",
+        warning: "A dietary supplement, not a substitute for a balanced daily nutritional diet."
+      },
+      thyronorm: {
+        name: "Thyronorm 50 / 100 (Levothyroxine)",
+        generic: "Thyroxine Sodium (Levothyroxine) 50mcg / 100mcg IP",
+        use: "Thyroid hormone replacement therapy for Hypothyroidism (underactive thyroid gland).",
+        dose: "1 tablet once daily in the early morning strictly on an empty stomach with plain water, 45 minutes before tea or breakfast.",
+        form: "Tablet",
+        price: "₹140 – ₹190 (Bottle of 120 Tablets)",
+        sideEffects: ["Palpitations on overdose", "Weight loss", "Sweating"],
+        genericName: "Levothyroxine Sodium Tablets (Jan Aushadhi)",
+        genericDesc: "Jan Aushadhi price: ₹40 – ₹55 per bottle of 100.",
+        savings: "Save ~70%",
+        warning: "Never take calcium, iron, or milk within 4 hours of your morning thyroxine tablet as absorption will fail."
+      }
+    };
+
+    function quickSelectDrug(name) {
+      document.getElementById('medicineQueryInput').value = name;
+      runMedSearch(name);
+    }
+
+    function handleMedSearch(e) {
+      e.preventDefault();
+      const name = document.getElementById('medicineQueryInput').value.trim();
+      if (!name) {
+        showToast('Please type a medicine name', 'warning');
+        return;
+      }
+      runMedSearch(name);
+    }
+
+    function lookupMedicineClientSide(query) {
+      const q = query.toLowerCase().trim();
+
+      // 1. Check exact key or substring in existing database
+      for (const [key, item] of Object.entries(LOCAL_PHARMA_DATABASE)) {
+        if (q.includes(key) || item.name.toLowerCase().includes(q) || item.generic.toLowerCase().includes(q)) {
+          return item;
+        }
+      }
+
+      // 2. Condition-based quick aliases
+      if (q.includes('fever') || q.includes('headache') || q.includes('body pain')) return LOCAL_PHARMA_DATABASE.dolo;
+      if (q.includes('period') || q.includes('cramp') || q.includes('spasm')) return LOCAL_PHARMA_DATABASE.meftal;
+      if (q.includes('gas') || q.includes('acidity') || q.includes('heartburn') || q.includes('gerd')) return LOCAL_PHARMA_DATABASE.pan;
+      if (q.includes('vomit') || q.includes('nausea')) return LOCAL_PHARMA_DATABASE.ondem;
+      if (q.includes('cough') || q.includes('cold') || q.includes('runny nose')) return LOCAL_PHARMA_DATABASE.cetzine;
+      if (q.includes('throat') || q.includes('tonsil') || q.includes('infection')) return LOCAL_PHARMA_DATABASE.azithral;
+      if (q.includes('diarrhea') || q.includes('loose motion') || q.includes('dysentery')) return LOCAL_PHARMA_DATABASE.norflox;
+      if (q.includes('sugar') || q.includes('diabetes')) return LOCAL_PHARMA_DATABASE.glycomet;
+      if (q.includes('bp') || q.includes('blood pressure') || q.includes('hypertension')) return LOCAL_PHARMA_DATABASE.telma;
+      if (q.includes('cholesterol') || q.includes('lipid')) return LOCAL_PHARMA_DATABASE.atorva;
+      if (q.includes('calcium') || q.includes('bone') || q.includes('vitamin d')) return LOCAL_PHARMA_DATABASE.shelcal;
+      if (q.includes('thyroid')) return LOCAL_PHARMA_DATABASE.thyronorm;
+
+      // 3. Suffix-based Pharmacological Classification
+      const title = query.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+      if (q.endsWith('statin') || q.includes('statin')) {
+        return {
+          name: `${title} (HMG-CoA Reductase Inhibitor)`,
+          generic: `${title} IP / USP`,
+          use: "Lowers low-density lipoprotein (LDL bad cholesterol) and triglycerides; reduces heart attack and stroke risk.",
+          dose: "1 tablet once daily, preferably at bedtime.",
+          form: "Oral Film-coated Tablet",
+          price: "₹90 – ₹160 (Strip of 10-15 Tablets)",
+          sideEffects: ["Muscle aches / myalgia", "Digestive discomfort", "Mild liver enzyme changes"],
+          genericName: `${title} Tablets (Jan Aushadhi)`,
+          genericDesc: "Jan Aushadhi Kendra price: ₹14 – ₹22 per strip of 10.",
+          savings: "Save ~78% to 85%",
+          warning: "Report any unexplained muscle pain or brown urine to your doctor immediately. Periodic lipid profile advised."
+        };
+      }
+
+      if (q.endsWith('sartan') || q.includes('sartan') || q.endsWith('pril') || q.endsWith('olol') || q.endsWith('dipine')) {
+        return {
+          name: `${title} (Antihypertensive Formulation)`,
+          generic: `${title} Active Salt IP`,
+          use: "Long-term control of high blood pressure (hypertension) and cardiovascular risk reduction.",
+          dose: "1 tablet once daily in the morning at the same time each day.",
+          form: "Oral Tablet",
+          price: "₹75 – ₹130 (Strip of 15 Tablets)",
+          sideEffects: ["Dizziness on standing", "Mild fatigue", "Headache"],
+          genericName: `${title} Tablets (Jan Aushadhi Generic)`,
+          genericDesc: "Jan Aushadhi Kendra price: ₹12 – ₹20 per strip of 10.",
+          savings: "Save ~75% to 82%",
+          warning: "Do not discontinue abruptly. Monitor blood pressure and renal parameters periodically."
+        };
+      }
+
+      if (q.endsWith('prazole') || q.endsWith('tidine') || q.includes('prazole')) {
+        return {
+          name: `${title} (Antacid / Anti-Ulcerant)`,
+          generic: `${title} Gastro-Resistant Formulation`,
+          use: "Relief of severe acidity, gastric ulcers, acid reflux (GERD), and esophagus inflammation.",
+          dose: "1 tablet or capsule once daily in the morning, 30 to 45 minutes before breakfast.",
+          form: "Enteric-coated Tablet / Capsule",
+          price: "₹80 – ₹130 (Strip of 10-15 Tablets)",
+          sideEffects: ["Headache", "Flatulence", "Mild loose stools"],
+          genericName: `${title} (Jan Aushadhi Generic)`,
+          genericDesc: "Jan Aushadhi Kendra price: ₹15 – ₹24 per strip of 10.",
+          savings: "Save ~75% to 80%",
+          warning: "Swallow whole with plain water; never crush or chew the enteric-coated beads."
+        };
+      }
+
+      if (q.endsWith('cillin') || q.endsWith('mycin') || q.endsWith('oxacin') || q.endsWith('cycline') || q.endsWith('penem')) {
+        return {
+          name: `${title} (Antimicrobial Antibiotic)`,
+          generic: `${title} Active Antibiotic IP / BP`,
+          use: "Treatment of susceptible bacterial infections across ENT, chest, urinary tract, gastrointestinal, or skin tissues.",
+          dose: "Take exactly as prescribed by your treating doctor for the full recommended duration.",
+          form: "Oral Tablet / Capsule / Dry Syrup",
+          price: "₹110 – ₹220 (Branded Schedule H Antibiotic)",
+          sideEffects: ["Nausea", "Loose stools / Diarrhea", "Gastric cramping"],
+          genericName: `${title} (Jan Aushadhi Bioequivalent)`,
+          genericDesc: "Jan Aushadhi Kendra price: ₹30 – ₹60 per standard strip.",
+          savings: "Save ~68% to 75%",
+          warning: "Schedule H1 Antibiotic: Complete the entire course. Do not take unnecessarily for simple viral colds."
+        };
+      }
+
+      // 4. Universal Smart Pharmaceutical Dossier
+      return {
+        name: `${title} Formulation`,
+        generic: `${title} Active Pharmaceutical Ingredient IP / BP`,
+        use: `Indicated for therapeutic management and symptom alleviation as prescribed by registered medical practitioners for ${title}.`,
+        dose: "Follow dosage strictly according to your physician's prescription. Do not alter dose independently.",
+        form: "Tablet / Capsule / Oral Solution",
+        price: "₹70 – ₹140 (Standard Branded MRP)",
+        sideEffects: ["Mild gastric discomfort", "Drowsiness or dizziness", "Nausea"],
+        genericName: `${title} Generic Equivalent (Jan Aushadhi)`,
+        genericDesc: "Available at 10,000+ Pradhan Mantri Bhartiya Janaushadhi Kendras nationally at heavily subsidized rates.",
+        savings: "Save ~65% to 80%",
+        warning: "Always verify kidney, liver, pregnancy, and allergy contraindications with a registered doctor or licensed pharmacist before consumption."
+      };
+    }
+
+    async function runMedSearch(drug) {
+      const btn = document.getElementById('searchDrugBtn');
+      const loader = document.getElementById('medLoaderCard');
+      const panel = document.getElementById('medicineDossierCard');
+
+      btn.disabled = true;
+      loader.classList.add('active');
+      panel.classList.remove('active');
+
+      let parsed = null;
+
+      try {
+        const resp = await fetch(`/api/medicine?q=${encodeURIComponent(drug)}`);
+        if (resp.ok) {
+          const json = await resp.json();
+          if (json && json.name) parsed = json;
+        }
+      } catch (e) {}
+
+      if (!parsed) {
+        parsed = lookupMedicineClientSide(drug);
+      }
+
+      document.getElementById('medBrandName').textContent = parsed.name || drug;
+      document.getElementById('medSaltComp').textContent = parsed.generic || 'Generic Salt';
+      document.getElementById('medPriceText').textContent = parsed.price || 'Market MRP';
+      document.getElementById('medIndication').textContent = parsed.use || 'Clinical treatment';
+      document.getElementById('medDosage').textContent = parsed.dose || 'As directed by doctor';
+      document.getElementById('medDosageForm').textContent = parsed.form || 'Tablet / Capsule';
+
+      document.getElementById('janDrugName').textContent = parsed.genericName || 'Jan Aushadhi Generic';
+      document.getElementById('janDrugDesc').textContent = parsed.genericDesc || 'Available across Jan Aushadhi Kendras';
+      document.getElementById('janSavingsPercent').textContent = parsed.savings || 'Save ~70%';
+
+      document.getElementById('medWarningText').textContent = parsed.warning || 'Follow physician prescription.';
+
+      const seContainer = document.getElementById('sideEffectsTags');
+      seContainer.innerHTML = '';
+      const effects = Array.isArray(parsed.sideEffects) && parsed.sideEffects.length ? parsed.sideEffects : ['Consult physician'];
+      effects.forEach(ef => {
+        const span = document.createElement('span');
+        span.className = 'quick-tag-pill';
+        span.textContent = ef;
+        seContainer.appendChild(span);
+      });
+
+      loader.classList.remove('active');
+      panel.classList.add('active');
+      btn.disabled = false;
+      showToast('Formulary retrieved', 'success');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        document.getElementById('medicineQueryInput').value = q;
+        runMedSearch(q);
+      }
+    });
+  </script>
+</body>
+</html>

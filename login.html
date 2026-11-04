@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Access &amp; Authentication — MediGuide India</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .auth-card-wrap {
+      min-height: calc(100vh - 160px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 56px 20px;
+    }
+    .auth-box {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 40px 36px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--theme-gradient);
+    }
+    .role-toggle {
+      display: flex;
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+    .role-btn {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-xs);
+      transition: all var(--transition);
+      font-family: inherit;
+      text-align: center;
+    }
+    .role-btn.active {
+      background: var(--bg-surface);
+      color: var(--theme-primary);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="site-container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-logo-link">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="13" y="3" width="10" height="30" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <rect x="3" y="13" width="30" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <path d="M2 22 L7 22 L10 16 L13 26 L16 18 L19 24 L22 20 L25 22 L28 22" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+        </a>
+
+        <ul class="nav-links-desktop">
+          <li><a href="index.html" class="nav-link-item">Home</a></li>
+          <li><a href="symptoms.html" class="nav-link-item">Symptoms</a></li>
+          <li><a href="medicines.html" class="nav-link-item">Medicines</a></li>
+          <li><a href="hospitals.html" class="nav-link-item">Hospitals</a></li>
+          <li><a href="opd.html" class="nav-link-item">OPD Timings</a></li>
+          <li><a href="helplines.html" class="nav-link-item">Helplines</a></li>
+        </ul>
+
+        <div class="nav-actions-desktop">
+          <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span>Theme</span>
+          </button>
+          <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">SOS 108</a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+      <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a href="index.html" class="mobile-nav-item" onclick="closeMobileMenu()">Home</a>
+    <a href="symptoms.html" class="mobile-nav-item" onclick="closeMobileMenu()">Symptom Triage</a>
+    <a href="medicines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Jan Aushadhi Medicines</a>
+    <a href="hospitals.html" class="mobile-nav-item" onclick="closeMobileMenu()">Hospitals &amp; Clinics</a>
+    <a href="opd.html" class="mobile-nav-item" onclick="closeMobileMenu()">OPD Timings</a>
+    <a href="helplines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Helplines</a>
+    <a href="login.html" class="mobile-nav-item active" onclick="closeMobileMenu()">Portal Login</a>
+    <a href="emergency.html" class="mobile-nav-item" style="color:var(--color-sos); font-weight:700;" onclick="closeMobileMenu()">Emergency SOS (108)</a>
+    <div style="margin-top:auto; padding-top:20px;">
+      <button type="button" class="btn-rect btn-rect-secondary w-100 theme-toggle-btn" onclick="toggleTheme();">
+        Toggle Theme
+      </button>
+    </div>
+  </div>
+
+  <main class="auth-card-wrap">
+    <div class="auth-box">
+
+      <div style="margin-bottom: 28px; text-align:center;">
+        <span class="hero-pill-badge" style="margin-bottom:12px;">Verified Portal</span>
+        <h1 style="font-size: 1.7rem; margin-bottom: 8px;">Portal Authentication</h1>
+        <p style="font-size: 0.92rem; color: var(--text-muted); margin:0;">
+          Access your triage history, prescriptions, and medical consultation records.
+        </p>
+      </div>
+
+      <!-- Role Tabs -->
+      <div class="role-toggle">
+        <button type="button" class="role-btn active" id="tabPatient" onclick="setRole('patient')">Patient Access</button>
+        <button type="button" class="role-btn" id="tabDoctor" onclick="setRole('doctor')">Clinician / Staff</button>
+      </div>
+
+      <!-- Google SSO -->
+      <button type="button" class="btn-rect btn-rect-secondary" style="width:100%; margin-bottom:12px; padding:12px 16px;" onclick="showGoogleModal()">
+        <svg viewBox="0 0 24 24" width="18" height="18">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <!-- Google Sign-In Modal -->
+      <div id="googleModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; display:none; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:var(--bg-surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:28px; max-width:420px; width:100%; box-shadow:0 24px 60px rgba(0,0,0,0.2);">
+          <h3 style="font-size:1.1rem; font-weight:900; margin-bottom:6px;">Sign in with Google</h3>
+          <p style="font-size:0.84rem; color:var(--text-faint); margin-bottom:20px;">Enter your Google account details to continue.</p>
+
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">Full Name</label>
+            <input type="text" id="gName" class="clinical-input" placeholder="e.g. Daksh Chawla">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">Gmail Address</label>
+            <input type="email" id="gEmail" class="clinical-input" placeholder="e.g. daksh@gmail.com">
+          </div>
+          <div style="margin-bottom:20px;">
+            <label style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
+              Profile Photo
+              <span style="font-weight:500; color:var(--text-faint); font-size:0.78rem;">(Upload from device)</span>
+            </label>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <div id="gPhotoPreview" style="width:48px; height:48px; border-radius:50%; background:var(--bg-muted); border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; color:var(--text-faint);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <label style="flex:1; cursor:pointer;">
+                <div style="padding:9px 14px; border:1.5px dashed var(--border); border-radius:8px; font-size:0.82rem; font-weight:600; color:var(--text-faint); text-align:center; transition:all var(--transition);" onmouseover="this.style.borderColor='var(--theme-primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                  📷 Choose Photo
+                </div>
+                <input type="file" id="gPhotoFile" accept="image/*" style="display:none;" onchange="previewGooglePhoto(this)">
+              </label>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn-rect btn-rect-secondary" style="flex:1;" onclick="closeGoogleModal()">Cancel</button>
+            <button type="button" class="btn-rect btn-rect-primary" style="flex:2;" onclick="confirmGoogleAuth()">
+              <svg viewBox="0 0 24 24" width="14" height="14" style="margin-right:6px;"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#fff"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#fff"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff"/></svg>
+              Sign In with Google
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+        <span style="font-size:0.75rem; font-weight:800; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.04em;">or via email</span>
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+      </div>
+
+      <!-- Form View -->
+      <div id="unauthFormView">
+        <form id="authForm" onsubmit="handleAuthLogin(event)">
+          <div id="nameFieldRow" style="display:none; margin-bottom:16px;">
+            <label style="font-size:0.84rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">Full Name</label>
+            <input type="text" id="regNameInput" class="clinical-input" placeholder="e.g. Daksh Chawla" autocomplete="name">
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="font-size:0.84rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">Email Address</label>
+            <input type="email" id="authIdInput" class="clinical-input" placeholder="e.g. name@gmail.com" required autocomplete="email" oninput="onEmailInput(this.value)">
+            <div id="emailRoleHint" style="display:none; margin-top:8px; font-size:0.8rem; padding:7px 12px; border-radius:8px; font-weight:600;"></div>
+          </div>
+          <div style="margin-bottom:22px;">
+            <label style="font-size:0.84rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">Password</label>
+            <input type="password" id="authPassInput" class="clinical-input" placeholder="••••••••••••" required autocomplete="current-password">
+          </div>
+          <button type="submit" id="authSubmitButton" class="btn-rect btn-rect-primary" style="width:100%; padding:13px;">
+            Sign In to Dashboard &rarr;
+          </button>
+        </form>
+
+        <div style="text-align:center; margin-top:18px;">
+          <a href="#" id="authModeToggleLink" style="font-size:0.88rem; font-weight:600;" onclick="toggleMode(event)">New user? Create an account &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Profile View -->
+      <div id="authProfileView" style="display:none; text-align:center;">
+        <div style="width:68px; height:68px; border-radius:var(--radius-pill); background:var(--theme-subtle); color:var(--theme-primary); font-size:1.8rem; font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; border:2px solid var(--theme-border); box-shadow:0 4px 14px var(--theme-glow);" id="profileAvatarLetter">
+          P
+        </div>
+        <h2 id="profileNameDisplay" style="font-size:1.4rem; margin-bottom:4px;">Patient</h2>
+        <span class="badge-modern" id="profileRoleTag" style="margin-bottom:24px; background:var(--theme-subtle); color:var(--theme-primary); border-color:var(--theme-border); font-weight:700;">Verified Patient</span>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px;">
+          <a href="symptoms.html" class="btn-rect btn-rect-primary" style="width:100%;">Open Symptom Checker</a>
+          <button type="button" class="btn-rect btn-rect-secondary" style="width:100%;" onclick="signOutUser()">Sign Out</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-bottom-bar" style="border:none; padding-top:0;">
+        <span>&copy; 2026 MediGuide India &bull; Citizen &amp; Clinician Portal Verification.</span>
+        <span><a href="emergency.html" style="color:var(--color-sos); font-weight:700;">Emergency: 108</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    let activeRole = 'patient';
+    let isRegistering = false;
+    const SESSION_KEY   = 'mediguide_user_session';
+    const ACCOUNTS_KEY  = 'mediguide_accounts'; // { email_lower → { name, email, role, photo } }
+
+    /* ── Account Registry helpers ── */
+    function getAccounts() {
+      try { return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}'); } catch { return {}; }
+    }
+    function saveAccount(emailLower, data) {
+      const all = getAccounts();
+      all[emailLower] = data;
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(all));
+    }
+    function getAccountByEmail(email) {
+      return getAccounts()[email.trim().toLowerCase()] || null;
+    }
+
+    /* ── Role tabs ── */
+    function setRole(r) {
+      activeRole = r;
+      document.getElementById('tabPatient').classList.toggle('active', r === 'patient');
+      document.getElementById('tabDoctor').classList.toggle('active',  r === 'doctor');
+    }
+
+    /* ── Register / Sign-In toggle ── */
+    function toggleMode(e) {
+      e.preventDefault();
+      isRegistering = !isRegistering;
+      const nameRow = document.getElementById('nameFieldRow');
+      const subBtn  = document.getElementById('authSubmitButton');
+      const link    = document.getElementById('authModeToggleLink');
+      const regName = document.getElementById('regNameInput');
+      if (isRegistering) {
+        nameRow.style.display = 'block';
+        regName.required = true;
+        subBtn.textContent = 'Create Account';
+        link.textContent = 'Already have an account? Sign In';
+      } else {
+        nameRow.style.display = 'none';
+        regName.required = false;
+        subBtn.textContent = 'Sign In to Dashboard \u2192';
+        link.textContent = 'New user? Create an account \u2192';
+      }
+    }
+
+    /* ── Live email hint (auto-detect registered role) ── */
+    function onEmailInput(val) {
+      const hint  = document.getElementById('emailRoleHint');
+      const email = val.trim().toLowerCase();
+      if (!email.includes('@')) { hint.style.display = 'none'; return; }
+      const rec = getAccountByEmail(email);
+      if (rec) {
+        const rName = rec.role === 'doctor' ? 'Clinician / Staff' : 'Patient';
+        const color = rec.role === 'doctor' ? '#059669' : '#2563eb';
+        const bg    = rec.role === 'doctor' ? 'rgba(5,150,105,0.08)' : 'rgba(37,99,235,0.08)';
+        const bord  = rec.role === 'doctor' ? 'rgba(5,150,105,0.25)' : 'rgba(37,99,235,0.25)';
+        hint.style.cssText = `display:block;margin-top:8px;font-size:0.8rem;padding:7px 12px;border-radius:8px;font-weight:600;background:${bg};color:${color};border:1px solid ${bord};`;
+        hint.innerHTML = `✓ This email is registered as <strong>${rName}</strong> — tab switched automatically`;
+        setRole(rec.role);
+      } else {
+        hint.style.display = 'none';
+      }
+    }
+
+    /* ── Email + Password login/register ── */
+    function handleAuthLogin(e) {
+      e.preventDefault();
+      const rawEmail = document.getElementById('authIdInput').value.trim();
+      const emailKey = rawEmail.toLowerCase();
+
+      /* Role-conflict check — works even on first visit */
+      const rec = getAccountByEmail(emailKey);
+      if (rec && rec.role !== activeRole) {
+        const rName = rec.role === 'doctor' ? 'Clinician / Staff' : 'Patient';
+        showToast(`⚠ This email is registered as ${rName}. Switched to correct tab.`, 'danger');
+        setRole(rec.role);
+        return; // block submission
+      }
+
+      let displayName;
+      if (isRegistering) {
+        const rawName = document.getElementById('regNameInput').value.trim();
+        if (!rawName) { showToast('Please enter your full name', 'warning'); return; }
+        displayName = rawName;
+      } else {
+        // Sign-in: use stored name if available, otherwise derive from email prefix
+        displayName = rec
+          ? rec.name
+          : rawEmail.split('@')[0]
+              .replace(/[._-]/g, ' ')
+              .replace(/\b\w/g, c => c.toUpperCase());
+      }
+
+      // Keep existing photo if re-logging in, else generate placeholder
+      const existingPhoto = rec ? rec.photo : null;
+      const bgColor = activeRole === 'doctor' ? '059669' : '2563eb';
+      const photo   = existingPhoto
+        ? existingPhoto
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=${bgColor}&color=fff&size=128&bold=true&rounded=true`;
+
+      const user = { name: displayName, email: rawEmail, role: activeRole, loginTime: new Date().toISOString(), photo };
+      saveAccount(emailKey, { name: displayName, email: rawEmail, role: activeRole, photo });
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+      showToast('Welcome, ' + displayName + '!', 'success');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1100);
+    }
+
+    /* ── Google Sign-In Modal ── */
+    let gPhotoBase64 = null;
+
+    function showGoogleModal() {
+      const modal = document.getElementById('googleModal');
+      modal.style.display = 'flex';
+      gPhotoBase64 = null;
+      document.getElementById('gName').value  = '';
+      document.getElementById('gEmail').value = '';
+      document.getElementById('gPhotoPreview').innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>`;
+    }
+    function closeGoogleModal() {
+      document.getElementById('googleModal').style.display = 'none';
+    }
+    function previewGooglePhoto(input) {
+      if (!input.files || !input.files[0]) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        gPhotoBase64 = ev.target.result;
+        document.getElementById('gPhotoPreview').innerHTML =
+          `<img src="${gPhotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+    function confirmGoogleAuth() {
+      const rawName  = document.getElementById('gName').value.trim();
+      const rawEmail = document.getElementById('gEmail').value.trim();
+      if (!rawName)  { showToast('Please enter your name',  'warning'); return; }
+      if (!rawEmail || !rawEmail.includes('@')) { showToast('Please enter a valid Gmail address', 'warning'); return; }
+
+      const emailKey = rawEmail.toLowerCase();
+      const rec = getAccountByEmail(emailKey);
+      if (rec && rec.role !== activeRole) {
+        const rName = rec.role === 'doctor' ? 'Clinician / Staff' : 'Patient';
+        showToast(`⚠ This email is registered as ${rName}. Switched tab.`, 'danger');
+        setRole(rec.role);
+        closeGoogleModal();
+        return;
+      }
+
+      const bgColor = activeRole === 'doctor' ? '059669' : '4285F4';
+      const photo   = gPhotoBase64
+        ? gPhotoBase64
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(rawName)}&background=${bgColor}&color=fff&size=128&bold=true&rounded=true`;
+
+      const user = { name: rawName, email: rawEmail, role: activeRole, loginTime: new Date().toISOString(), photo };
+      saveAccount(emailKey, { name: rawName, email: rawEmail, role: activeRole, photo });
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+      closeGoogleModal();
+      showToast('Signed in with Google ✓', 'success');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1100);
+    }
+
+    /* ── Sign out ── */
+    function signOutUser() {
+      localStorage.removeItem(SESSION_KEY);
+      showToast('Signed out successfully', 'info');
+      setTimeout(() => { window.location.href = 'login.html'; }, 800);
+    }
+
+    /* ── Render logged-in state on login page ── */
+    function renderSession() {
+      const form = document.getElementById('unauthFormView');
+      const prof = document.getElementById('authProfileView');
+      const sess = localStorage.getItem(SESSION_KEY);
+      if (sess) {
+        try {
+          const u = JSON.parse(sess);
+          form.style.display = 'none';
+          prof.style.display  = 'block';
+          document.getElementById('profileNameDisplay').textContent = u.name || 'User';
+          const avatarEl = document.getElementById('profileAvatarLetter');
+          if (u.photo) {
+            avatarEl.style.padding = '0';
+            avatarEl.innerHTML = `<img src="${u.photo}" alt="${u.name}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+          } else {
+            avatarEl.textContent = (u.name || 'U').charAt(0).toUpperCase();
+          }
+          document.getElementById('profileRoleTag').textContent =
+            u.role === 'doctor' ? 'Verified Clinician' : 'Verified Patient';
+          return;
+        } catch (ignore) {}
+      }
+      form.style.display = 'block';
+      prof.style.display  = 'none';
+    }
+
+    /* ── Close modal on backdrop click ── */
+    document.getElementById('googleModal').addEventListener('click', function(e) {
+      if (e.target === this) closeGoogleModal();
+    });
+
+    window.addEventListener('DOMContentLoaded', renderSession);
+  </script>
+</body>
+</html>

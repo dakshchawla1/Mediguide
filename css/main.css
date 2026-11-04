@@ -1,0 +1,820 @@
+/* ==========================================================================
+   MEDIGUIDE INDIA — MULTI-THEME CLINICAL LUXURY SYSTEM (v7.0)
+   Vibrant, Elegant, Highly Beautified & Color-Coded Per Healthcare Feature
+   Rich Glassmorphism · Multi-Colored Glow Accents · High-End Visual Depth
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+
+/* --------------------------------------------------------------------------
+   CORE GLOBAL VARIABLES
+   -------------------------------------------------------------------------- */
+:root {
+  /* Global Base Surfaces */
+  --bg-page:        #f8fafc;
+  --bg-surface:     #ffffff;
+  --bg-surface-glass: rgba(255, 255, 255, 0.88);
+  --bg-subtle:      #f1f5f9;
+  --bg-hover:       #e2e8f0;
+
+  /* Typography Colors */
+  --text-main:      #0f172a;
+  --text-body:      #334155;
+  --text-muted:     #64748b;
+  --text-faint:     #94a3b8;
+
+  /* Default Brand (Sapphire & Cyan) */
+  --theme-primary:        #2563eb;
+  --theme-primary-hover:  #1d4ed8;
+  --theme-subtle:         #eff6ff;
+  --theme-border:         #bfdbfe;
+  --theme-glow:           rgba(37, 99, 235, 0.18);
+  --theme-gradient:       linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+
+  /* Multi-Color Feature Palettes */
+  /* 1. Symptoms — Diagnostic Violet & Indigo */
+  --color-symptoms:        #7c3aed;
+  --color-symptoms-hover:  #6d28d9;
+  --color-symptoms-subtle: #f5f3ff;
+  --color-symptoms-border: #ddd6fe;
+  --color-symptoms-glow:   rgba(124, 58, 237, 0.22);
+  --color-symptoms-grad:   linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+
+  /* 2. Medicines — Healing Emerald & Jade */
+  --color-meds:            #059669;
+  --color-meds-hover:      #047857;
+  --color-meds-subtle:     #ecfdf5;
+  --color-meds-border:     #a7f3d0;
+  --color-meds-glow:       rgba(5, 150, 105, 0.22);
+  --color-meds-grad:       linear-gradient(135deg, #059669 0%, #10b981 100%);
+
+  /* 3. Hospitals — Maritime Azure & Ocean Blue */
+  --color-hosp:            #0284c7;
+  --color-hosp-hover:      #0369a1;
+  --color-hosp-subtle:     #f0f9ff;
+  --color-hosp-border:     #bae6fd;
+  --color-hosp-glow:       rgba(2, 132, 199, 0.22);
+  --color-hosp-grad:       linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+
+  /* 4. OPD Timings — Amber, Sun Gold & Ochre */
+  --color-opd:             #d97706;
+  --color-opd-hover:       #b45309;
+  --color-opd-subtle:      #fffbeb;
+  --color-opd-border:      #fde68a;
+  --color-opd-glow:        rgba(217, 119, 6, 0.22);
+  --color-opd-grad:        linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+
+  /* 5. Emergency SOS — High-Voltage Crimson & Coral */
+  --color-sos:             #dc2626;
+  --color-sos-hover:       #b91c1c;
+  --color-sos-subtle:      #fef2f2;
+  --color-sos-border:      #fecaca;
+  --color-sos-glow:        rgba(220, 38, 38, 0.28);
+  --color-sos-grad:        linear-gradient(135deg, #dc2626 0%, #f87171 100%);
+
+  /* 6. Helplines — Rose & Compassionate Magenta */
+  --color-help:            #e11d48;
+  --color-help-hover:      #be123c;
+  --color-help-subtle:     #fff1f2;
+  --color-help-border:     #fecdd3;
+  --color-help-glow:       rgba(225, 29, 72, 0.22);
+  --color-help-grad:       linear-gradient(135deg, #e11d48 0%, #fb7185 100%);
+
+  /* Borders & Shadows */
+  --border:                #e2e8f0;
+  --border-strong:         #cbd5e1;
+  --shadow-sm:             0 2px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md:             0 8px 24px -4px rgba(15, 23, 42, 0.08), 0 3px 8px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg:             0 16px 36px -6px rgba(15, 23, 42, 0.12), 0 6px 14px -3px rgba(15, 23, 42, 0.06);
+  --shadow-glow:           0 0 24px var(--theme-glow);
+
+  /* Geometry */
+  --radius-xs:             4px;
+  --radius-sm:             8px;
+  --radius-md:             14px;
+  --radius-lg:             20px;
+  --radius-pill:           9999px;
+
+  /* Typography */
+  --font-main:             'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-mono:             'JetBrains Mono', monospace;
+  --transition:            0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   DARK THEME
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --bg-page:               #070b14;
+  --bg-surface:            #0d1424;
+  --bg-surface-glass:      rgba(13, 20, 36, 0.88);
+  --bg-subtle:             #162035;
+  --bg-hover:              #1f2e4c;
+
+  --text-main:             #f8fafc;
+  --text-body:             #cbd5e1;
+  --text-muted:            #94a3b8;
+  --text-faint:            #64748b;
+
+  --border:                #1e293b;
+  --border-strong:         #334155;
+
+  --color-symptoms-subtle: #1e1338;
+  --color-symptoms-border: #4c1d95;
+  --color-meds-subtle:     #052e21;
+  --color-meds-border:     #065f46;
+  --color-hosp-subtle:     #082f49;
+  --color-hosp-border:     #0369a1;
+  --color-opd-subtle:      #3d2105;
+  --color-opd-border:      #854d0e;
+  --color-sos-subtle:      #450a0a;
+  --color-sos-border:      #991b1b;
+  --color-help-subtle:     #4c0519;
+  --color-help-border:     #9f1239;
+
+  --shadow-sm:             0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-md:             0 8px 24px rgba(0, 0, 0, 0.55);
+  --shadow-lg:             0 16px 36px rgba(0, 0, 0, 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   PAGE-SPECIFIC THEME ACTIVATION
+   -------------------------------------------------------------------------- */
+body.theme-symptoms {
+  --theme-primary:        var(--color-symptoms);
+  --theme-primary-hover:  var(--color-symptoms-hover);
+  --theme-subtle:         var(--color-symptoms-subtle);
+  --theme-border:         var(--color-symptoms-border);
+  --theme-glow:           var(--color-symptoms-glow);
+  --theme-gradient:       var(--color-symptoms-grad);
+}
+
+body.theme-medicines {
+  --theme-primary:        var(--color-meds);
+  --theme-primary-hover:  var(--color-meds-hover);
+  --theme-subtle:         var(--color-meds-subtle);
+  --theme-border:         var(--color-meds-border);
+  --theme-glow:           var(--color-meds-glow);
+  --theme-gradient:       var(--color-meds-grad);
+}
+
+body.theme-hospitals {
+  --theme-primary:        var(--color-hosp);
+  --theme-primary-hover:  var(--color-hosp-hover);
+  --theme-subtle:         var(--color-hosp-subtle);
+  --theme-border:         var(--color-hosp-border);
+  --theme-glow:           var(--color-hosp-glow);
+  --theme-gradient:       var(--color-hosp-grad);
+}
+
+body.theme-opd {
+  --theme-primary:        var(--color-opd);
+  --theme-primary-hover:  var(--color-opd-hover);
+  --theme-subtle:         var(--color-opd-subtle);
+  --theme-border:         var(--color-opd-border);
+  --theme-glow:           var(--color-opd-glow);
+  --theme-gradient:       var(--color-opd-grad);
+}
+
+body.theme-emergency {
+  --theme-primary:        var(--color-sos);
+  --theme-primary-hover:  var(--color-sos-hover);
+  --theme-subtle:         var(--color-sos-subtle);
+  --theme-border:         var(--color-sos-border);
+  --theme-glow:           var(--color-sos-glow);
+  --theme-gradient:       var(--color-sos-grad);
+}
+
+body.theme-helplines {
+  --theme-primary:        var(--color-help);
+  --theme-primary-hover:  var(--color-help-hover);
+  --theme-subtle:         var(--color-help-subtle);
+  --theme-border:         var(--color-help-border);
+  --theme-glow:           var(--color-help-glow);
+  --theme-gradient:       var(--color-help-grad);
+}
+
+/* --------------------------------------------------------------------------
+   GLOBAL RESET & TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-page);
+  color: var(--text-body);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Lush Background Ambient Mesh */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: 500px;
+  background: radial-gradient(circle at 50% 20%, var(--theme-glow), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+h1, h2, h3, h4, h5 {
+  color: var(--text-main);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.04em; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.3rem); }
+h3 { font-size: 1.25rem; }
+
+a {
+  color: var(--theme-primary);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+a:hover {
+  filter: brightness(1.15);
+}
+
+/* Container */
+.site-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   LUXURY FLOATING GLASS NAVIGATION
+   -------------------------------------------------------------------------- */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  transition: all var(--transition);
+}
+
+.site-nav.scrolled {
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.brand-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.brand-icon-box {
+  width: 40px;
+  height: 40px;
+  background: var(--theme-gradient);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px var(--theme-glow);
+  transition: transform var(--transition);
+}
+
+.brand-logo-link:hover .brand-icon-box {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.brand-icon-box svg {
+  width: 22px;
+  height: 22px;
+  stroke: #fff;
+}
+
+.brand-title {
+  font-size: 1.28rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.035em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--theme-primary);
+  display: inline-block;
+}
+
+.nav-links-desktop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+
+.nav-link-item {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+  position: relative;
+}
+
+.nav-link-item:hover {
+  color: var(--text-main);
+  background: var(--bg-subtle);
+}
+
+.nav-link-item.active {
+  color: var(--theme-primary);
+  background: var(--theme-subtle);
+  font-weight: 700;
+}
+
+.nav-link-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 20%;
+  right: 20%;
+  height: 2.5px;
+  background: var(--theme-primary);
+  border-radius: 2px;
+}
+
+.nav-actions-desktop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   BEAUTIFIED MULTI-COLORED BUTTONS
+   -------------------------------------------------------------------------- */
+.btn-rect {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+  line-height: 1.3;
+  transition: all var(--transition);
+}
+
+.btn-rect-primary {
+  background: var(--theme-gradient);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px var(--theme-glow);
+}
+
+.btn-rect-primary:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--theme-glow);
+  filter: brightness(1.08);
+}
+
+.btn-rect-secondary {
+  background: var(--bg-surface);
+  color: var(--text-main);
+  border-color: var(--border);
+}
+
+.btn-rect-secondary:hover {
+  background: var(--bg-subtle);
+  border-color: var(--border-strong);
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.btn-rect-emergency {
+  background: var(--color-sos-grad);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px var(--color-sos-glow);
+}
+
+.btn-rect-emergency:hover {
+  color: #ffffff;
+  box-shadow: 0 8px 22px var(--color-sos-glow);
+  transform: translateY(-2px);
+}
+
+.btn-rect-sm {
+  padding: 7px 14px;
+  font-size: 0.82rem;
+}
+
+.btn-rect-lg {
+  padding: 15px 30px;
+  font-size: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   BEAUTIFIED MULTI-COLORED HERO BANNER
+   -------------------------------------------------------------------------- */
+.hero-wrapper {
+  padding: 76px 0 52px;
+  text-align: center;
+}
+
+.hero-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--theme-subtle);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px var(--theme-glow);
+}
+
+.hero-headline-gradient {
+  background: linear-gradient(135deg, var(--text-main) 30%, var(--theme-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   BEAUTIFIED CARDS WITH COLOR ACCENT BORDERS
+   -------------------------------------------------------------------------- */
+.card-modern {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 30px;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-modern:hover {
+  border-color: var(--theme-border);
+  box-shadow: var(--shadow-md), 0 0 20px var(--theme-glow);
+  transform: translateY(-3px);
+}
+
+/* Distinct Top Color Accent Line on Cards */
+.card-accent-symptoms::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--color-symptoms-grad); }
+.card-accent-meds::before     { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--color-meds-grad); }
+.card-accent-hosp::before     { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--color-hosp-grad); }
+.card-accent-opd::before      { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--color-opd-grad); }
+.card-accent-sos::before      { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--color-sos-grad); }
+.card-accent-help::before     { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--color-help-grad); }
+
+/* Beautiful Icon Box with Gradient Backgrounds */
+.icon-box-multi {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #fff;
+  transition: transform var(--transition);
+}
+
+.card-modern:hover .icon-box-multi {
+  transform: scale(1.08);
+}
+
+.icon-box-symptoms { background: var(--color-symptoms-grad); box-shadow: 0 4px 14px var(--color-symptoms-glow); }
+.icon-box-meds     { background: var(--color-meds-grad);     box-shadow: 0 4px 14px var(--color-meds-glow); }
+.icon-box-hosp     { background: var(--color-hosp-grad);     box-shadow: 0 4px 14px var(--color-hosp-glow); }
+.icon-box-opd      { background: var(--color-opd-grad);      box-shadow: 0 4px 14px var(--color-opd-glow); }
+.icon-box-sos      { background: var(--color-sos-grad);      box-shadow: 0 4px 14px var(--color-sos-glow); }
+.icon-box-help     { background: var(--color-help-grad);     box-shadow: 0 4px 14px var(--color-help-glow); }
+
+/* --------------------------------------------------------------------------
+   BEAUTIFIED SEARCH BAR
+   -------------------------------------------------------------------------- */
+.modern-search-bar {
+  display: flex;
+  align-items: center;
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 10px 8px 20px;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition);
+  gap: 12px;
+}
+
+.modern-search-bar:focus-within {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 5px var(--theme-glow), var(--shadow-lg);
+}
+
+.modern-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1.08rem;
+  color: var(--text-main);
+  outline: none;
+  padding: 8px 0;
+  font-family: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   MULTI-COLORED QUICK PILLS
+   -------------------------------------------------------------------------- */
+.quick-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-body);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-tag-pill:hover {
+  background: var(--theme-subtle);
+  border-color: var(--theme-border);
+  color: var(--theme-primary);
+  transform: translateY(-1px);
+}
+
+.quick-tag-pill.active {
+  background: var(--theme-primary);
+  border-color: var(--theme-primary);
+  color: #ffffff;
+  box-shadow: 0 3px 10px var(--theme-glow);
+}
+
+/* --------------------------------------------------------------------------
+   BEAUTIFIED DATA TABLES & GRIDS
+   -------------------------------------------------------------------------- */
+.data-table-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.clinical-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.clinical-table thead th {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+}
+
+.clinical-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+
+.clinical-table tbody tr:hover {
+  background: var(--theme-subtle);
+}
+
+.clinical-table td {
+  padding: 16px 20px;
+  color: var(--text-body);
+}
+
+/* --------------------------------------------------------------------------
+   INPUTS
+   -------------------------------------------------------------------------- */
+.clinical-input {
+  width: 100%;
+  padding: 13px 18px;
+  font-size: 0.94rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: all var(--transition);
+}
+
+.clinical-input:focus {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 4px var(--theme-glow);
+}
+
+/* --------------------------------------------------------------------------
+   BADGES
+   -------------------------------------------------------------------------- */
+.badge-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-brand      { background: var(--theme-subtle);         color: var(--theme-primary); border: 1px solid var(--theme-border); }
+.badge-symptoms   { background: var(--color-symptoms-subtle); color: var(--color-symptoms); border: 1px solid var(--color-symptoms-border); }
+.badge-meds       { background: var(--color-meds-subtle);     color: var(--color-meds);     border: 1px solid var(--color-meds-border); }
+.badge-hosp       { background: var(--color-hosp-subtle);     color: var(--color-hosp);     border: 1px solid var(--color-hosp-border); }
+.badge-opd        { background: var(--color-opd-subtle);      color: var(--color-opd);      border: 1px solid var(--color-opd-border); }
+.badge-sos        { background: var(--color-sos-subtle);      color: var(--color-sos);      border: 1px solid var(--color-sos-border); }
+.badge-help       { background: var(--color-help-subtle);     color: var(--color-help);     border: 1px solid var(--color-help-border); }
+
+/* --------------------------------------------------------------------------
+   FOOTER & DRAWER
+   -------------------------------------------------------------------------- */
+.site-footer {
+  margin-top: auto;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  padding: 56px 0 28px;
+}
+
+.footer-matrix-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 36px;
+  margin-bottom: 40px;
+}
+
+.footer-link-item {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 5px 0;
+  transition: all var(--transition);
+}
+
+.footer-link-item:hover {
+  color: var(--theme-primary);
+  transform: translateX(3px);
+}
+
+.footer-bottom-bar {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.84rem;
+  color: var(--text-faint);
+}
+
+/* Mobile Toggle & Drawer */
+.mobile-nav-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: min(340px, 86vw);
+  height: 100vh;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  z-index: 200;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-lg);
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+
+.mobile-nav-drawer.open { right: 0; }
+
+.mobile-nav-item {
+  display: block;
+  padding: 13px 16px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+  background: var(--theme-subtle);
+  color: var(--theme-primary);
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast-msg {
+  background: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--theme-primary);
+  border-radius: var(--radius-sm);
+  padding: 13px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .nav-links-desktop { display: none; }
+  .mobile-nav-toggle { display: flex; }
+  .footer-matrix-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .footer-matrix-grid { grid-template-columns: 1fr; }
+  .modern-search-bar { flex-direction: column; padding: 12px; }
+  .modern-search-bar .btn-rect { width: 100%; }
+}

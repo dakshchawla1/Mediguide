@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Directory & Emergency Locator — MediGuide India</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .map-frame-box {
+      width: 100%;
+      height: 460px;
+      border: 2px solid var(--color-hosp-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 36px;
+      background: var(--bg-surface);
+      box-shadow: 0 8px 24px var(--color-hosp-glow);
+    }
+    .map-frame-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .hosp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+  </style>
+</head>
+<body class="theme-hospitals">
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="site-container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-logo-link">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="13" y="3" width="10" height="30" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <rect x="3" y="13" width="30" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+              <path d="M2 22 L7 22 L10 16 L13 26 L16 18 L19 24 L22 20 L25 22 L28 22" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+        </a>
+
+        <ul class="nav-links-desktop">
+          <li><a href="index.html" class="nav-link-item">Home</a></li>
+          <li><a href="symptoms.html" class="nav-link-item">Symptoms</a></li>
+          <li><a href="medicines.html" class="nav-link-item">Medicines</a></li>
+          <li><a href="hospitals.html" class="nav-link-item active">Hospitals</a></li>
+          <li><a href="opd.html" class="nav-link-item">OPD Timings</a></li>
+          <li><a href="helplines.html" class="nav-link-item">Helplines</a></li>
+        </ul>
+
+        <div class="nav-actions-desktop">
+          <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span>Theme</span>
+          </button>
+          <a href="emergency.html" class="btn-rect btn-rect-emergency btn-rect-sm">SOS 108</a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span class="brand-title">MediGuide<span class="brand-dot"></span></span>
+      <button type="button" class="btn-rect btn-rect-secondary btn-rect-sm" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a href="index.html" class="mobile-nav-item" onclick="closeMobileMenu()">Home</a>
+    <a href="symptoms.html" class="mobile-nav-item" onclick="closeMobileMenu()">Symptom Triage</a>
+    <a href="medicines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Jan Aushadhi Medicines</a>
+    <a href="hospitals.html" class="mobile-nav-item active" onclick="closeMobileMenu()">Hospitals &amp; Clinics</a>
+    <a href="opd.html" class="mobile-nav-item" onclick="closeMobileMenu()">OPD Timings</a>
+    <a href="helplines.html" class="mobile-nav-item" onclick="closeMobileMenu()">Helplines</a>
+    <a href="login.html" class="mobile-nav-item" onclick="closeMobileMenu()">Portal Login</a>
+    <a href="emergency.html" class="mobile-nav-item" style="color:var(--color-sos); font-weight:700;" onclick="closeMobileMenu()">Emergency SOS (108)</a>
+    <div style="margin-top:auto; padding-top:20px;">
+      <button type="button" class="btn-rect btn-rect-secondary w-100 theme-toggle-btn" onclick="toggleTheme();">
+        Toggle Theme
+      </button>
+    </div>
+  </div>
+
+  <main style="padding: 56px 0 84px;">
+    <div class="site-container">
+
+      <!-- Page Header -->
+      <div style="text-align: center; margin-bottom: 36px;">
+        <span class="hero-pill-badge" style="background:var(--color-hosp-subtle); border-color:var(--color-hosp-border); color:var(--color-hosp);">
+          National Healthcare Facility Registry
+        </span>
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Hospital &amp; Trauma Center Locator</h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+          Locate verified government medical colleges, trauma centers, and tertiary referral hospitals with live GPS directions.
+        </p>
+      </div>
+
+      <!-- Search Card -->
+      <div class="card-modern card-accent-hosp" style="margin-bottom: 32px;">
+        <form onsubmit="handleCitySearch(event)">
+          <label style="font-size:0.92rem; font-weight:700; color:var(--text-main); display:block; margin-bottom:10px;">
+            Search City, District, or Locality:
+          </label>
+          <div style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+            <input type="text" id="hospitalSearchInput" class="clinical-input" style="flex:1; min-width:260px;" placeholder="e.g. New Delhi, Mumbai, Jaipur, Bengaluru, Lucknow, Kolkata..." autocomplete="off">
+            <button type="submit" class="btn-rect" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 4px 12px var(--color-hosp-glow);">
+              Search Map
+            </button>
+            <button type="button" class="btn-rect btn-rect-secondary" onclick="useCurrentGPSLocation()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+              Use My GPS
+            </button>
+          </div>
+        </form>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <span style="font-size:0.86rem; font-weight:700; color:var(--text-muted); margin-right:4px;">Quick cities:</span>
+          <button type="button" class="quick-tag-pill" onclick="searchForCity('New Delhi')">Delhi NCR</button>
+          <button type="button" class="quick-tag-pill" onclick="searchForCity('Mumbai')">Mumbai</button>
+          <button type="button" class="quick-tag-pill" onclick="searchForCity('Bengaluru')">Bengaluru</button>
+          <button type="button" class="quick-tag-pill" onclick="searchForCity('Jaipur')">Jaipur</button>
+          <button type="button" class="quick-tag-pill" onclick="searchForCity('Lucknow')">Lucknow</button>
+          <button type="button" class="quick-tag-pill" onclick="searchForCity('Chennai')">Chennai</button>
+        </div>
+      </div>
+
+      <!-- Map Display -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+        <div id="activeSearchQueryDisplay" style="font-weight:800; color:var(--text-main); font-size:1.15rem;">
+          Hospitals in New Delhi
+        </div>
+        <div id="externalMapsButtonWrap"></div>
+      </div>
+
+      <div class="map-frame-box" id="mapDisplayWrapper">
+        <iframe src="https://maps.google.com/maps?q=hospitals+near+New+Delhi+India&output=embed" loading="lazy" title="Google Map of Hospitals"></iframe>
+      </div>
+
+      <!-- Verified Hospitals Grid -->
+      <div style="margin-top: 48px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 style="font-size: 1.6rem; margin-bottom: 4px;">Premier Apex &amp; Multi-Specialty Institutions</h2>
+            <p style="color:var(--text-faint); font-size:0.9rem; margin:0;">Verified government medical colleges, tertiary care centers, and specialty institutes.</p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="quick-tag-pill active" onclick="filterHospCards(this, 'all')">All (16)</button>
+            <button class="quick-tag-pill" onclick="filterHospCards(this, 'Delhi')">Delhi</button>
+            <button class="quick-tag-pill" onclick="filterHospCards(this, 'Mumbai')">Mumbai</button>
+            <button class="quick-tag-pill" onclick="filterHospCards(this, 'Bangalore')">Bangalore</button>
+            <button class="quick-tag-pill" onclick="filterHospCards(this, 'Chennai')">Chennai</button>
+            <button class="quick-tag-pill" onclick="filterHospCards(this, 'North')">North</button>
+          </div>
+        </div>
+
+        <div class="hosp-grid" id="hospCardsGrid">
+          
+          <div class="card-modern card-accent-hosp" data-zone="delhi north govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Apex Central Institute
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">AIIMS New Delhi</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Ansari Nagar East, Ring Road, New Delhi — 110029</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              24/7 Level-1 Apex Trauma Centre, emergency casualty, multi-organ transplant units, and comprehensive specialty clinics.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=AIIMS+New+Delhi" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=AIIMS+New+Delhi" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:01126588500" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="delhi north govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Central Multi-Specialty
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">Safdarjung Hospital &amp; VMMC</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Ring Road, Opposite AIIMS, New Delhi — 110029</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              High-volume national referral hospital, specialized sports injury centre, regional burns institute, and round-the-clock emergency.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=Safdarjung" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Safdarjung+Hospital+Delhi" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:01126707444" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="delhi north pvt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Quaternary Super-Specialty
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">Medanta — The Medicity Gurugram</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Sector 38, CH Baktawar Singh Road, Gurugram — 122001</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              World-renowned institutes for cardiac sciences, liver and kidney transplants, oncology, neurosciences, and robotic surgery.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=Medanta" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Medanta+The+Medicity+Gurgaon" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:01244141414" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="mumbai west govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Premier Oncology Center
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">Tata Memorial Hospital</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Dr. E Borges Road, Parel, Mumbai — 400012</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              National apex cancer centre recognized globally for clinical diagnosis, radiation therapy, and surgical oncology excellence.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=Tata+Memorial" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Tata+Memorial+Hospital+Mumbai" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:02224177000" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="mumbai west govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Municipal Apex Hospital
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">KEM Hospital Mumbai</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Acharya Donde Marg, Parel, Mumbai — 400012</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              One of India's largest teaching hospitals with 1800+ beds, 24/7 casualty, cardiology, neurology, and neonatal care.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=KEM+Hospital" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=KEM+Hospital+Mumbai" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:02224136051" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="bangalore south govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              National Institute of Mental Health
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">NIMHANS Bengaluru</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Hosur Road, Near Dairy Circle, Bengaluru — 560029</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              India's apex center for mental health, neuropsychiatry, neurosurgery, de-addiction, and child developmental psychiatry.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=NIMHANS" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=NIMHANS+Bangalore" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:08046110007" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="chennai south govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              State Apex General Hospital
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">RGGGH Chennai (General Hospital)</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 EVR Periyar Salai, Park Town, Chennai — 600003</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              Historic 350-year-old apex tertiary hospital in Tamil Nadu with multi-specialty trauma, cardiology, and kidney care.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=RGGGH" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Rajiv+Gandhi+Government+General+Hospital+Chennai" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:04425305000" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="chennai south pvt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              National Tertiary Referral
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">CMC Vellore (Christian Medical College)</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Ida Scudder Road, Vellore — 632004</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              Pioneering institution renowned for hematology, stem cell bone marrow transplant, neurosurgery, and gastroenterology.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=CMC+Vellore" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=CMC+Vellore" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:04162281000" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="north govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Apex State Medical College
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">SMS Hospital Jaipur</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 JLN Marg, Ashok Nagar, Jaipur — 302004</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              Largest tertiary hospital in Rajasthan featuring advanced trauma emergency, cardiac catheterization labs, and organ transplant.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=SMS+Hospital+Jaipur" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=SMS+Hospital+Jaipur" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:01412518888" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="north govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Apex Post-Graduate Institute
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">PGIMER Chandigarh (PGI)</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Sector 12, Chandigarh — 160012</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              Premier medical institute for Punjab, Haryana, and HP offering quaternary care across advanced medical and surgical specialties.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=PGIMER" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=PGIMER+Chandigarh" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:01722756565" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="north govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              State Medical University
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">KGMU Lucknow</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 Shah Mina Road, Chowk, Lucknow — 226003</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              Uttar Pradesh's foremost medical university with 4500+ beds, trauma center, cardiology, pediatric surgery, and orthopaedics.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=KGMU" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=KGMU+Lucknow" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:05222258880" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+          <div class="card-modern card-accent-hosp" data-zone="east govt">
+            <span class="badge-modern" style="background:var(--color-hosp-subtle); border:1px solid var(--color-hosp-border); color:var(--color-hosp); font-weight:700; margin-bottom:12px;">
+              Apex Research &amp; Referral
+            </span>
+            <h3 style="font-size:1.25rem; margin-bottom:6px;">IPGME&amp;R / SSKM Hospital Kolkata</h3>
+            <div style="font-size:0.8rem; color:var(--text-faint); margin-bottom:10px;">📍 244 AJC Bose Road, Bhowanipore, Kolkata — 700020</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px; flex:1; line-height:1.5;">
+              Apex super-specialty hospital in West Bengal handling cardiology, neurosurgery, rheumatology, and round-the-clock emergency.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="opd.html?q=SSKM" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">OPD Timings</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=SSKM+Hospital+Kolkata" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm" style="flex:1; justify-content:center;">Directions</a>
+              <a href="tel:03322044440" class="btn-rect btn-rect-sm" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 3px 10px var(--color-hosp-glow); justify-content:center;">Call</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-bottom-bar" style="border:none; padding-top:0;">
+        <span>&copy; 2026 MediGuide India &bull; National Hospital Geolocation Registry.</span>
+        <span><a href="emergency.html" style="color:var(--color-sos); font-weight:700;">Emergency Hotline: 108</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    let currentCity = 'New Delhi';
+
+    function searchForCity(city) {
+      document.getElementById('hospitalSearchInput').value = city;
+      currentCity = city;
+      renderMap(city);
+    }
+
+    function handleCitySearch(e) {
+      e.preventDefault();
+      const city = document.getElementById('hospitalSearchInput').value.trim();
+      if (!city) {
+        showToast('Please type a city or locality', 'warning');
+        return;
+      }
+      currentCity = city;
+      renderMap(city);
+    }
+
+    function renderMap(location) {
+      const q = `hospitals near ${location} India`;
+      const url = `https://maps.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
+      document.getElementById('mapDisplayWrapper').innerHTML = `
+        <iframe src="${url}" loading="lazy" title="Google Map of ${location}"></iframe>
+      `;
+      document.getElementById('activeSearchQueryDisplay').textContent = `Hospitals in ${location}`;
+      document.getElementById('externalMapsButtonWrap').innerHTML = `
+        <a href="https://www.google.com/maps/search/${encodeURIComponent(q)}" target="_blank" class="btn-rect btn-rect-secondary btn-rect-sm">
+          Open in Google Maps &rarr;
+        </a>
+      `;
+      showToast(`Map updated: ${location}`, 'info');
+    }
+
+    function useCurrentGPSLocation() {
+      if (!navigator.geolocation) {
+        showToast('Geolocation is not supported', 'warning');
+        return;
+      }
+      showToast('Acquiring GPS position...', 'info');
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          const url = `https://maps.google.com/maps?q=hospitals&ll=${lat},${lng}&z=14&output=embed`;
+          document.getElementById('mapDisplayWrapper').innerHTML = `
+            <iframe src="${url}" loading="lazy" title="Google Map near GPS"></iframe>
+          `;
+          document.getElementById('activeSearchQueryDisplay').textContent = 'Hospitals near your GPS location';
+          showToast('GPS position acquired', 'success');
+        },
+        err => {
+          showToast('GPS permission denied. Please search by city.', 'warning');
+        },
+        { timeout: 8000, enableHighAccuracy: true }
+      );
+    }
+
+    function filterHospCards(btn, zone) {
+      document.querySelectorAll('.quick-tag-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const cards = document.querySelectorAll('#hospCardsGrid .card-modern');
+      const target = zone.toLowerCase();
+
+      cards.forEach(card => {
+        const cardZone = (card.getAttribute('data-zone') || '').toLowerCase();
+        if (target === 'all' || cardZone.includes(target)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const c = params.get('city') || 'New Delhi';
+      document.getElementById('hospitalSearchInput').value = c;
+      currentCity = c;
+      renderMap(c);
+    });
+  </script>
+</body>
+</html>
