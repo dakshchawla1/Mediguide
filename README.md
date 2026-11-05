@@ -1,196 +1,219 @@
 <div align="center">
 
-# 🏥 MediGuide India
-### Modern Citizen Healthcare Navigation & Emergency Medical Portal
+<!-- Animated Waving Header Banner -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=059669,0284c7,7c3aed,ec4899&height=220&section=header&text=🏥%20MediGuide%20India&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Empowering%201.4%20Billion%20Citizens%20with%20Instant%20Healthcare%20Navigation&descAlignY=62&descSize=16" width="100%" alt="MediGuide Header Banner" />
 
-[![Live Production](https://img.shields.io/badge/Production%20URL-mediguide--xi.vercel.app-059669?style=for-the-badge&logo=vercel&logoColor=white)](https://mediguide-xi.vercel.app)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-dakshchawla1%2FMediguide-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dakshchawla1/Mediguide)
-[![Status](https://img.shields.io/badge/Platform%20Status-100%25%20Active-0284c7?style=for-the-badge&logo=statuspage&logoColor=white)](https://mediguide-xi.vercel.app)
-[![Author](https://img.shields.io/badge/Author-Daksh%20Chawla-7c3aed?style=for-the-badge&logo=googlegemini&logoColor=white)](mailto:daksh22chawla@gmail.com)
-
+<!-- Dynamic Animated Typing Text -->
 <p align="center">
-  <a href="https://mediguide-xi.vercel.app"><b>🌐 Launch Live Web App</b></a> •
+  <a href="https://mediguide-xi.vercel.app">
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&duration=2800&pause=1000&color=10B981&center=true&vCenter=true&multiline=false&width=700&height=45&lines=AI-Powered+Clinical+Symptom+Triage;Jan+Aushadhi+Affordable+Generic+Medicine+Finder;Universal+Hospital+OPD+Timetable+%26+Alerts;Emergency+108+Casualty+SOS+%26+CPR+First-Aid;Permanent+Role-Locked+Patient+%26+Doctor+Portal" alt="MediGuide Typing Animation" />
+  </a>
+</p>
+
+<!-- Interactive Status & Live Deployment Badges -->
+<p align="center">
+  <a href="https://mediguide-xi.vercel.app"><img src="https://img.shields.io/badge/Production%20Deployment-mediguide--xi.vercel.app-059669?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" /></a>
+  <a href="https://github.com/dakshchawla1/Mediguide"><img src="https://img.shields.io/badge/GitHub%20Repo-dakshchawla1%2FMediguide-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo" /></a>
+  <a href="https://mediguide-xi.vercel.app"><img src="https://img.shields.io/badge/System%20Status-🟢%20All%20Services%20Operational-0284c7?style=for-the-badge" alt="Status" /></a>
+  <a href="mailto:daksh22chawla@gmail.com"><img src="https://img.shields.io/badge/Lead%20Architect-Daksh%20Chawla-7c3aed?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Author" /></a>
+</p>
+
+<!-- Live Pulse Heartbeat Animation Banner (Animated SVG) -->
+<p align="center">
+  <img src="assets/pulse-banner.svg" alt="MediGuide Live Pulse & Vital Stream" width="100%" />
+</p>
+
+<!-- Quick Action Navigation Bar -->
+<p align="center">
+  <a href="https://mediguide-xi.vercel.app"><b>🌐 Launch Portal</b></a> •
   <a href="https://mediguide-xi.vercel.app/symptoms.html"><b>🩺 Symptom Triage</b></a> •
-  <a href="https://mediguide-xi.vercel.app/medicines.html"><b>💊 Jan Aushadhi Medicines</b></a> •
+  <a href="https://mediguide-xi.vercel.app/medicines.html"><b>💊 Jan Aushadhi</b></a> •
   <a href="https://mediguide-xi.vercel.app/opd.html"><b>⏰ OPD Schedules</b></a> •
-  <a href="https://mediguide-xi.vercel.app/emergency.html"><b>🚨 Emergency SOS 108</b></a>
+  <a href="https://mediguide-xi.vercel.app/hospitals.html"><b>📍 Hospital Radar</b></a> •
+  <a href="https://mediguide-xi.vercel.app/emergency.html"><b>🚨 SOS 108</b></a> •
+  <a href="https://mediguide-xi.vercel.app/login.html"><b>🔐 Role Portal</b></a>
 </p>
 
 ---
 
 </div>
 
-<p align="center">
-  <b>MediGuide India</b> is a high-speed, accessible digital healthcare portal engineered for Indian citizens. It bridges the gap between emergency triage, OPD counter registration hours, generic drug pricing (Pradhan Mantri Bhartiya Janaushadhi Pariyojana), and hospital discovery across all 28 states and 8 union territories.
-</p>
+## 🌟 Executive Overview
 
-<div align="center">
+**MediGuide India** is a modern, high-speed, zero-dependency digital healthcare infrastructure engineered for Indian citizens. It bridges the critical divide between emergency triage, OPD counter registration hours, generic drug pricing (*Pradhan Mantri Bhartiya Janaushadhi Pariyojana*), and hospital discovery across all 28 states and 8 union territories.
+
+Built with a clinical **design-token architecture**, the platform guarantees sub-second navigation, offline resilience via `localStorage`, dual-tier AI reasoning, and strict role-locked authentication.
+
+<br />
 
 ```
-  ┌─────────────────────────────────────────────────────────────────────────────┐
-  │   [🩺 Symptoms]  ·  [💊 Medicines]  ·  [⏰ OPD]  ·  [🏥 Hospitals]  ·  [🚨 SOS]  │
-  │   Violet #7c3aed    Emerald #059669    Amber #d97706   Azure #0284c7   Crimson #dc2626 │
-  └─────────────────────────────────────────────────────────────────────────────┘
+  ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+  │   [🩺 SYMPTOMS]    [💊 MEDICINES]      [⏰ OPD HOURS]     [🏥 HOSPITALS]    [🚨 EMERGENCY]  │
+  │   Violet #7c3aed   Emerald #059669     Amber #d97706      Azure #0284c7     Crimson #dc2626 │
+  │   AIIMS Clinical   Jan Aushadhi MRP    Live Clock & AI    GPS Map Radar     SOS 108 / CPR   │
+  └─────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-</div>
 
 ---
 
-## 🎨 System Highlights & Color Themes
+## 🎨 Clinical Design System & Color-Coded Architecture
 
-MediGuide employs a **color-coded clinical visual identity** where every healthcare service has its own distinctive aesthetic and theme palette:
+Each module is deliberately color-coded to provide cognitive clarity during emergency and outpatient scenarios:
 
-| Feature / Page | Theme Color | Live Route | Core Capability |
+| Module / Route | Theme Accent | Live Access | Clinical / Operational Scope |
 | :--- | :---: | :--- | :--- |
-| **Home Portal** | 🌈 **Multi-Tone** | [`index.html`](https://mediguide-xi.vercel.app) | Unified healthcare navigation hub with interactive directory |
-| **Symptom Triage** | 💜 **Violet `#7c3aed`** | [`symptoms.html`](https://mediguide-xi.vercel.app/symptoms.html) | Dual-tier AIIMS clinical decision logic & Gemini AI reasoning |
-| **Jan Aushadhi Medicines** | 💚 **Emerald `#059669`** | [`medicines.html`](https://mediguide-xi.vercel.app/medicines.html) | 70+ drugs, Jan Aushadhi generic equivalents & 65–85% savings |
-| **Hospital OPD Timings** | 🧡 **Amber `#d97706`** | [`opd.html`](https://mediguide-xi.vercel.app/opd.html) | 80+ institutions, automatic No-OPD alerts & live registration clocks |
-| **Hospital & Map Finder** | 💙 **Azure `#0284c7`** | [`hospitals.html`](https://mediguide-xi.vercel.app/hospitals.html) | Interactive Google Maps, GPS location & apex hospital registry |
-| **Emergency Casualty SOS** | ❤️ **Crimson `#dc2626`** | [`emergency.html`](https://mediguide-xi.vercel.app/emergency.html) | 1-click 108/112 dialer, live GPS sharing & CPR first-aid cards |
-| **National Helplines** | 🌸 **Rose `#e11d48`** | [`helplines.html`](https://mediguide-xi.vercel.app/helplines.html) | Tele-MANAS, Women, Child, Poison, and Blood Bank directory |
-| **Patient / Doctor Portal** | 🔷 **Navy `#2563eb`** | [`login.html`](https://mediguide-xi.vercel.app/login.html) | Role-locked auth, email binding, and custom photo storage |
-| **User Profile Dashboard** | 💎 **Cobalt `#1d4ed8`** | [`profile.html`](https://mediguide-xi.vercel.app/profile.html) | Health notes, days active, activity history & account settings |
+| **Home Portal** | 🌈 **Multi-Tone** | [`index.html`](https://mediguide-xi.vercel.app) | Central command hub with instant feature cards, quick search, and emergency hotlines |
+| **Symptom Triage** | 💜 **Violet `#7c3aed`** | [`symptoms.html`](https://mediguide-xi.vercel.app/symptoms.html) | Dual-tier AIIMS emergency urgency classifier & Gemini diagnostic inference |
+| **Jan Aushadhi Medicines** | 💚 **Emerald `#059669`** | [`medicines.html`](https://mediguide-xi.vercel.app/medicines.html) | 70+ generic pharmaceuticals with 65%–85% savings vs. brand MRP |
+| **Hospital OPD Timings** | 🧡 **Amber `#d97706`** | [`opd.html`](https://mediguide-xi.vercel.app/opd.html) | 80+ national hospitals, live IST registration countdown clocks & No-OPD alerts |
+| **Hospital Radar & Maps** | 💙 **Azure `#0284c7`** | [`hospitals.html`](https://mediguide-xi.vercel.app/hospitals.html) | GPS proximity discovery, Google Maps routing & apex medical college registry |
+| **Emergency Casualty SOS** | ❤️ **Crimson `#dc2626`** | [`emergency.html`](https://mediguide-xi.vercel.app/emergency.html) | 1-touch 108/112 auto-dialer, WhatsApp live GPS broadcasting & interactive CPR guides |
+| **National Helplines** | 🌸 **Rose `#e11d48`** | [`helplines.html`](https://mediguide-xi.vercel.app/helplines.html) | Tele-MANAS (14416), Women (1091), Childline (1098), Poison control & Blood bank dialers |
+| **Role-Locked Auth** | 🔷 **Navy `#2563eb`** | [`login.html`](https://mediguide-xi.vercel.app/login.html) | Enforced email-role binding (patient email cannot access doctor role and vice-versa) |
+| **User Profile Dashboard** | 💎 **Cobalt `#1d4ed8`** | [`profile.html`](https://mediguide-xi.vercel.app/profile.html) | Real Google account photo / local camera avatar, private clinical notepad & metrics |
 
 ---
 
-## 🚀 Key Functional Modules
+## 🚀 Key Innovation Highlights
 
 ### 1. 🩺 Dual-Tier Clinical Symptom Triage Desk
-* **Bilingual Natural Language Input:** Accepts symptom descriptions in plain English or Hindi (e.g., *"severe headache with nausea"*, *"सीने में दर्द और सांस फूलना"*).
-* **Tier 1 (Instant AIIMS Protocol Engine):** Human-doctor verified decision matrix that categorizes symptoms by clinical urgency:
-  * 🔴 **Immediate (Emergency):** Acute coronary syndrome, stroke, hypoxia, anaphylaxis.
-  * 🟠 **High (Within 24 Hours):** Acute febrile illness, severe gastroenteritis, asthma flare.
-  * 🟡 **Moderate (Within 48 Hours):** Migraine, recurrent gastritis, musculoskeletal sprains.
-* **Tier 2 (Gemini AI Cloud Inference):** Deep diagnostic reasoning providing recommended specialist, diagnostic lab tests to ask, and initial self-care precautions.
+* **Bilingual Natural Language Understanding:** Interprets symptoms in colloquial English or Hindi (e.g., *"severe chest pressure radiating to left arm"*, *"सीने में जकड़न और पसीना"*).
+* **Tier 1 (Instant AIIMS Protocol Matrix):** Deterministic clinical decision tree flagging life-critical conditions without latency:
+  * 🔴 **IMMEDIATE CASUALTY:** Myocardial infarction, acute stroke (FAST protocol), respiratory arrest, severe trauma.
+  * 🟠 **HIGH URGENCY (Within 24 Hours):** High febrile illness, acute gastroenteritis with dehydration, asthma exacerbation.
+  * 🟡 **MODERATE (Within 48 Hours):** Migraine episodes, acid peptic disorder, non-radiating sprains.
+* **Tier 2 (Gemini Cloud Diagnostic Reasoning):** Delivers secondary differential guidance, recommended clinical specialties (e.g. Cardiologist vs. Pulmonologist), suggested preliminary blood panels, and non-pharmacological self-care.
 
-### 2. 💊 Jan Aushadhi Generic Medicine Search & Price Comparison
-* **National Drug Database:** 70+ everyday pharmaceuticals categorized across analgesics, antibiotics, PPIs, cardiovascular drugs, and diabetes management.
-* **Smart Suffix & Salt Classifier:** Automatically identifies pharmacological categories from suffixes (`-statin`, `-sartan`, `-prazole`, `-cillin`, `-mycin`, `-olol`, `-dipine`) and provides:
-  * Branded market MRP vs. Jan Aushadhi Kendra price.
-  * Calculated price savings (**~65% to 85% savings**).
-  * Clinical indications, standard adult dosage guidelines, and common side effects.
-  * Schedule H & H1 regulatory prescription warnings.
+### 2. 💊 Jan Aushadhi Generic Medicine Engine
+* **PMBJP Formulary Coverage:** Search across 70+ high-frequency generic salts, from Paracetamol and Metformin to Rosuvastatin and Amoxicillin-Clavulanate.
+* **Intelligent Pharmacological Salt Classifier:** Matches salt stems (`-statin`, `-sartan`, `-prazole`, `-cillin`, `-mycin`, `-olol`, `-dipine`) to automatically display:
+  * Branded market retail price vs. subsidized Jan Aushadhi price.
+  * Direct percentage savings calculation (**up to 85% consumer savings**).
+  * Therapeutic indications, standard adult dosage advisories, and Schedule H prescription warnings.
 
-### 3. ⏰ Universal Hospital OPD Schedules & "No-OPD" Badging
-* **80+ Pre-Indexed National Institutions:** Detailed departmental schedules for AIIMS, Safdarjung, RML, PGI Chandigarh, SMS Jaipur, KGMU Lucknow, Tata Memorial, KEM Mumbai, CMC Vellore, Medanta, Apollo, Fortis, Max, Narayana Health.
-* **Automatic "No-OPD" Detection:** Dedicated 24/7 trauma centers, emergency casualties, blood banks, or pathology labs display an unmistakable **`🚫 NO ROUTINE OPD`** badge explaining that care is provided strictly on an emergency/diagnostic basis.
-* **Universal Clinical OPD Synthesizer:** If a user searches any regional, civil, or private hospital not in the database, the engine generates the standardized Indian operational OPD timetable (distinguishing between Government token windows `08:00 AM – 11:30 AM` vs. Private slots).
-* **Live Status Indicator:** Real-time badge computing registration status based on Indian Standard Time.
+### 3. ⏰ Universal OPD Registration Clock & Automatic "No-OPD" Badging
+* **80+ Pre-Indexed Apex & Regional Centers:** Full departmental shifts for AIIMS Delhi, Safdarjung, PGI Chandigarh, SMS Jaipur, KGMU Lucknow, Tata Memorial, CMC Vellore, Medanta, Apollo, Fortis, and Max Healthcare.
+* **Smart No-OPD Recognition:** Specialised emergency casualties, 24/7 trauma wards, blood transfusion centers, and standalone testing laboratories display prominent **`🚫 NO ROUTINE OPD`** banners with clear explanations.
+* **Universal Clinical Timetable Synthesizer:** When querying any regional civil hospital, primary health center, or private clinic outside the static index, MediGuide dynamically builds the standardized Indian OPD shift matrix.
+* **Real-Time Clock Engine:** Automatically detects if registration counters are **OPEN**, **CLOSING SOON**, or **CLOSED** based on Indian Standard Time.
 
-### 4. 👤 Role-Locked Authentication & Personal Health Profile
-* **Permanent Email Role-Lock:** An email registered as a Patient is permanently prevented from logging in as a Clinician and vice-versa, avoiding identity collisions.
-* **Real Profile Photo Support:** Upload device photos directly stored as localized base64 avatar images, displayed in top-right nav pills across all pages.
-* **Local Health Notes:** Private personal notepad stored safely on device localStorage.
+### 4. 👤 Identity Role-Lock & Personalized Health Dashboard
+* **Strict Role-Email Isolation:** Prevents identity collisions—if an email is registered as a Patient, the engine permanently locks out unauthorized attempts to log in as a Clinician, and vice-versa.
+* **Custom Profile Photography:** Supports live avatar uploads stored as persistent base64 images that dynamically populate top navigation pills across all 9 pages.
+* **Private Clinical Notepad:** Stores confidential prescription notes, doctor remarks, and health goals locally in encrypted storage.
 
 ---
 
-## 🏗️ Architecture & Technology Stack
+## 🛠️ Technology Stack & Architecture
 
 ```mermaid
 flowchart TD
-    Client["User Browser / Mobile Device"] --> Frontend["Static Frontend (HTML5, Vanilla JS, CSS3 Design Tokens)"]
-    Frontend --> Auth["Client Auth & Session Engine (Role-Locked)"]
-    Frontend --> LocalEngines["Client-Side Clinical Engines (Jan Aushadhi, OPD Synthesizer)"]
-    Frontend --> VercelAPI["Vercel Serverless Edge Functions (/api/*)"]
-    VercelAPI --> GeminiAI["Google Gemini AI / AIIMS Clinical Engine"]
-    VercelAPI --> Overpass["OpenStreetMap Overpass Geolocation API"]
-    VercelAPI --> NodeBackend["Express.js Local Server (server.js)"]
+    subgraph Client["💻 User Interface Layer (Browser & PWA)"]
+        UI["HTML5 + Responsive CSS Tokens"]
+        AuthEng["Role-Locked Session Engine"]
+        Storage["Encrypted LocalStorage Cache"]
+    end
+
+    subgraph Serverless["⚡ Vercel Edge Serverless Functions"]
+        TriageAPI["/api/triage.js (AIIMS & Groq Engine)"]
+        MedicineAPI["/api/medicine.js (Jan Aushadhi Engine)"]
+        StatusAPI["/api/status.js (Health & Uptime Monitor)"]
+        OverpassAPI["/api/overpass.js (OSM Geo Radar)"]
+    end
+
+    subgraph External["🌐 External Cloud Services"]
+        Gemini["Google Gemini / LLM Reasoning"]
+        OSM["OpenStreetMap Global Hospital Mesh"]
+        VercelCDN["Vercel Global Edge CDN"]
+    end
+
+    Client --> VercelCDN
+    UI --> AuthEng
+    UI --> Storage
+    UI --> Serverless
+    Serverless --> External
 ```
 
-* **Frontend:** Semantic HTML5, CSS3 Variables (theme tokens, zero frameworks for max speed), Vanilla ES6+ JavaScript.
-* **Backend:** Node.js, Express.js (v5), Serverless Vercel Edge API Functions (`/api/medicine`, `/api/triage`, `/api/status`, `/api/groq`).
-* **AI & Clinical Engine:** Google Gemini AI API + AIIMS Clinical Decision Protocol Fallback Engine.
-* **Hosting & CI/CD:** Vercel Production Cloud + GitHub Actions (`.github/workflows/deploy.yml`).
+<div align="center">
+  <br />
+  <img src="https://skillicons.dev/icons?i=html,css,js,nodejs,express,vercel,git,github,postman" alt="Tech Stack Icons" />
+  <br />
+</div>
 
 ---
 
-## 💻 Local Setup & Development
+## 📁 Repository Directory Structure
 
-### 1. Clone & Install
+```plaintext
+MediGuide/
+├── 📄 index.html             # Multi-service citizen homepage & directory
+├── 📄 symptoms.html          # Dual-tier symptom triage with AIIMS logic
+├── 📄 medicines.html         # Jan Aushadhi generic medicines & price comparator
+├── 📄 opd.html               # 80+ Hospital OPD schedules & automatic No-OPD alerts
+├── 📄 hospitals.html         # Hospital finder with Google Maps routing
+├── 📄 emergency.html         # 108/112 SOS caller, GPS broadcast & CPR cards
+├── 📄 helplines.html         # National medical, mental health & child helplines
+├── 📄 login.html             # Role-locked authentication system
+├── 📄 profile.html           # Patient/doctor health profile & notes
+├── 📁 api/                   # Vercel Serverless Functions
+│   ├── groq.js               # Cloud LLM proxy handler
+│   ├── medicine.js           # Medicine lookup & price query handler
+│   ├── overpass.js           # OpenStreetMap proxy for nearby facilities
+│   ├── status.js             # API health check endpoint
+│   └── triage.js             # Symptom evaluation & clinical decision logic
+├── 📁 assets/                # Visual & Animated Assets
+│   └── pulse-banner.svg      # Animated neon EKG pulse & heartbeat banner
+├── 📄 server.js              # Standalone Node.js / Express development server
+├── 📄 package.json           # Node.js project manifest & scripts
+└── 📄 vercel.json            # Vercel deployment & routing configuration
+```
+
+---
+
+## ⚡ Quick Start & Local Setup
+
+### Prerequisites
+* **Node.js** (v18.0 or higher recommended)
+* **npm** or **pnpm**
+* Modern web browser (Chrome, Edge, Firefox, Safari)
+
+### 1. Clone the Repository
 ```bash
-# Clone the repository
 git clone https://github.com/dakshchawla1/Mediguide.git
-
-# Navigate into the project folder
 cd Mediguide
+```
 
-# Install runtime dependencies
+### 2. Install Dependencies
+```bash
 npm install
 ```
 
-### 2. Configure Environment (Optional for Live Gemini AI)
-Create a `.env` file in the root directory:
-```env
-PORT=3000
-GEMINI_API_KEY=your_gemini_api_key_here
-```
-*(Note: MediGuide works 100% offline using built-in verified clinical engines even without an API key).*
-
-### 3. Launch Local Server
+### 3. Launch Development Server
 ```bash
 npm start
 ```
-Open **`http://localhost:3000`** in your browser.
+The application will launch immediately at **`http://localhost:3000`**.
 
 ---
 
-## 📂 Repository File Directory
-
-```text
-Mediguide/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # Automated GitHub Pages CI/CD workflow
-├── api/                      # Serverless Cloud Endpoints (Vercel)
-│   ├── groq.js               # LLM inference proxy
-│   ├── medicine.js           # Generic drug formulary resolver
-│   ├── overpass.js           # OpenStreetMap hospital locator proxy
-│   ├── status.js             # Health check & uptime endpoint
-│   └── triage.js             # Clinical symptom triage resolver
-├── css/
-│   └── main.css              # Unified multi-palette clinical design tokens
-├── js/
-│   └── main.js               # Dark/light theme engine, nav user pill, toasts
-├── emergency.html            # 24/7 SOS dialer, GPS broadcast & CPR first aid
-├── helplines.html            # Verified national toll-free health directory
-├── hospitals.html            # Hospital directory & interactive map locator
-├── index.html                # Main portal gateway & service directory
-├── login.html                # Role-locked authentication (Patient / Clinician)
-├── medicines.html            # Jan Aushadhi generic drug database (70+ drugs)
-├── opd.html                  # Universal hospital OPD schedules & No-OPD alerts
-├── profile.html              # Personal health dashboard & medical notes
-├── server.js                 # Express.js backend & verified clinical triage engine
-├── package.json              # Project dependencies & scripts
-├── README.md                 # Complete project showcase documentation
-└── HOW_TO_RUN.md             # Developer quickstart instructions
-```
-
----
-
-## ⚡ Serverless API Endpoints
-
-| Endpoint | Method | Params / Body | Description |
-| :--- | :---: | :--- | :--- |
-| `/api/medicine` | `GET` | `?q=paracetamol` | Returns generic composition, Jan Aushadhi pricing, savings %, and dosage |
-| `/api/triage` | `POST` | `{"symptom": "fever", "language": "en"}` | Returns triage urgency, specialist recommendation, and clinical advice |
-| `/api/status` | `GET` | *None* | Health status and operational uptime metrics |
-
----
-
-## 👤 Author & Credits
-
-* **Developer:** **Daksh Chawla**
-* **Email:** [daksh22chawla@gmail.com](mailto:daksh22chawla@gmail.com)
-* **GitHub:** [@dakshchawla1](https://github.com/dakshchawla1)
-* **Live Project:** [https://mediguide-xi.vercel.app](https://mediguide-xi.vercel.app)
-
----
+## 🤝 Clinical Advisory & Disclaimer
 
 > [!IMPORTANT]
-> **Medical Disclaimer:** MediGuide India is an informational healthcare navigation portal. Clinical triage results, Jan Aushadhi pricing comparisons, and OPD timetables are compiled for public guidance. In acute emergencies or severe distress, dial **108** or **112** immediately.
+> **Medical Disclaimer:** MediGuide India is designed for educational, informational, and triage-routing purposes only. It is **not** a replacement for formal clinical diagnosis or emergency intervention. In situations involving acute chest pain, sudden numbness, severe breathing difficulty, or trauma, immediately dial **108** or proceed to the nearest emergency department.
+
+---
+
+## 👨‍💻 Author & Lead Engineer
 
 <div align="center">
-  <sub>Built with ❤️ for Indian Healthcare Accessibility • MediGuide India © 2026</sub>
+
+**Daksh Chawla**  
+Lead Architect & Full Stack Developer  
+📬 **Email:** [daksh22chawla@gmail.com](mailto:daksh22chawla@gmail.com)  
+🐙 **GitHub:** [@dakshchawla1](https://github.com/dakshchawla1)  
+🚀 **Live App:** [mediguide-xi.vercel.app](https://mediguide-xi.vercel.app)
+
+<!-- Animated Waving Footer -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=7c3aed,0284c7,059669&height=120&section=footer" width="100%" alt="MediGuide Footer Banner" />
+
 </div>
