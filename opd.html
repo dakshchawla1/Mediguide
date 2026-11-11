@@ -183,6 +183,47 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
+    @media (max-width: 768px) {
+      .opd-card-head {
+        padding: 16px 14px 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .opd-card-title {
+        font-size: 1.15rem;
+      }
+      .opd-card-actions {
+        padding: 0 14px 14px;
+        gap: 8px;
+      }
+      .opd-card-actions .btn-rect {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 8px 12px;
+      }
+      .opd-table-wrap {
+        padding: 0 14px 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table.opd-tbl {
+        min-width: 480px;
+        font-size: 0.82rem;
+      }
+      table.opd-tbl thead th {
+        padding: 8px 10px;
+        font-size: 0.72rem;
+      }
+      table.opd-tbl tbody td {
+        padding: 8px 10px;
+      }
+      .no-opd-alert-box {
+        margin: 0 14px 14px;
+        padding: 14px;
+        font-size: 0.84rem;
+      }
+    }
   </style>
 </head>
 <body class="theme-opd">

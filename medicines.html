@@ -73,6 +73,31 @@
       margin-top: 28px;
     }
     .loader-box.active { display: block; }
+    @media (max-width: 768px) {
+      .dossier-card {
+        padding: 20px 16px;
+        margin-top: 24px;
+      }
+      .loader-box {
+        padding: 28px 16px;
+      }
+      .savings-card {
+        padding: 16px 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .spec-card {
+        padding: 14px 16px;
+      }
+      .dossier-price-box {
+        text-align: left !important;
+        width: 100% !important;
+        margin-top: 10px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--border);
+      }
+    }
   </style>
 </head>
 <body class="theme-medicines">
@@ -162,7 +187,7 @@
               Enter Medicine or Chemical Salt:
             </label>
             <div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
-              <input type="text" id="medicineQueryInput" class="clinical-input" style="flex:1; min-width:240px;" placeholder="e.g. Dolo 650, Pan 40, Azithral, Augmentin 625, Glycomet..." autocomplete="off">
+              <input type="text" id="medicineQueryInput" class="clinical-input" style="flex:1; min-width:0;" placeholder="e.g. Dolo 650, Pan 40, Azithral, Augmentin 625, Glycomet..." autocomplete="off">
               <button type="submit" id="searchDrugBtn" class="btn-rect btn-rect-primary" style="background:var(--color-meds-grad); color:#fff; box-shadow:0 4px 12px var(--color-meds-glow); white-space:nowrap;">
                 Search Formulary
               </button>
@@ -200,7 +225,7 @@
               <h2 id="medBrandName" style="font-size:1.8rem; color:var(--text-main); margin-top:6px;">Dolo 650</h2>
               <div id="medSaltComp" style="font-size:1.1rem; font-weight:700; color:var(--color-meds); margin-top:4px;">Paracetamol 650mg IP</div>
             </div>
-            <div style="text-align:right;">
+            <div class="dossier-price-box" style="text-align:right;">
               <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:var(--text-faint);">Market MRP (Est.)</div>
               <div id="medPriceText" style="font-family:var(--font-mono); font-size:1.5rem; font-weight:900; color:var(--text-main);">₹32 – ₹36</div>
             </div>

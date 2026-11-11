@@ -274,15 +274,22 @@
 
     /* ── Responsive ── */
     @media (max-width: 700px) {
-      .profile-hero { flex-direction: column; text-align: center; padding: 24px 20px; }
+      .profile-hero { flex-direction: column; text-align: center; padding: 22px 16px; gap: 16px; }
+      .profile-avatar { width: 80px; height: 80px; font-size: 2rem; }
       .profile-hero-badges { justify-content: center; }
       .profile-hero-actions { width: 100%; }
-      .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .profile-hero-actions .btn-rect { width: 100%; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .stat-card { padding: 14px 12px; }
       .stat-value { font-size: 1.3rem; }
-      .profile-cols, .profile-cols-3 { grid-template-columns: 1fr; }
+      .profile-cols, .profile-cols-3 { grid-template-columns: 1fr; gap: 14px; }
+      .section-head { padding: 14px 16px; }
+      .section-body { padding: 16px 14px; }
     }
     @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: 1fr; gap: 8px; }
+      .danger-actions { flex-direction: column; }
+      .danger-actions .btn-rect { width: 100%; }
     }
   </style>
 </head>

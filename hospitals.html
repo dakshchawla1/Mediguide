@@ -26,6 +26,16 @@
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 24px;
     }
+    @media (max-width: 768px) {
+      .map-frame-box {
+        height: 300px;
+        margin-bottom: 24px;
+      }
+      .hosp-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
   </style>
 </head>
 <body class="theme-hospitals">
@@ -114,7 +124,7 @@
             Search City, District, or Locality:
           </label>
           <div style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
-            <input type="text" id="hospitalSearchInput" class="clinical-input" style="flex:1; min-width:260px;" placeholder="e.g. New Delhi, Mumbai, Jaipur, Bengaluru, Lucknow, Kolkata..." autocomplete="off">
+            <input type="text" id="hospitalSearchInput" class="clinical-input" style="flex:1; min-width:0;" placeholder="e.g. New Delhi, Mumbai, Jaipur, Bengaluru, Lucknow, Kolkata..." autocomplete="off">
             <button type="submit" class="btn-rect" style="background:var(--color-hosp-grad); color:#fff; box-shadow:0 4px 12px var(--color-hosp-glow);">
               Search Map
             </button>
