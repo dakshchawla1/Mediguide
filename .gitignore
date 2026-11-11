@@ -27,4 +27,9 @@ resume.html
 resume.pdf
 resume_preview.png
 
+# Media captures
+assets/screenshots/*.mp4
+assets/screenshots/*.webm
+assets/screenshots/*.png
+
 .vercel
